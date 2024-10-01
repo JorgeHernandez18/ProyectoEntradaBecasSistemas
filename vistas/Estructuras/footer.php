@@ -7,7 +7,7 @@
             document.write(new Date().getFullYear())
           </script>,
           creado por
-          <a href="#" class="font-weight-bold text-white" target="_blank">Joel Lizarazo</a>
+          <a href="#" class="font-weight-bold text-white" target="_blank">Endersonjoellg@ufps.edu.co</a>
         </div>
       </div>
       <div class="col-12 col-md-6">

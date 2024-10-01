@@ -7,4 +7,6 @@
 	if ($conexion -> connect_error) {
 		die("no se pudo conectar");	
 	}
+	// Establecer el conjunto de caracteres a UTF-8
+	$conexion->set_charset("utf8mb4");
 ?>

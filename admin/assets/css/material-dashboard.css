@@ -22851,7 +22851,7 @@ label,
   font-family: 'Material Icons Round';
   font-weight: normal;
   font-style: normal;
-  font-size: 20px;
+  font-size: 30px;
   /* Preferred icon size */
   display: inline-block;
   line-height: 1;
@@ -22944,13 +22944,13 @@ label,
 }
 
 .icon-lg {
-  width: 64px;
-  height: 64px;
+  width: 70px;
+  height: 70px;
 }
 
 .icon-lg i {
-  top: 31%;
-  font-size: 1.5rem;
+  top: 29%;
+  font-size: 2rem;
 }
 
 .icon-lg.icon-striped {

@@ -82,12 +82,14 @@
     <?php include '../Estructuras/footer.php'; ?>
     </div>
   </main>
+  <?php include '../../admin/pages/layouts/configuradorInterfaz.php'; ?>
   <!--   Core JS Files   -->
   <script src="../../admin/assets/js/core/popper.min.js"></script>
   <script src="../../admin/assets/js/core/bootstrap.min.js"></script>
   <script src="../../admin/assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../../admin/assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../js/sidenav.js"></script>
+  <script src="../../admin/assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>

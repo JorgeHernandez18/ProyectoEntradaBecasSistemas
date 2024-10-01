@@ -106,6 +106,7 @@
                     </div>
                   </div>
                 </div>
+                <p class="text-white text-center">Registros Del Día: <span id="registroDia"></span></p>
               </div>
               </div>
               <div class="card-body">

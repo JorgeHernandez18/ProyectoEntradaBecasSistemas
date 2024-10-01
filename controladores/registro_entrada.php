@@ -15,10 +15,12 @@ $arregloUsuario = $_SESSION['datos_login'];
 if ($arregloUsuario['nombre']=='entradabecl') {
     $sede = 'becl'; 
 }elseif ($arregloUsuario['nombre']=='entradabecle') {
-    $sede = 'bss';
+    $sede = 'bcs';
 } else {
     $sede = 'desconocida';
 }
+
+
 
 // Verificar si el formulario fue enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -31,8 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               LEFT JOIN authorised_values S ON borrowers.sort2 = S.authorised_value 
               LEFT JOIN authorised_values ON borrowers.sort1 = authorised_values.authorised_value 
               WHERE borrowers.cardnumber = '$codigo'";
-
     $resultado = $conexion->query($query);
+
+
+    // Consulta para obtener el número de registros del día
+    $consultaDia = $conexion->query("SELECT COUNT(*) as totalDia FROM registro WHERE DATE(entrada) = CURDATE()");
+    $registrosDia = $consultaDia->fetch_assoc()['totalDia'];
+
+
 
     if ($resultado->num_rows > 0) {
         // Obtener los datos del estudiante
@@ -47,13 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($tipoRegistro == 'salida') {
             // Buscar el último registro de entrada sin salida
-            $queryUltimoRegistro = "SELECT * FROM registro WHERE codigo = '$codigo' AND salida IS NULL ORDER BY id DESC LIMIT 1";
+            $queryUltimoRegistro = "SELECT * FROM registro WHERE codigo = '$codigo' ORDER BY id DESC LIMIT 1";
             $resultadoUltimoRegistro = $conexion->query($queryUltimoRegistro);
             
             if ($resultadoUltimoRegistro->num_rows > 0) {
                 $registro = $resultadoUltimoRegistro->fetch_assoc();
                 $idRegistro = $registro['id'];
-
+                    
                 // Actualizar salida
                 $queryActualizarSalida = "UPDATE registro SET salida = '$fechaHoraActual' WHERE id = '$idRegistro'";
                 $conexion->query($queryActualizarSalida);
@@ -67,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     'tipo' => 'salida',
                     'programa' => $programa,
                     'facultad' => $facultad,
-                    'mensaje' => 'Salida registrada exitosamente'
+                    'registroDia' => $registrosDia,
+                    'mensaje' => 'Salida registrada exitosamente',
                 ]);
                 exit();
             } else {
@@ -94,7 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'programa' => $programa,
                 'facultad' => $facultad,
                 'sede' => $sede,
+                'registroDia' => $registrosDia,
                 'mensaje' => 'Entrada registrada exitosamente'
+                
             ]);
             exit();
         }
