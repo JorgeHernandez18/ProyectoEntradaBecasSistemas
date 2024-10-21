@@ -1,8 +1,8 @@
 <?php
 session_start();
 include "../controladores/seguridad.php";
-include "../controladores/excel.php";
-include "../controladores/filtro_paginacion.php";
+include "../controladores/excel_computo.php";
+include "../controladores/filtro_paginacion_computo.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,9 +26,7 @@ include "../controladores/filtro_paginacion.php";
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -52,7 +50,7 @@ include "../controladores/filtro_paginacion.php";
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white active bg-gradient-primary" href="../pages/registros.php">
+            <a class="nav-link text-white" href="../pages/registros.php">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">table_view</i>
               </div>
@@ -60,7 +58,7 @@ include "../controladores/filtro_paginacion.php";
             </a>
           </li>
           <li class="nav-item">
-          <a class="nav-link text-white" href="../pages/registros_computo.php">
+          <a class="nav-link text-white active bg-gradient-primary" href="../pages/registros_computo.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">computer</i>
             </div>
@@ -88,9 +86,9 @@ include "../controladores/filtro_paginacion.php";
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Registro</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Registro Sala de Computo</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Registro</h6>
+          <h6 class="font-weight-bolder mb-0">Registro Sala de Computo</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-end w-100">
@@ -125,10 +123,18 @@ include "../controladores/filtro_paginacion.php";
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
                 <div class="d-flex justify-content-between align-items-center px-3">
                   <h6 class="text-white text-capitalize mb-0">REGISTRO DE ENTRADA</h6><h6 class="text-white text-capitalize mb-0">TOTAL REGISTROS: <span id="totalRegistros" class="text-white"></span></h6>
-                  <button id="btnExportar" class="btn btn-success" onclick="descargarExcel()">
-                    <i class="fas fa-file-excel fa-lg me-2" style="color: white;"></i>
-                    <span class="d-none d-md-inline">Exportar a Excel</span>
-                  </button>
+                  <div class="d-flex justify-content-between align-items-center px-3">
+                    <!-- Botón para agregar o eliminar equipos -->
+                    <button id="btnGestionEquipos" class="btn btn-info me-2" onclick="abrirModalGestionEquipos()">
+                        <i class="fas fa-desktop fa-lg me-2" style="color: white;"></i>
+                        <span class="d-none d-md-inline"></span>
+                    </button>
+                    <!-- Botón para descargar excel -->
+                    <button id="btnExportar" class="btn btn-success me-2" onclick="descargarExcel()">
+                        <i class="fas fa-file-excel fa-lg me-2" style="color: white;"></i>
+                        <span class="d-none d-md-inline">Exportar a Excel</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,6 +147,7 @@ include "../controladores/filtro_paginacion.php";
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Código</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Programa Académico</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Facultad</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Equipo</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Entrada</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Salida</th>
                     </tr>
@@ -171,6 +178,9 @@ include "../controladores/filtro_paginacion.php";
                         <p class="text-xs font-weight-bold mb-0"><?php echo $f['facultad']; ?></p>
                       </td>
                       <td>
+                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['equipo']; ?></p>
+                      </td>
+                      <td>
                         <p class="text-xs font-weight-bold mb-0"><?php echo $f['entrada']; ?></p>
                       </td>
                       <td>
@@ -183,8 +193,38 @@ include "../controladores/filtro_paginacion.php";
                   </tbody>
                 </table>
               </div>
-              <!-- "total registros de la busqueda" -->
-                    
+
+              <!-- Modal para gestión de equipos -->
+                <div class="modal fade" id="modalGestionEquipos" tabindex="-1" role="dialog" aria-labelledby="modalGestionEquiposLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalGestionEquiposLabel">Gestión de Equipos</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <!-- Formulario para agregar equipo -->
+                            <form id="formAgregarEquipo">
+                            <div class="form-group">
+                                <label for="numeroEquipo">Número de Equipo</label>
+                                <input type="number" class="form-control" id="numeroEquipo" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Agregar Equipo</button>
+                            </form>
+
+                            <!-- Lista de equipos -->
+                            <h5 class="mt-4">Equipos Existentes</h5>
+                            <ul id="listaEquipos" class="list-group">
+                            <!-- Los equipos se cargarán aquí dinámicamente -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                </div>
+              
               <!-- Paginación -->
               <div class="row">
               </span>
@@ -240,7 +280,8 @@ include "../controladores/filtro_paginacion.php";
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/busqueda.js"></script>
+  <script src="../assets/js/busqueda_computo.js"></script>
+  <script src="../assets/js/gestion_equipo.js"></script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -249,15 +290,23 @@ include "../controladores/filtro_paginacion.php";
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-  </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+        
 
-  <!-- links para exportar a excel -->
-  <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
-  <script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
-  <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+
+<!-- links para exportar a excel -->
+<script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
+<script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+<!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+<script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 </body>
 </html>

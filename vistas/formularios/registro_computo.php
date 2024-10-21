@@ -11,7 +11,6 @@
      header("location: index.php");
      exit();
    }
-  include "../../controladores/seguridad.php";
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +57,9 @@
   <div id="successMessageSalida" class="success-message">
     <p>Salida registrada exitosamente</p>
   </div>
+  <div id="successMessageSalida2" class="success-message">
+    <p>Salida registrada exitosamente</p>
+  </div>
   <!-- incluye el header -->  
   <?php include '../Estructuras/header.php'; ?>
   <!-- Cuadro de alerta de error -->
@@ -67,6 +69,7 @@
   </div>
   </div>
   <main class="main-content  mt-0">
+    
     <div class="page-header align-items-start min-vh-100" style="background-image: url('../../admin/assets/img/fondo.jpg');">
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container my-auto">
@@ -75,7 +78,7 @@
             <div class="card z-index-0 fadeIn3 fadeInBottom">
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">REGISTRO DE ENTRADA</h4>
+                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">REGISTRO SALA DE COMPUTO</h4>
                 <div class="widget">
                   <div class="fecha">
                     <p id="diaSemana" class="diaSemana"></p>,
@@ -100,7 +103,7 @@
               </div>
               </div>
               <div class="card-body">
-              <form id="registroForm" method="post">
+              <form id="registroComputoForm" method="post">
                 <div class="nav-wrapper position-relative end-0">
                   <div class="btn-group nav nav-pills nav-fill p-1" role="group" aria-label="Basic radio toggle button group">
                     <input type="radio" class="btn-check" name="radioOpciones" id="btnEntrada" value="entrada" autocomplete="off" checked>
@@ -109,6 +112,12 @@
                     <input type="radio" class="btn-check" name="radioOpciones" id="btnSalida" value="salida" autocomplete="off">
                     <label class="btn btn-outline-primary" for="btnSalida">Salida</label>
                   </div>
+
+                    <div class="btn-group nav  nav-fill p-1">
+                      <select class="btn btn-outline-primary" id="equipo" name="equipo" required>
+                          <option value="" disabled selected>Seleccione un equipo</option>
+                      </select>
+                    </div>
                 </div>
                 <div class="row input-group-newsletter">
                   <div class="col">
@@ -132,6 +141,11 @@
             <p><span>Programa:</span> <strong id="programaEstudiante"></strong></p>
             <p><span>Facultad:</span> <strong id="facultadEstudiante"></strong></p>
           </div>
+          <!-- Ventana flotante de información de equipos -->
+          <div id="equiposOcupadosWindow" class="floating-window equipos-ocupados">
+            <h5>Equipos Ocupados</h5>
+            <ul id="listaEquiposOcupados"></ul>
+          </div>
         </div>
       </div>
       <!-- incluye el footer -->
@@ -143,7 +157,7 @@
   <script src="../../admin/assets/js/core/bootstrap.min.js"></script>
   <script src="../../admin/assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../../admin/assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../js/registroForm.js"></script>
+  <script src="../js/registroComputoForm.js"></script>
   <script src="../js/fechayhora.js"></script>
   <script src="../js/sidenav.js"></script>
 </body>

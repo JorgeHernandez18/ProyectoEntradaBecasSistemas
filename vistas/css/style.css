@@ -54,7 +54,7 @@
   
 .error-alert {
   position: fixed;
-  top: 40%; /* Ajusta esto para mover el cuadro hacia arriba */
+  top: 20%; /* Ajusta esto para mover el cuadro hacia arriba */
   left: 50%;
   transform: translate(-50%, -50%);
   width: 400px; /* Aumenta el ancho del cuadro */
@@ -143,7 +143,7 @@
     position: static;
     margin: 20px auto;
     width: 95%; /* Usar un porcentaje mayor para mejor respuesta */
-    max-width: 450px; /* Ancho máximo aumentado */
+    max-width: 95%; /* Ancho máximo aumentado */
     transform: none;
     border-radius: 20px;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
@@ -179,3 +179,81 @@
   font-size: 16px;
 }
 
+
+
+
+.equipos-ocupados {
+  position: fixed;
+  top: 50%;
+  left: 20%; /* Cambiado a left para centrarlo horizontalmente */
+  transform: translate(-50%, -50%); /* Centrado tanto vertical como horizontalmente */
+  width: 280px; /* Aumentado el ancho */
+  background-color: #ffffff;
+  padding: 35px; /* Aumentado el padding */
+  border-radius: 20px; /* Bordes más redondeados */
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+  display: none;
+  z-index: 1000;
+  border: 1px solid #ddd;
+}
+
+.equipos-ocupados h5 {
+    margin-top: 0;
+    font-size: 1.4em; /* Tamaño de letra mayor para el título */
+}
+
+.equipos-ocupados ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.equipos-ocupados li {
+  display: flex;
+  justify-content: space-between; /* Espaciar entre el número de equipo y el código */
+  align-items: center; /* Alinear verticalmente */
+  margin-bottom: 10px; /* Separación entre elementos */
+}
+
+
+.equipo-numero {
+  font-size: 1.2em;
+  font-size: 18px; /* Tamaño de fuente más grande */
+  color: #555;
+  line-height: 1.6; /* Aumentado el interlineado */
+}
+
+.equipo-codigo {
+  font-weight: bold;
+  font-size: 1.2em;
+  text-align: right; /* Alineación a la derecha */
+  color: #000;
+  font-weight: 600;
+}
+
+
+/* Ajustes responsivos */
+@media (max-width: 1400px) {
+  .equipos-ocupados {
+    position: static;
+    margin: 20px auto;
+    width: 95%; /* Usar un porcentaje mayor para mejor respuesta */
+    max-width: 95%; /* Ancho máximo aumentado */
+    transform: none;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    padding: 30px; /* Ajustado el padding para móviles */
+  }
+
+  .equipos-ocupados h5 {
+    font-size: 22px; /* Ligeramente más pequeño en móviles */
+  }
+
+  .equipos-ocupados p {
+    font-size: 16px; /* Ligeramente más pequeño en móviles */
+  }
+}
+
+.destacado {
+  box-shadow: 0 0 10px #ff0000;
+  transition: box-shadow 0.3s ease-in-out;
+}

@@ -35,11 +35,13 @@ try {
     $arregloUsuario = $_SESSION['datos_login'];
 
     // Determinar la sede
-    if ($arregloUsuario['nombre'] == 'entradabecl') {
-        $sede = 'becl';
-    } else {
-        $sede = 'bcs';
-    }
+    //if ($arregloUsuario['nombre'] == 'entradabecl') {
+    //    $sede = 'becl';
+    //} elseif ($arregloUsuario['nombre'] == 'entradabecle') {
+    //    $sede = 'bcs';
+    //} else {
+    //    $sede = 'desconocida';
+    //}
 
     // Verificar el método de la solicitud
     if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -47,12 +49,15 @@ try {
     }
 
     // Obtener y validar los datos del POST
+    $equipo= $_POST['equipo'] ?? '';
     $codigo = $_POST['codigo'] ?? '';
     $tipoRegistro = $_POST['radioOpciones'] ?? '';
     if (empty($codigo) || empty($tipoRegistro)) {
         handleError("Datos de formulario incompletos");
     }
-
+    if ($tipoRegistro === 'entrada' && empty($equipo)) {
+        handleError("Datos de formulario incompletos: Se requiere seleccionar un equipo para la entrada");
+    }
     // Consulta para verificar el código
     $query = "SELECT vista_borrowers.cardnumber, vista_borrowers.surname, vista_borrowers.firstname, vista_borrowers.email, 
               S.lib AS carrera, vista_authorised_values.lib AS departamento 
@@ -72,7 +77,7 @@ try {
     $resultado = $stmt->get_result();
 
     // Consulta para obtener el número de registros del día
-    $consultaDia = "SELECT COUNT(*) as totalDia FROM registro WHERE DATE(entrada) = CURDATE()";
+    $consultaDia = "SELECT COUNT(*) as totalDia FROM registro_computo WHERE DATE(entrada) = CURDATE()";
     $stmtDia = $conexion->prepare($consultaDia);
     if (!$stmtDia) {
         handleError("Error en la preparación de la consulta de registros del día: " . $conexion->error);
@@ -93,7 +98,7 @@ try {
 
         if ($tipoRegistro == 'salida') {
             // Lógica para registro de salida
-            $queryUltimoRegistro = "SELECT * FROM registro WHERE codigo = ? ORDER BY id DESC LIMIT 1";
+            $queryUltimoRegistro = "SELECT * FROM registro_computo WHERE codigo = ? ORDER BY id DESC LIMIT 1";
             $stmt = $conexion->prepare($queryUltimoRegistro);
             if (!$stmt) {
                 handleError("Error en la preparación de la consulta de último registro: " . $conexion->error);
@@ -107,8 +112,9 @@ try {
             if ($resultadoUltimoRegistro->num_rows > 0) {
                 $registro = $resultadoUltimoRegistro->fetch_assoc();
                 $idRegistro = $registro['id'];
+                $equipoUsado = $registro['equipo'];
                 
-                $queryActualizarSalida = "UPDATE registro SET salida = ? WHERE id = ?";
+                $queryActualizarSalida = "UPDATE registro_computo SET salida = ? WHERE id = ?";
                 $stmtActualizar = $conexion->prepare($queryActualizarSalida);
                 if (!$stmtActualizar) {
                     handleError("Error en la preparación de la actualización de salida: " . $conexion->error);
@@ -116,6 +122,17 @@ try {
                 $stmtActualizar->bind_param("si", $fechaHoraActual, $idRegistro);
                 if (!$stmtActualizar->execute()) {
                     handleError("Error al ejecutar la actualización de salida: " . $stmtActualizar->error);
+                }
+
+                // Actualizar el estado del equipo a 'libre'
+                $queryActualizarEquipo = "UPDATE equipo SET estado = 'libre' WHERE equipo = ?";
+                $stmtActualizarEquipo = $conexion->prepare($queryActualizarEquipo);
+                if (!$stmtActualizarEquipo) {
+                    handleError("Error en la preparación de la actualización del estado del equipo: " . $conexion->error);
+                }
+                $stmtActualizarEquipo->bind_param("s", $equipoUsado);
+                if (!$stmtActualizarEquipo->execute()) {
+                    handleError("Error al ejecutar la actualización del estado del equipo: " . $stmtActualizarEquipo->error);
                 }
 
                 echo json_encode([
@@ -128,20 +145,67 @@ try {
                     'facultad' => $facultad,
                     'registroDia' => $registrosDia,
                     'mensaje' => 'Salida registrada exitosamente',
+                    'equipoLiberado' => $equipoUsado
                 ]);
             } else {
                 handleError('No se encontró una entrada sin salida para este estudiante');
             }
         } else {
+            // Verificar si el equipo está libre
+            $queryVerificarEquipo = "SELECT estado FROM equipo WHERE equipo = ?";
+            $stmtVerificarEquipo = $conexion->prepare($queryVerificarEquipo);
+
+            if (!$stmtVerificarEquipo) {
+                handleError("Error en la preparación de la consulta de verificación de equipo: " . $conexion->error);
+            }
+            $stmtVerificarEquipo->bind_param("s", $equipo);
+            if (!$stmtVerificarEquipo->execute()) {
+                handleError("Error al ejecutar la consulta de verificación de equipo: " . $stmtVerificarEquipo->error);
+            }
+            $resultadoVerificarEquipo = $stmtVerificarEquipo->get_result();
+            $estadoEquipo = $resultadoVerificarEquipo->fetch_assoc()['estado'];
+
+            if ($estadoEquipo !== 'libre') {
+                handleError("El equipo seleccionado no está disponible");
+            }
+            
+            if ($tipoRegistro === 'entrada') {
+                // Verificar si el usuario ya tiene un préstamo activo
+                $queryPrestamoActivo = "SELECT * FROM registro_computo WHERE codigo = ? AND salida IS NULL";
+                $stmtPrestamoActivo = $conexion->prepare($queryPrestamoActivo);
+                if (!$stmtPrestamoActivo) {
+                    handleError("Error en la preparación de la consulta de préstamo activo: " . $conexion->error);
+                }
+                $stmtPrestamoActivo->bind_param("s", $codigo);
+                if (!$stmtPrestamoActivo->execute()) {
+                    handleError("Error al ejecutar la consulta de préstamo activo: " . $stmtPrestamoActivo->error);
+                }
+                $resultadoPrestamoActivo = $stmtPrestamoActivo->get_result();
+                
+                if ($resultadoPrestamoActivo->num_rows > 0) {
+                    handleError("El usuario ya tiene un equipo prestado. Debe registrar la salida antes de prestar otro equipo.");
+                }
+            }
             // Lógica para registro de entrada
-            $queryInsertar = "INSERT INTO registro (nombre, correo, codigo, programa, facultad, entrada, sede) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $queryInsertar = "INSERT INTO registro_computo (nombre, correo, codigo, programa, facultad, entrada, equipo) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmtInsertar = $conexion->prepare($queryInsertar);
             if (!$stmtInsertar) {
                 handleError("Error en la preparación de la inserción de entrada: " . $conexion->error);
             }
-            $stmtInsertar->bind_param("sssssss", $nombre, $correo, $codigo, $programa, $facultad, $fechaHoraActual, $sede);
+            $stmtInsertar->bind_param("sssssss", $nombre, $correo, $codigo, $programa, $facultad, $fechaHoraActual, $equipo);
             if (!$stmtInsertar->execute()) {
                 handleError("Error al ejecutar la inserción de entrada: " . $stmtInsertar->error);
+            }
+
+            // Actualizar el estado del equipo a 'ocupado'
+            $queryActualizarEquipo = "UPDATE equipo SET estado = 'ocupado' WHERE equipo = ?";
+            $stmtActualizarEquipo = $conexion->prepare($queryActualizarEquipo);
+            if (!$stmtActualizarEquipo) {
+                handleError("Error en la preparación de la actualización del estado del equipo: " . $conexion->error);
+            }
+            $stmtActualizarEquipo->bind_param("s", $equipo);
+            if (!$stmtActualizarEquipo->execute()) {
+                handleError("Error al ejecutar la actualización del estado del equipo: " . $stmtActualizarEquipo->error);
             }
 
             echo json_encode([
@@ -153,7 +217,7 @@ try {
                 'correo' => $correo,
                 'programa' => $programa,
                 'facultad' => $facultad,
-                'sede' => $sede,
+                'equipo' => $equipo,
                 'registroDia' => $registrosDia,
                 'mensaje' => 'Entrada registrada exitosamente'
             ]);

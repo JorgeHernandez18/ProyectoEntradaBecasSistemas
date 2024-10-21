@@ -31,29 +31,35 @@
 
 
 ///////---------------------CONSULTAS GRAFICA DE REGISTROS DE LAS 7 CARRERAS MAS FRECIENTES ----------------/////////
-
-    // Consulta para obtener los 7 programas más frecuentes en el semestre actual
-    $consultaProgramas = $conexion->query("
+// Consulta para obtener los 7 programas más frecuentes en el semestre actual
+$consultaProgramas = $conexion->query("
     SELECT programa, COUNT(*) as total
     FROM registro
     WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'
     GROUP BY programa
     ORDER BY total DESC
     LIMIT 7
-    ") or die($conexion->error);
+") or die($conexion->error);
 
-    $programas = [];
-    $totales = [];
+$programas = [];
+$totales = []; // Inicializa correctamente el array de totales
+$totalesProgramas = 0; // Inicializa el acumulador de totales
+$totalPrograma = 0; // Inicializa el valor máximo de programa
 
-    while ($row = $consultaProgramas->fetch_assoc()) {
-        $programas[] = $row['programa'];
-        $totales[] = $row['total'];
+while ($row = $consultaProgramas->fetch_assoc()) {
+    $programas[] = $row['programa'];  // Guarda el programa
+    $totales[] = $row['total'];  // Guarda el total de cada programa
+    $totalesProgramas += $row['total'];  // Suma el total al acumulador
+
+    // Encontrar el total más alto
+    if ($row['total'] > $totalPrograma) {
+        $totalPrograma = $row['total'];
     }
+}
 
-    // Convertir los arrays a formato JSON para usar en JavaScript
-    $programasJSON = json_encode($programas);
-    $totalesJSON = json_encode($totales);
-
+// Convertir los arrays a formato JSON para usar en JavaScript
+$programasJSON = json_encode($programas);
+$totalesJSON = json_encode($totales);
 
 
 ///////---------------------CONSULTAS GRAFICA DE REGISTROS POR MES----------------/////////
