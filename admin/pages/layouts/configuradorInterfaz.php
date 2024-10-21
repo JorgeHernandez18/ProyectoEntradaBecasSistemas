@@ -45,7 +45,7 @@
         <hr class="horizontal dark my-sm-4">
         <a class="btn btn-outline-dark w-100" href="https://github.com/Biblioteca-Eduardo-Cote-Lamus/ProyectoEntradaBECL">Ver Documentación</a>
         <div class="w-100 text-center">
-          <a href="https://github.com/Biblioteca-Eduardo-Cote-Lamus/ProyectoEntradaBECL" class="btn btn-dark mb-0 me-2" target="_blank">
+          <a href="https://github.com/Biblioteca-Eduardo-Cote-Lamus" class="btn btn-dark mb-0 me-2" target="_blank">
             <i class="fab fa-github me-1" aria-hidden="true"></i> Github
           </a>
         </div>
