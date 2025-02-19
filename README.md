@@ -65,6 +65,14 @@ El Sistema de Ingreso BECL es una solución integral para gestionar y realizar s
 ![image](https://github.com/user-attachments/assets/e208f255-1eb0-4535-ad1e-a6d671c4d80a)
 *formulario de registro y eliminacion de equipos disponibles en sala de Computo*
 
+### 7. Panel de Funcionarios de la BECL
+![image](https://github.com/user-attachments/assets/b0ae27b5-07b7-4398-ac1f-327e7ebe3538)
+*Lista de los funcionarios de la BECL*
+
+### 8. Perfil del personal administrativo de la BECL
+![image](https://github.com/user-attachments/assets/f4d5b01c-926b-42ee-b793-f71d4ac91b7c)
+*previsualiza datos del funcionario como su registro de entrada y salida a sus funciones laborales*
+
 
 ## Instalación y Uso
 
