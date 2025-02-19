@@ -79,7 +79,7 @@ El Sistema de Ingreso BECL es una solución integral para gestionar y realizar s
 El Sistema de Ingreso BECL es una aplicación web. Para acceder y utilizar el sistema:
 
 1. Asegúrese de tener un navegador web moderno (Chrome, Firefox, Safari, Edge).
-2. Visite la URL del sistema: [http://biblioteca.ufps.edu.co/](http://biblioteca.ufps.edu.co/)
+2. Visite la URL del sistema: [http://biblioteca.ufps.edu.co/]([https://ufps.cloudbiteca.com/])
 3. Utilice sus credenciales proporcionadas para iniciar sesión.
 4. Para el registro de entrada de estudiantes, use el panel de ingreso.
 5. Para acceder a las estadísticas y registros detallados, use el panel de administración.
