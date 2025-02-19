@@ -61,6 +61,11 @@ El Sistema de Ingreso BECL es una solución integral para gestionar y realizar s
 ![Captura de pantalla 2024-10-01 154504](https://github.com/user-attachments/assets/86747b34-17bd-48b3-a8ff-a91f3702d104)
 *Lista todos los registros de entrada en formato de tabla paginada*
 
+### 6. Registro de Equipos en sala de Computo
+![image](https://github.com/user-attachments/assets/e208f255-1eb0-4535-ad1e-a6d671c4d80a)
+*formulario de registro y eliminacion de equipos disponibles en sala de Computo*
+
+
 ## Instalación y Uso
 
 El Sistema de Ingreso BECL es una aplicación web. Para acceder y utilizar el sistema:
