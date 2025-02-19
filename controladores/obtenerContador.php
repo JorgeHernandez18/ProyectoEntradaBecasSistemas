@@ -3,7 +3,7 @@
 include "../modelo/conexion.php";
 
 // Consulta para obtener el número de estudiantes registrados
-$query = "SELECT COUNT(*) as total FROM registro WHERE DATE(entrada) = CURDATE()"; 
+$query = "SELECT COUNT(*) as total FROM becl_registro WHERE DATE(entrada) = CURDATE()"; 
 $result = mysqli_query($conn, $query);
 
 if ($result) {

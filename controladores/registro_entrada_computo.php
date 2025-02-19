@@ -1,5 +1,7 @@
 <?php
-
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 // Función para manejar errores y devolverlos como JSON
 function handleError($message, $sqlError = null) {
     $error = [
@@ -77,7 +79,7 @@ try {
     $resultado = $stmt->get_result();
 
     // Consulta para obtener el número de registros del día
-    $consultaDia = "SELECT COUNT(*) as totalDia FROM registro_computo WHERE DATE(entrada) = CURDATE()";
+    $consultaDia = "SELECT COUNT(*) as totalDia FROM becl_registro_computo WHERE DATE(entrada) = CURDATE()";
     $stmtDia = $conexion->prepare($consultaDia);
     if (!$stmtDia) {
         handleError("Error en la preparación de la consulta de registros del día: " . $conexion->error);
@@ -98,7 +100,7 @@ try {
 
         if ($tipoRegistro == 'salida') {
             // Lógica para registro de salida
-            $queryUltimoRegistro = "SELECT * FROM registro_computo WHERE codigo = ? ORDER BY id DESC LIMIT 1";
+            $queryUltimoRegistro = "SELECT * FROM becl_registro_computo WHERE codigo = ? ORDER BY id DESC LIMIT 1";
             $stmt = $conexion->prepare($queryUltimoRegistro);
             if (!$stmt) {
                 handleError("Error en la preparación de la consulta de último registro: " . $conexion->error);
@@ -114,7 +116,7 @@ try {
                 $idRegistro = $registro['id'];
                 $equipoUsado = $registro['equipo'];
                 
-                $queryActualizarSalida = "UPDATE registro_computo SET salida = ? WHERE id = ?";
+                $queryActualizarSalida = "UPDATE becl_registro_computo SET salida = ? WHERE id = ?";
                 $stmtActualizar = $conexion->prepare($queryActualizarSalida);
                 if (!$stmtActualizar) {
                     handleError("Error en la preparación de la actualización de salida: " . $conexion->error);
@@ -125,15 +127,17 @@ try {
                 }
 
                 // Actualizar el estado del equipo a 'libre'
-                $queryActualizarEquipo = "UPDATE equipo SET estado = 'libre' WHERE equipo = ?";
+                $queryActualizarEquipo = "UPDATE becl_equipo SET estado = 'libre' WHERE equipo = ?";
                 $stmtActualizarEquipo = $conexion->prepare($queryActualizarEquipo);
                 if (!$stmtActualizarEquipo) {
                     handleError("Error en la preparación de la actualización del estado del equipo: " . $conexion->error);
                 }
-                $stmtActualizarEquipo->bind_param("s", $equipoUsado);
+                $stmtActualizarEquipo->bind_param("i", $equipoUsado);
                 if (!$stmtActualizarEquipo->execute()) {
+                    error_log("Error al actualizar estado del equipo: " . $stmtActualizarEquipo->error);
                     handleError("Error al ejecutar la actualización del estado del equipo: " . $stmtActualizarEquipo->error);
                 }
+                error_log("Estado del equipo actualizado correctamente: Equipo " . $equipo . " marcado como ocupado");
 
                 echo json_encode([
                     'success' => true,
@@ -152,13 +156,13 @@ try {
             }
         } else {
             // Verificar si el equipo está libre
-            $queryVerificarEquipo = "SELECT estado FROM equipo WHERE equipo = ?";
+            $queryVerificarEquipo = "SELECT estado FROM becl_equipo WHERE equipo = ?";
             $stmtVerificarEquipo = $conexion->prepare($queryVerificarEquipo);
 
             if (!$stmtVerificarEquipo) {
                 handleError("Error en la preparación de la consulta de verificación de equipo: " . $conexion->error);
             }
-            $stmtVerificarEquipo->bind_param("s", $equipo);
+            $stmtVerificarEquipo->bind_param("i", $equipo);
             if (!$stmtVerificarEquipo->execute()) {
                 handleError("Error al ejecutar la consulta de verificación de equipo: " . $stmtVerificarEquipo->error);
             }
@@ -171,7 +175,7 @@ try {
             
             if ($tipoRegistro === 'entrada') {
                 // Verificar si el usuario ya tiene un préstamo activo
-                $queryPrestamoActivo = "SELECT * FROM registro_computo WHERE codigo = ? AND salida IS NULL";
+                $queryPrestamoActivo = "SELECT * FROM becl_registro_computo WHERE codigo = ? AND salida IS NULL";
                 $stmtPrestamoActivo = $conexion->prepare($queryPrestamoActivo);
                 if (!$stmtPrestamoActivo) {
                     handleError("Error en la preparación de la consulta de préstamo activo: " . $conexion->error);
@@ -187,26 +191,28 @@ try {
                 }
             }
             // Lógica para registro de entrada
-            $queryInsertar = "INSERT INTO registro_computo (nombre, correo, codigo, programa, facultad, entrada, equipo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $queryInsertar = "INSERT INTO becl_registro_computo (nombre, correo, codigo, programa, facultad, entrada, equipo) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmtInsertar = $conexion->prepare($queryInsertar);
             if (!$stmtInsertar) {
                 handleError("Error en la preparación de la inserción de entrada: " . $conexion->error);
             }
-            $stmtInsertar->bind_param("sssssss", $nombre, $correo, $codigo, $programa, $facultad, $fechaHoraActual, $equipo);
+            $stmtInsertar->bind_param("ssssssi", $nombre, $correo, $codigo, $programa, $facultad, $fechaHoraActual, $equipo);
             if (!$stmtInsertar->execute()) {
                 handleError("Error al ejecutar la inserción de entrada: " . $stmtInsertar->error);
             }
 
             // Actualizar el estado del equipo a 'ocupado'
-            $queryActualizarEquipo = "UPDATE equipo SET estado = 'ocupado' WHERE equipo = ?";
+            $queryActualizarEquipo = "UPDATE becl_equipo SET estado = 'ocupado' WHERE equipo = ?";
             $stmtActualizarEquipo = $conexion->prepare($queryActualizarEquipo);
             if (!$stmtActualizarEquipo) {
                 handleError("Error en la preparación de la actualización del estado del equipo: " . $conexion->error);
             }
-            $stmtActualizarEquipo->bind_param("s", $equipo);
+            $stmtActualizarEquipo->bind_param("i", $equipo);
             if (!$stmtActualizarEquipo->execute()) {
+                error_log("Error al actualizar estado del equipo: " . $stmtActualizarEquipo->error);
                 handleError("Error al ejecutar la actualización del estado del equipo: " . $stmtActualizarEquipo->error);
             }
+            error_log("Estado del equipo actualizado correctamente: Equipo " . $equipo . " marcado como ocupado");
 
             echo json_encode([
                 'success' => true,

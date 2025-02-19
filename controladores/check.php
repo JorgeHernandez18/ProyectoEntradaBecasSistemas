@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start(); // Inicia la sesión o reanuda una sesión existente.
 
 include "../modelo/conexion.php"; // Incluye el archivo de conexión a la base de datos.
@@ -7,7 +7,7 @@ if (isset($_POST['usuario']) && isset($_POST['password'])) {
     // Verifica que se hayan enviado los campos 'usuario' y 'password' a través de POST.
 
     // Prepara la consulta SQL para evitar inyección SQL
-    $stmt = $conexion->prepare("SELECT * FROM admin WHERE usuario = ? AND password = ?");
+    $stmt = $conexion->prepare("SELECT * FROM becl_admin WHERE usuario = ? AND password = ?");
     
     // Genera el hash de la contraseña
     $passwordHash = sha1($_POST['password']);

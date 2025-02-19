@@ -1,7 +1,8 @@
 <?php
 include "../controladores/seguridad.php";
+
 // Inicializa la consulta base y el array de parámetros
-$baseQuery = "FROM registro_computo WHERE 1=1";
+$baseQuery = "FROM becl_registro_computo WHERE 1=1";
 $params = array();
 
 // Maneja el filtrado por fecha

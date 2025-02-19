@@ -22,10 +22,6 @@
               <ul class="navbar-nav d-lg-flex">
                 <li class="nav-item d-flex align-items-center">
                   <!-- Cierra la sesion y lo envia al index -->
-                  <a class="btn bg-gradient-success btn-sm mb-0 me-2" href="#" id="liberarEquipos">Liberar Equipos</a>
-                </li>
-                <li class="nav-item d-flex align-items-center">
-                  <!-- Cierra la sesion y lo envia al index -->
                   <a class="btn btn-outline-primary btn-sm mb-0 me-2" href="../../controladores/cerrar_sesion.php">salir</a>
                 </li>
               </ul>

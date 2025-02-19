@@ -65,6 +65,14 @@ include "../controladores/filtro_paginacion_computo.php";
             <span class="nav-link-text ms-1">Registro Computo</span>
           </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="../pages/funcionarios.php">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">face</i>
+              </div>
+              <span class="nav-link-text ms-1">Funcionarios BECL</span>
+            </a>
+          </li>
           <li class="nav-item mt-3">
             <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Cuenta</h6>
           </li>
@@ -126,7 +134,7 @@ include "../controladores/filtro_paginacion_computo.php";
                   <div class="d-flex justify-content-between align-items-center px-3">
                     <!-- Botón para agregar o eliminar equipos -->
                     <button id="btnGestionEquipos" class="btn btn-info me-2" onclick="abrirModalGestionEquipos()">
-                        <i class="fas fa-desktop fa-lg me-2" style="color: white;"></i>
+                        <i class="material-icons">settings</i>
                         <span class="d-none d-md-inline"></span>
                     </button>
                     <!-- Botón para descargar excel -->
@@ -238,7 +246,7 @@ include "../controladores/filtro_paginacion_computo.php";
                       <li class="page-item <?php if ($paginaActual <= 1) echo 'disabled'; ?>">
                         <a class="page-link" href="?pagina=<?php echo max(1, $paginaActual - 1); ?>" tabindex="-1">
                           <span class="material-icons">keyboard_arrow_left</span>
-                          <span class="sr-only">Previous</span>
+                          <span class="sr-only"></span>
                         </a>
                       </li>
 
@@ -260,7 +268,7 @@ include "../controladores/filtro_paginacion_computo.php";
                       <li class="page-item <?php if ($paginaActual >= $totalPaginas) echo 'disabled'; ?>">
                         <a class="page-link" href="?pagina=<?php echo min($totalPaginas, $paginaActual + 1); ?>">
                           <span class="material-icons">keyboard_arrow_right</span>
-                          <span class="sr-only">Next</span>
+                          <span class="sr-only"></span>
                         </a>
                       </li>
                     </ul>

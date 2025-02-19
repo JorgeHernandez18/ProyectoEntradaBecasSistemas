@@ -25,6 +25,8 @@ document.getElementById('registroComputoForm').addEventListener('submit', functi
     const codigo = document.getElementById('codigo').value;
     const tipoRegistro = document.querySelector('input[name="radioOpciones"]:checked').value;
 
+    console.log('Enviando datos:', { equipo, codigo, tipoRegistro }); // Agregar para depuración
+
     fetch('../../controladores/registro_entrada_computo.php', {
         method: 'POST',
         headers: {
@@ -91,8 +93,8 @@ function mostrarMensajeExito(tipo) {
 }
 
 function mostrarError(mensaje) {
-    document.getElementById('errorMessage').textContent = 'Error en el registro: ' + mensaje;
     const errorAlertFlow = document.getElementById('errorAlert');
+    document.getElementById('errorMessage').textContent = 'Error en el registro: ' + mensaje;
     errorAlertFlow.style.display = 'block';
     errorAlertFlow.style.opacity = '1';
     setTimeout(() => {
@@ -121,25 +123,45 @@ function actualizarEstadoEquipos() {
 
 
 function actualizarListaEquipos() {
+    console.log('Actualizando lista de equipos...');
     fetch('../../controladores/obtener_equipos_libres.php')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Respuesta recibida:', data);
             const selectEquipo = document.getElementById('equipo');
             selectEquipo.innerHTML = '<option value="" disabled selected>Seleccione un equipo</option>';
-            data.equiposLibres.forEach(equipo => {
-                const option = document.createElement('option');
-                option.value = equipo;
-                option.textContent = `Equipo ${equipo}`;
-                selectEquipo.appendChild(option);
-            });
+            if (data.equiposLibres && Array.isArray(data.equiposLibres)) {
+                data.equiposLibres.forEach(equipo => {
+                    const option = document.createElement('option');
+                    option.value = equipo;
+                    option.textContent = `Equipo ${equipo}`;
+                    selectEquipo.appendChild(option);
+                });
+            } else {
+                console.error('Formato de datos incorrecto:', data);
+                mostrarError('Datos recibidos en formato incorrecto');
+            }            
         })
-        .catch(error => console.error('Error al obtener equipos libres:', error));
+        .catch(error => {
+            console.error('Error al obtener equipos libres:', error);
+            mostrarError('Error al actualizar la lista de equipos');
+        });
 }
 
 
 function liberarTodosLosEquipos() {
     fetch('../../controladores/liberar_equipos.php')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 mostrarMensajeExito2(data.mensaje2);
@@ -171,4 +193,3 @@ function mostrarMensajeExito2(mensaje2) {
 function cerrarAlerta() {
     document.getElementById('errorAlert').style.display = 'none';
 }
-

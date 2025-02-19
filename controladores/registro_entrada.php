@@ -1,5 +1,4 @@
 <?php
-
 // Función para manejar errores y devolverlos como JSON
 function handleError($message, $sqlError = null) {
     $error = [
@@ -72,7 +71,7 @@ try {
     $resultado = $stmt->get_result();
 
     // Consulta para obtener el número de registros del día
-    $consultaDia = "SELECT COUNT(*) as totalDia FROM registro WHERE DATE(entrada) = CURDATE()";
+    $consultaDia = "SELECT COUNT(*) as totalDia FROM becl_registro WHERE DATE(entrada) = CURDATE()";
     $stmtDia = $conexion->prepare($consultaDia);
     if (!$stmtDia) {
         handleError("Error en la preparación de la consulta de registros del día: " . $conexion->error);
@@ -93,7 +92,7 @@ try {
 
         if ($tipoRegistro == 'salida') {
             // Lógica para registro de salida
-            $queryUltimoRegistro = "SELECT * FROM registro WHERE codigo = ? ORDER BY id DESC LIMIT 1";
+            $queryUltimoRegistro = "SELECT * FROM becl_registro WHERE codigo = ? ORDER BY id DESC LIMIT 1";
             $stmt = $conexion->prepare($queryUltimoRegistro);
             if (!$stmt) {
                 handleError("Error en la preparación de la consulta de último registro: " . $conexion->error);
@@ -108,7 +107,7 @@ try {
                 $registro = $resultadoUltimoRegistro->fetch_assoc();
                 $idRegistro = $registro['id'];
                 
-                $queryActualizarSalida = "UPDATE registro SET salida = ? WHERE id = ?";
+                $queryActualizarSalida = "UPDATE becl_registro SET salida = ? WHERE id = ?";
                 $stmtActualizar = $conexion->prepare($queryActualizarSalida);
                 if (!$stmtActualizar) {
                     handleError("Error en la preparación de la actualización de salida: " . $conexion->error);
@@ -134,7 +133,7 @@ try {
             }
         } else {
             // Lógica para registro de entrada
-            $queryInsertar = "INSERT INTO registro (nombre, correo, codigo, programa, facultad, entrada, sede) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $queryInsertar = "INSERT INTO becl_registro (nombre, correo, codigo, programa, facultad, entrada, sede) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmtInsertar = $conexion->prepare($queryInsertar);
             if (!$stmtInsertar) {
                 handleError("Error en la preparación de la inserción de entrada: " . $conexion->error);

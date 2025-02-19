@@ -1,10 +1,10 @@
 <?php
     // Consulta para el total de registros
-    $consultaTotal = $conexion->query("SELECT COUNT(*) as total FROM registro") or die($conexion->error);
+    $consultaTotal = $conexion->query("SELECT COUNT(*) as total FROM becl_registro") or die($conexion->error);
     $totalRegistros = $consultaTotal->fetch_assoc()['total'];
 
     // Consulta para los registros del día
-    $consultaDia = $conexion->query("SELECT COUNT(*) as totalDia FROM registro WHERE DATE(entrada) = CURDATE()") or die($conexion->error);
+    $consultaDia = $conexion->query("SELECT COUNT(*) as totalDia FROM becl_registro WHERE DATE(entrada) = CURDATE()") or die($conexion->error);
     $registrosDia = $consultaDia->fetch_assoc()['totalDia'];
 
     // Determinar el semestre actual
@@ -22,11 +22,11 @@
     }
 
     // Consulta para contar los registros del semestre actual
-    $consultaSemestre = $conexion->query("SELECT COUNT(*) as totalSemestre FROM registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'") or die($conexion->error);
+    $consultaSemestre = $conexion->query("SELECT COUNT(*) as totalSemestre FROM becl_registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'") or die($conexion->error);
     $registrosSemestre = $consultaSemestre->fetch_assoc()['totalSemestre'];
 
     // Consulta para contar los registros de los funcionarios del semestre actual
-    $consultaFuncionariosSemestre = $conexion->query("SELECT COUNT(*) as totalFuncionariosSemestre FROM registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre' AND codigo REGEXP '^0[0-9]{4}$'") or die($conexion->error);
+    $consultaFuncionariosSemestre = $conexion->query("SELECT COUNT(*) as totalFuncionariosSemestre FROM becl_registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre' AND codigo REGEXP '^0[0-9]{4}$'") or die($conexion->error);
     $registrosFuncionariosSemestre = $consultaFuncionariosSemestre->fetch_assoc()['totalFuncionariosSemestre'];
 
 
@@ -34,7 +34,7 @@
 // Consulta para obtener los 7 programas más frecuentes en el semestre actual
 $consultaProgramas = $conexion->query("
     SELECT programa, COUNT(*) as total
-    FROM registro
+    FROM becl_registro
     WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'
     GROUP BY programa
     ORDER BY total DESC
@@ -67,7 +67,7 @@ $totalesJSON = json_encode($totales);
     // Consulta para contar los registros por mes en el semestre actual
     $consultaMensual = $conexion->query("
     SELECT MONTH(entrada) as mes, COUNT(*) as total
-    FROM registro
+    FROM becl_registro
     WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'
     GROUP BY MONTH(entrada)
     ORDER BY MONTH(entrada)
@@ -109,7 +109,7 @@ $totalesJSON = json_encode($totales);
             DATE(entrada) as fecha,
             DAYOFWEEK(entrada) as dia_semana, 
             COUNT(*) as total
-        FROM registro
+        FROM becl_registro
         WHERE DATE(entrada) BETWEEN '$inicioSemana' AND '$hoy'
         GROUP BY DATE(entrada), DAYOFWEEK(entrada)
         ORDER BY fecha ASC

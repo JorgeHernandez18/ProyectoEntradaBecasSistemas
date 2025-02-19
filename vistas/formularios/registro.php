@@ -59,7 +59,7 @@
     <p>Salida registrada exitosamente</p>
   </div>
   <!-- incluye el header -->  
-  <?php include '../Estructuras/header.php'; ?>
+<?php include '../Estructuras/header.php'; ?>
   <!-- Cuadro de alerta de error -->
   <div id="errorAlert" class="error-alert">
     <p id="errorMessage"></p>
@@ -135,7 +135,7 @@
         </div>
       </div>
       <!-- incluye el footer -->
-      <?php include '../Estructuras/footer.php'; ?>
+<?php include '../Estructuras/footer.php'; ?>
     </div>
   </main>
   <!--   Core JS Files   -->

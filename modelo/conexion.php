@@ -1,4 +1,4 @@
-<?php 
+<?php
 	$servidor="localhost";
 	$nombreBd="ingreso";
 	$usuario="root";
@@ -8,5 +8,5 @@
 		die("no se pudo conectar");	
 	}
 	// Establecer el conjunto de caracteres a UTF-8
-	$conexion->set_charset("utf8mb4");
+	$conexion->set_charset(charset: "utf8mb4");
 ?>
