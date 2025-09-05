@@ -6,8 +6,8 @@
           © <script>
             document.write(new Date().getFullYear())
           </script>,
-          creado por
-          <a href="#" class="font-weight-bold text-white" target="_blank">Endersonjoellg@ufps.edu.co</a>
+          adaptado por
+          <a href="#" class="font-weight-bold text-white" target="_blank">Jorgekevinhl@ufps.edu.co</a>
         </div>
       </div>
       <div class="col-12 col-md-6">
@@ -16,7 +16,7 @@
             <a href="https://ww2.ufps.edu.co/" class="nav-link text-white" target="_blank">UFPS</a>
           </li>
           <li class="nav-item">
-            <a href="http://biblioteca.ufps.edu.co/" class="nav-link text-white" target="_blank">BECL</a>
+            <a href="https://ingsistemas.cloud.ufps.edu.co/" class="nav-link text-white" target="_blank">Ingeniería de Sistemas</a>
           </li>
         </ul>
       </div>

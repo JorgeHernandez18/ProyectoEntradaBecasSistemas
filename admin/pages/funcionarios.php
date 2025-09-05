@@ -34,9 +34,9 @@ include "../controladores/filtro_funcionarios.php";
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
       <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="http://biblioteca.ufps.edu.co/" target="_blank">
+        <a class="navbar-brand m-0" href="https://ingsistemas.cloud.ufps.edu.co/" target="_blank">
           <img src="../../favicon.ico" class="navbar-brand-img h-200" alt="main_logo">
-          <span class="ms-1 font-weight-bold text-white">Biblioteca UFPS</span>
+          <span class="ms-1 font-weight-bold text-white">Becarios Sistemas</span>
         </a>
       </div>
       <hr class="horizontal light mt-0 mb-2">
@@ -148,6 +148,10 @@ include "../controladores/filtro_funcionarios.php";
                     <button class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#modalAgregarBecario">
                       <i class="material-icons">add</i> Nuevo Becario
                     </button>
+                    <!-- Botón para cargar Excel -->
+                    <button class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#modalCargarExcel">
+                      <i class="material-icons">upload_file</i> Cargar Excel
+                    </button>
                     <!-- Botón para cambiar el orden -->
                     <button id="ordenarBtn" class="btn btn-success">
                       <i class="material-icons">arrow_downward</i> Ordenar por Código
@@ -190,10 +194,15 @@ include "../controladores/filtro_funcionarios.php";
                                 <p class="mb-2 text-sm">
                                     Estado: <span class="badge bg-<?php echo $f['estado'] == 'activo' ? 'success' : 'secondary'; ?>"><?php echo ucfirst($f['estado']); ?></span>
                                 </p>
-                                <!-- Botón para editar becario -->
-                                <button class="btn btn-warning btn-sm w-100" onclick="editarBecario('<?php echo $f['codigo']; ?>')">
-                                    <i class="material-icons">edit</i> Editar
-                                </button>
+                                <!-- Botones para editar y eliminar becario -->
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-warning btn-sm flex-fill" onclick="editarBecario('<?php echo $f['codigo']; ?>')">
+                                        <i class="material-icons">edit</i> Editar
+                                    </button>
+                                    <button class="btn btn-danger btn-sm flex-fill" onclick="eliminarBecario('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
+                                        <i class="material-icons">delete</i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -414,6 +423,32 @@ include "../controladores/filtro_funcionarios.php";
         });
       }
     }
+
+    // Función para eliminar becario
+    function eliminarBecario(codigo, nombre) {
+      if (confirm(`¿Estás seguro de que deseas eliminar al becario ${nombre}?\n\nEsta acción eliminará:\n- La información del becario\n- Todos sus registros de entrada/salida\n- Su foto (si tiene)\n\nEsta acción NO se puede deshacer.`)) {
+        fetch('../controladores/eliminar_becario.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ codigo: codigo })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Becario eliminado exitosamente');
+            window.location.reload(); // Recargar página para actualizar la lista
+          } else {
+            alert('Error al eliminar el becario: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error al conectar con el servidor');
+        });
+      }
+    }
   </script>
 
   <!-- Modal para Agregar Nuevo Becario -->
@@ -561,6 +596,65 @@ include "../controladores/filtro_funcionarios.php";
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Cargar Excel -->
+  <div class="modal fade" id="modalCargarExcel" tabindex="-1" role="dialog" aria-labelledby="modalCargarExcelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCargarExcelLabel">Cargar Becarios desde Excel/CSV</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="../controladores/cargar_excel_becarios.php" method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Archivo Excel/CSV</label>
+              <input type="file" name="excel_file" class="form-control" accept=".csv,.xls,.xlsx" required>
+              <div class="form-text">
+                Formatos soportados: CSV, XLS, XLSX<br>
+                <strong>Orden de columnas esperado:</strong><br>
+                1. Código (obligatorio)<br>
+                2. Nombre Completo (obligatorio)<br>
+                3. Correo (obligatorio)<br>
+                4. Teléfono (opcional)<br>
+                5. Semestre (opcional)<br>
+                6. Horas Semanales (opcional, por defecto 20)<br>
+                7. Fecha de Inicio (opcional, por defecto hoy)
+              </div>
+            </div>
+            
+            <div class="alert alert-info">
+              <i class="material-icons">info</i>
+              <strong>Instrucciones:</strong>
+              <ul class="mb-0 mt-2">
+                <li>La primera fila debe contener encabezados</li>
+                <li>Los códigos duplicados serán ignorados</li>
+                <li>Se recomienda usar formato CSV para mejor compatibilidad</li>
+                <li>Máximo 500 becarios por archivo</li>
+              </ul>
+            </div>
+            
+            <div class="alert alert-warning">
+              <i class="material-icons">warning</i>
+              <strong>Nota:</strong> Para archivos Excel (.xls, .xlsx), por favor conviértalos a CSV primero.
+            </div>
+            
+            <div class="text-center">
+              <a href="../../ejemplo_becarios.csv" download="ejemplo_becarios.csv" class="btn btn-outline-primary btn-sm">
+                <i class="material-icons">download</i> Descargar Ejemplo CSV
+              </a>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="material-icons">upload</i> Cargar Becarios
+            </button>
           </div>
         </form>
       </div>
