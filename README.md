@@ -1,100 +1,164 @@
-# [Sistema de Ingreso Biblioteca Eduardo Cote Lamus (BECL)]([http://biblioteca.ufps.edu.co/) 
+# Sistema de Registro de Becarios - Ingeniería de Sistemas UFPS
 
-![versión](https://img.shields.io/badge/versión-1.0.0-blue.svg)
+![versión](https://img.shields.io/badge/versión-2.0.0-blue.svg)
 
 ## Descripción General
 
-El Sistema de Ingreso BECL es una solución integral para gestionar y realizar seguimiento de las entradas de estudiantes a la Biblioteca Eduardo Cote Lamus. Este sistema proporciona una forma eficiente de registrar las visitas de los estudiantes, generar estadísticas y monitorear los patrones de uso de la biblioteca.
+El Sistema de Registro de Becarios es una solución integral para gestionar y realizar seguimiento de las entradas y salidas de becarios del programa de Ingeniería de Sistemas de la UFPS. Este sistema proporciona una forma eficiente de registrar las horas trabajadas, gestionar la información de becarios y generar reportes estadísticos de seguimiento.
 
 ## Características Principales
 
 1. **Autenticación de Usuarios**
-   - Interfaz de inicio de sesión segura para registro de entrada y acceso administrativo
-   - Niveles de acceso diferenciados para personal y administradores
+   - Interfaz de inicio de sesión segura con dos niveles de acceso
+   - Usuario administrador: Acceso completo al panel administrativo
+   - Usuario becario: Acceso únicamente al formulario de registro de entrada/salida
 
-2. **Panel de Registro de Entrada**
-   - Visualización de reloj en tiempo real
-   - Contador de entradas del día actual
-   - Registro rápido de estudiantes mediante código estudiantil
-   - Visualización inmediata de la información del estudiante registrado
+2. **Panel de Registro de Entrada/Salida**
+   - Visualización de reloj en tiempo real con fecha actual
+   - Contador de registros del día actual
+   - Registro rápido mediante código de becario
+   - Sistema de entrada y salida automática con cálculo de horas trabajadas
+   - Visualización inmediata de la información del becario registrado
 
-3. **Visualización de Información del Estudiante**
-   - Muestra nombre completo, código, hora de entrada, facultad y programa del estudiante al registrarse
+3. **Gestión Completa de Becarios**
+   - **Crear becarios**: Formulario completo con foto, datos personales y académicos
+   - **Editar becarios**: Modificación de información incluyendo actualización de fotos
+   - **Eliminar becarios**: Eliminación segura con confirmación (incluye registros y fotos)
+   - **Carga masiva**: Importación de becarios desde archivos CSV/Excel
+   - **Gestión de fotos**: Subida, visualización y eliminación de fotos de perfil
 
 4. **Panel de Administración**
-   - Vista general completa de las estadísticas de uso de la biblioteca
-   - Representaciones visuales de datos a través de varios gráficos:
-     - Top 7 de programas más frecuentes que visitan la biblioteca
-     - Flujo de entrada mensual para el semestre actual
-     - Flujo de entrada semanal
-   - Visualización de métricas clave:
-     - Registros totales
-     - Registros diarios
-     - Registros del semestre
-     - Registros de personal
+   - Vista general con estadísticas de uso del sistema
+   - Representaciones visuales de datos a través de gráficos:
+     - Registros diarios, semanales y mensuales
+     - Estadísticas de horas trabajadas por período
+     - Análisis de patrones de entrada/salida
+   - Métricas en tiempo real:
+     - Total de becarios activos
+     - Registros del día/semana/mes
+     - Horas trabajadas por semestre
 
-5. **Registros Detallados de Entrada**
-   - Vista tabular de todos los registros de entrada
-   - Capacidades de filtrado por rango de fechas
-   - Funcionalidad de búsqueda para consultas rápidas
-   - Opción de exportar datos a Excel para análisis adicional
+5. **Sistema de Registros Detallados**
+   - Vista tabular paginada de todos los registros
+   - Filtrado avanzado por fechas y búsqueda
+   - Fotos de perfil integradas en los listados
+   - Exportación de datos a Excel
+   - Historial completo de entrada/salida con horas calculadas
 
-## Capturas de Pantalla
+## Funcionalidades Técnicas
 
-### 1. Pantalla de Inicio de Sesión
-![Login](https://github.com/user-attachments/assets/74a9dab1-4e7d-41f0-a37e-d95b775141b5)
-*Proporciona acceso al panel de registro de entrada y al panel de administración*
+### Gestión de Archivos
+- **Carga masiva CSV**: Formato estándar con validaciones de datos
+- **Gestión de fotos**: Subida, redimensionamiento y validación de imágenes (JPG, PNG, GIF)
+- **Exportación Excel**: Reportes completos con filtros personalizables
 
-### 2. Panel de Registro de Entrada
-![Panel de Ingreso](https://github.com/user-attachments/assets/07e6cc4b-ee2c-4dde-9fad-2da64a394fff)
-*Muestra la hora actual, el conteo de entradas y el formulario de registro*
+### Base de Datos
+- **Estructura optimizada**: Tablas relacionales para becarios, registros y administradores
+- **Integridad referencial**: Claves foráneas y validaciones de consistencia
+- **Cálculo automático**: Horas trabajadas basadas en timestamps de entrada/salida
 
-### 3. Ejemplo de Registro de Estudiante
-![Registro de Estudiante](https://github.com/user-attachments/assets/321d9ee4-e2ba-48b4-9a3c-a01f395f333f)
-*Visualización de la información del estudiante tras el registro exitoso*
+### Seguridad
+- **Autenticación segura**: Passwords hasheados con bcrypt
+- **Niveles de acceso**: Separación clara entre usuarios becarios y administradores
+- **Validación de archivos**: Tipo, tamaño y contenido de uploads
+- **Transacciones**: Operaciones de base de datos seguras con rollback
 
-### 4. Panel de Administración
-![Dashboard](https://github.com/user-attachments/assets/7f98c92d-b3e8-406d-99b1-2f7bd1a6f14f)
-*Ofrece una visión general de las tendencias de uso de la biblioteca*
+## Usuarios del Sistema
 
-### 5. Página de Registros de Entrada
-![Captura de pantalla 2024-10-01 154504](https://github.com/user-attachments/assets/86747b34-17bd-48b3-a8ff-a91f3702d104)
-*Lista todos los registros de entrada en formato de tabla paginada*
+### Usuario Administrador
+- **Credenciales**: `admin` / `password`
+- **Acceso completo**: Dashboard, gestión de becarios, reportes
+- **Funciones**: CRUD completo de becarios, análisis estadístico, exportación de datos
 
-### 6. Registro de Equipos en sala de Computo
-![image](https://github.com/user-attachments/assets/e208f255-1eb0-4535-ad1e-a6d671c4d80a)
-*formulario de registro y eliminacion de equipos disponibles en sala de Computo*
-
-### 7. Panel de Funcionarios de la BECL
-![image](https://github.com/user-attachments/assets/b0ae27b5-07b7-4398-ac1f-327e7ebe3538)
-*Lista de los funcionarios de la BECL*
-
-### 8. Perfil del personal administrativo de la BECL
-![image](https://github.com/user-attachments/assets/f4d5b01c-926b-42ee-b793-f71d4ac91b7c)
-*previsualiza datos del funcionario como su registro de entrada y salida a sus funciones laborales*
+### Usuario Becario
+- **Credenciales**: `becario` / `entrada123`
+- **Acceso limitado**: Solo formulario de registro entrada/salida
+- **Función**: Marcar entrada y salida para control de horas trabajadas
 
 
-## Instalación y Uso
+## Instalación y Configuración
 
-El Sistema de Ingreso BECL es una aplicación web. Para acceder y utilizar el sistema:
+### Requisitos del Sistema
+- **Servidor Web**: Apache o Nginx
+- **PHP**: Versión 7.4 o superior
+- **Base de Datos**: MySQL 5.7+ o MariaDB 10.2+
+- **Extensiones PHP**: mysqli, fileinfo, gd (para manejo de imágenes)
 
-1. Asegúrese de tener un navegador web moderno (Chrome, Firefox, Safari, Edge).
-2. Visite la URL del sistema: [http://biblioteca.ufps.edu.co/]([https://ufps.cloudbiteca.com/])
-3. Utilice sus credenciales proporcionadas para iniciar sesión.
-4. Para el registro de entrada de estudiantes, use el panel de ingreso.
-5. Para acceder a las estadísticas y registros detallados, use el panel de administración.
+### Pasos de Instalación
 
-Nota: Para la instalación en un servidor local o de desarrollo, asegúrese de tener configurado un servidor web compatible con PHP.
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/JorgeHernandez18/ProyectoEntradaBecasSistemas.git
+   cd ProyectoEntradaBecasSistemas
+   ```
+
+2. **Configurar base de datos**
+   - Crear base de datos MySQL: `becarios_sistemas`
+   - Importar estructura inicial (archivo SQL proporcionado por el administrador)
+   - Configurar conexión en `modelo/conexion.php`
+
+3. **Configurar permisos**
+   ```bash
+   chmod 755 admin/assets/fotos_becarios/
+   chmod 644 -R admin/assets/
+   ```
+
+4. **Acceder al sistema**
+   - Navegar a la URL del proyecto en tu servidor web
+   - Usar credenciales por defecto para primer acceso
+
+### Estructura del Proyecto
+```
+├── admin/                  # Panel administrativo
+├── controladores/         # Lógica de negocio
+├── modelo/               # Conexión y configuración de BD
+├── vistas/               # Interfaces de usuario
+└── README.md            # Documentación
+```
 
 ## Tecnologías Utilizadas
 
-El Sistema de Ingreso BECL ha sido desarrollado utilizando las siguientes tecnologías:
+### Backend
+- **PHP**: Lógica del servidor y procesamiento de datos
+- **MySQL/MySQLi**: Base de datos relacional y conectividad
+- **Sessions**: Manejo de autenticación y estado de usuario
 
-- PHP: Para la lógica del servidor y procesamiento de datos
-- HTML: Para la estructura de las páginas web
-- JavaScript: Para la interactividad en el lado del cliente
-- CSS: Para el diseño y estilo de la interfaz de usuario
-  
+### Frontend
+- **HTML5**: Estructura semántica de páginas web
+- **CSS3**: Diseño responsive y estilización avanzada
+- **JavaScript (ES6+)**: Interactividad del lado del cliente
+- **Bootstrap 5**: Framework CSS para interfaces responsivas
+- **Material Dashboard**: Template profesional para panel administrativo
+
+### Librerías y Herramientas
+- **Chart.js**: Gráficos interactivos para estadísticas
+- **Font Awesome**: Iconografía moderna
+- **Material Icons**: Iconos de Google Material Design
+- **DataTables**: Tablas dinámicas con paginación y filtros
+
+### Características Técnicas
+- **Responsive Design**: Adaptable a dispositivos móviles y desktop
+- **AJAX**: Comunicación asíncrona para mejor UX
+- **File Upload**: Manejo seguro de archivos e imágenes
+- **CSV Processing**: Importación masiva de datos
+- **Session Security**: Protección contra ataques comunes
+
+## Contribuciones y Desarrollo
+
+### Basado en
+Este proyecto es una adaptación del sistema BECL (Biblioteca Eduardo Cote Lamus) para el contexto específico de becarios de Ingeniería de Sistemas.
+
+### Desarrolladores
+- **Proyecto Original**: endersonjoellg@ufps.edu.co
+- **Adaptación Becarios**: Jorgekevinhl@ufps.edu.co
+
+### Repositorio
+- **URL**: [https://github.com/JorgeHernandez18/ProyectoEntradaBecasSistemas](https://github.com/JorgeHernandez18/ProyectoEntradaBecasSistemas)
+- **Licencia**: MIT License
+
 ## Contacto
 
-endersonjoellg@ufps.edu.co
+Para soporte técnico o consultas sobre el sistema:
+- **Email**: Jorgekevinhl@ufps.edu.co
+- **Programa**: Ingeniería de Sistemas UFPS
+- **Sitio Web**: [https://ingsistemas.cloud.ufps.edu.co/](https://ingsistemas.cloud.ufps.edu.co/)
