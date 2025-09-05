@@ -1,10 +1,10 @@
 <?php
     // Consulta para el total de registros
-    $consultaTotal = $conexion->query("SELECT COUNT(*) as total FROM becl_registro") or die($conexion->error);
+    $consultaTotal = $conexion->query("SELECT COUNT(*) as total FROM becarios_registro") or die($conexion->error);
     $totalRegistros = $consultaTotal->fetch_assoc()['total'];
 
     // Consulta para los registros del día
-    $consultaDia = $conexion->query("SELECT COUNT(*) as totalDia FROM becl_registro WHERE DATE(entrada) = CURDATE()") or die($conexion->error);
+    $consultaDia = $conexion->query("SELECT COUNT(*) as totalDia FROM becarios_registro WHERE DATE(entrada) = CURDATE()") or die($conexion->error);
     $registrosDia = $consultaDia->fetch_assoc()['totalDia'];
 
     // Determinar el semestre actual
@@ -22,21 +22,21 @@
     }
 
     // Consulta para contar los registros del semestre actual
-    $consultaSemestre = $conexion->query("SELECT COUNT(*) as totalSemestre FROM becl_registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'") or die($conexion->error);
+    $consultaSemestre = $conexion->query("SELECT COUNT(*) as totalSemestre FROM becarios_registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'") or die($conexion->error);
     $registrosSemestre = $consultaSemestre->fetch_assoc()['totalSemestre'];
 
-    // Consulta para contar los registros de los funcionarios del semestre actual
-    $consultaFuncionariosSemestre = $conexion->query("SELECT COUNT(*) as totalFuncionariosSemestre FROM becl_registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre' AND codigo REGEXP '^0[0-9]{4}$'") or die($conexion->error);
-    $registrosFuncionariosSemestre = $consultaFuncionariosSemestre->fetch_assoc()['totalFuncionariosSemestre'];
+    // Consulta para total de horas trabajadas en el semestre
+    $consultaHorasSemestre = $conexion->query("SELECT SUM(horas_trabajadas) as totalHoras FROM becarios_registro WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre' AND horas_trabajadas IS NOT NULL") or die($conexion->error);
+    $horasSemestre = $consultaHorasSemestre->fetch_assoc()['totalHoras'] ?? 0;
 
 
-///////---------------------CONSULTAS GRAFICA DE REGISTROS DE LAS 7 CARRERAS MAS FRECIENTES ----------------/////////
-// Consulta para obtener los 7 programas más frecuentes en el semestre actual
+///////---------------------CONSULTAS GRAFICA DE REGISTROS POR BECARIO MAS ACTIVO ----------------/////////
+// Consulta para obtener los 7 becarios más activos en el semestre actual
 $consultaProgramas = $conexion->query("
-    SELECT programa, COUNT(*) as total
-    FROM becl_registro
+    SELECT nombre, COUNT(*) as total
+    FROM becarios_registro
     WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'
-    GROUP BY programa
+    GROUP BY codigo, nombre
     ORDER BY total DESC
     LIMIT 7
 ") or die($conexion->error);
@@ -47,7 +47,7 @@ $totalesProgramas = 0; // Inicializa el acumulador de totales
 $totalPrograma = 0; // Inicializa el valor máximo de programa
 
 while ($row = $consultaProgramas->fetch_assoc()) {
-    $programas[] = $row['programa'];  // Guarda el programa
+    $programas[] = $row['nombre'];  // Guarda el nombre del becario
     $totales[] = $row['total'];  // Guarda el total de cada programa
     $totalesProgramas += $row['total'];  // Suma el total al acumulador
 
@@ -64,11 +64,11 @@ $totalesJSON = json_encode($totales);
 
 ///////---------------------CONSULTAS GRAFICA DE REGISTROS POR MES----------------/////////
 
-    // Consulta para contar los registros por mes en el semestre actual
+    // Consulta para sumar horas trabajadas por mes en el semestre actual
     $consultaMensual = $conexion->query("
-    SELECT MONTH(entrada) as mes, COUNT(*) as total
-    FROM becl_registro
-    WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre'
+    SELECT MONTH(entrada) as mes, SUM(horas_trabajadas) as total
+    FROM becarios_registro
+    WHERE entrada BETWEEN '$inicioSemestre' AND '$finSemestre' AND horas_trabajadas IS NOT NULL
     GROUP BY MONTH(entrada)
     ORDER BY MONTH(entrada)
     ") or die($conexion->error);
@@ -103,14 +103,14 @@ $totalesJSON = json_encode($totales);
     $inicioSemana = date('Y-m-d', strtotime('monday this week'));
     $hoy = date('Y-m-d');
 
-    // Consulta para obtener el conteo por día de la semana actual, incluyendo hoy
+    // Consulta para obtener las horas trabajadas por día de la semana actual, incluyendo hoy
     $consultaSemanal = $conexion->query("
         SELECT 
             DATE(entrada) as fecha,
             DAYOFWEEK(entrada) as dia_semana, 
-            COUNT(*) as total
-        FROM becl_registro
-        WHERE DATE(entrada) BETWEEN '$inicioSemana' AND '$hoy'
+            SUM(horas_trabajadas) as total
+        FROM becarios_registro
+        WHERE DATE(entrada) BETWEEN '$inicioSemana' AND '$hoy' AND horas_trabajadas IS NOT NULL
         GROUP BY DATE(entrada), DAYOFWEEK(entrada)
         ORDER BY fecha ASC
     ") or die($conexion->error);

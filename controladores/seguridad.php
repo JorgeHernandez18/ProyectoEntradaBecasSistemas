@@ -1,16 +1,13 @@
 <?php
-  //si no es administrados con permiso de entrada lo envia al index
-  if ($arregloUsuario['nivel']!='entrada') {
-    header("location: index.php"); 
+  // Si no es administrador o con permiso de entrada lo envía al index
+  if ($arregloUsuario['nivel'] != 'entrada' && $arregloUsuario['nivel'] != 'admin') {
+    header("location: ../../vistas/formularios/index.php");
+    exit();
   }
 
-  //si es un administrador lo envia al dashboard
-  if ($arregloUsuario['nivel']=='admin') {
-    header("location: ../../admin/pages/dashboard.php"); 
-  }
-
-  //si es un administrador lo envia al dashboard
-  if ($arregloUsuario['nombre']=='computobecl') {
-    header("location: registro_computo.php"); 
+  // Si es administrador y está intentando acceder al registro, redirigir al dashboard
+  if ($arregloUsuario['nivel'] == 'admin' && strpos($_SERVER['REQUEST_URI'], 'vistas/formularios/registro.php') !== false) {
+    header("location: ../../admin/pages/dashboard.php");
+    exit();
   }
 ?>

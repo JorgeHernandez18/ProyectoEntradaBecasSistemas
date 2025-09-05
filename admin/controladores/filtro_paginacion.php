@@ -1,7 +1,7 @@
 <?php
 include "../controladores/seguridad.php";
 // Inicializa la consulta base y el array de parámetros
-$baseQuery = "FROM becl_registro WHERE 1=1";
+$baseQuery = "FROM becarios_registro br LEFT JOIN becarios_info bi ON br.codigo = bi.codigo WHERE 1=1";
 $params = array();
 
 // Maneja el filtrado por fecha
@@ -21,13 +21,10 @@ if(isset($_GET['from_date']) && isset($_GET['to_date']) && !empty($_GET['from_da
 // Maneja la búsqueda por término
 $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
 if (!empty($busqueda)) {
-    $baseQuery .= " AND (nombre LIKE ? OR 
-                         codigo LIKE ? OR 
-                         programa LIKE ? OR 
-                         facultad LIKE ? OR 
-                         correo LIKE ? OR 
-                         sede LIKE ?)";
-    $params = array_merge($params, array_fill(0, 6, "%$busqueda%"));
+    $baseQuery .= " AND (br.nombre LIKE ? OR 
+                         br.codigo LIKE ? OR 
+                         br.correo LIKE ?)";
+    $params = array_merge($params, array_fill(0, 3, "%$busqueda%"));
 }
 
 // Número de registros por página
@@ -57,7 +54,7 @@ $paginaActual = max(1, min($paginaActual, $totalPaginas));
 $inicio = ($paginaActual - 1) * $registrosPorPagina;
 
 // Consulta para obtener los registros de la página actual
-$stmt = $conexion->prepare("SELECT * $baseQuery ORDER BY id DESC LIMIT ?, ?");
+$stmt = $conexion->prepare("SELECT br.*, bi.foto $baseQuery ORDER BY br.id DESC LIMIT ?, ?");
 if (!empty($params)) {
     $types = str_repeat('s', count($params)) . 'ii';
     $stmt->bind_param($types, ...[...$params, $inicio, $registrosPorPagina]);
@@ -71,11 +68,21 @@ $resultado = $stmt->get_result();
 if(isset($_GET['ajax'])) {
     $output = '';
     while($f = mysqli_fetch_array($resultado)){
+        // Determinar la URL de la foto
+        if (!empty($f['foto']) && file_exists('../assets/fotos_becarios/' . $f['foto'])) {
+            $fotoUrl = '../assets/fotos_becarios/' . $f['foto'];
+        } else {
+            $fotoUrl = '../assets/img/user.jpg';
+        }
+        
+        $salidaFormateada = $f['salida'] ? date('Y-m-d H:i', strtotime($f['salida'])) : 'En curso';
+        $horasFormateadas = $f['horas_trabajadas'] ? number_format($f['horas_trabajadas'], 2) . ' hrs' : '-';
+        
         $output .= "<tr>
             <td>
                 <div class='d-flex px-2 py-1'>
                     <div>
-                        <img src='../assets/img/user.jpg' class='avatar avatar-sm me-3 border-radius-lg' alt='user1'>
+                        <img src='$fotoUrl' class='avatar avatar-sm me-3 border-radius-lg' alt='user1'>
                     </div>
                     <div class='d-flex flex-column justify-content-center'>
                         <h6 class='mb-0 text-sm'>{$f['nombre']}</h6>
@@ -87,16 +94,13 @@ if(isset($_GET['ajax'])) {
                 <p class='text-xs font-weight-bold mb-0'>{$f['codigo']}</p>
             </td>
             <td>
-                <p class='text-xs font-weight-bold mb-0'>{$f['programa']}</p>
+                <p class='text-xs font-weight-bold mb-0'>" . date('Y-m-d H:i', strtotime($f['entrada'])) . "</p>
             </td>
             <td>
-                <p class='text-xs font-weight-bold mb-0'>{$f['facultad']}</p>
+                <p class='text-xs font-weight-bold mb-0'>$salidaFormateada</p>
             </td>
             <td>
-                <p class='text-xs font-weight-bold mb-0'>{$f['entrada']}</p>
-            </td>
-            <td>
-                <p class='text-xs font-weight-bold mb-0'>{$f['salida']}</p>
+                <p class='text-xs font-weight-bold mb-0'>$horasFormateadas</p>
             </td>
         </tr>";
     }

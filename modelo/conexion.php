@@ -1,6 +1,6 @@
 <?php
-	$servidor="localhost";
-	$nombreBd="ingreso";
+	$servidor="127.0.0.1";
+	$nombreBd="becarios_sistemas";
 	$usuario="root";
 	$pass="";
 	$conexion = new mysqli($servidor,$usuario,$pass,$nombreBd);

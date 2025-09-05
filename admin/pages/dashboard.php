@@ -13,7 +13,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../../favicon.ico">
   <link rel="icon" type="image/ico" href="../../favicon.ico">
   <title>
-    ADMIN ENTRADA BIBLIOTECA UFPS
+    ADMIN SISTEMA BECARIOS - INGENIERÍA DE SISTEMAS UFPS
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
@@ -86,8 +86,8 @@
                 <i class="material-icons opacity-10">person</i>
               </div>
               <div class="text-end pt-1">
-                <p class="text-lg mb-0 text-capitalize">Registros de funcionarios</p>
-                <h4 class="mb-0"><?php echo number_format($registrosFuncionariosSemestre); ?></h4>
+                <p class="text-lg mb-0 text-capitalize">Horas trabajadas</p>
+                <h4 class="mb-0"><?php echo number_format($horasSemestre ?? 0, 1); ?> hrs</h4>
               </div>
             </div>
             <div class="card-footer p-3"></div>
@@ -105,16 +105,16 @@
               </div>
             </div>
             <div class="card-body">
-              <h6 class="mb-0">Programas más Frecuentes</h6>
+              <h6 class="mb-0">Becarios Más Activos</h6>
               <p class="text-sm">Estadísticas del semestre actual</p>
               <hr class="dark horizontal">
               <div class="d-flex">
                 <i class="material-icons text-sm my-auto me-1">group</i>
-                <p class="mb-0 text-sm">Total de visitas: <span id="totalVisitas"></span></p>
+                <p class="mb-0 text-sm">Total de registros: <span id="totalVisitas"></span></p>
               </div>
               <div class="d-flex mt-2">
-                <i class="material-icons text-sm my-auto me-1">school</i>
-                <p class="mb-0 text-sm">Programa más frecuente: <span id="programaMasFrecuente"></span></p>
+                <i class="material-icons text-sm my-auto me-1">person</i>
+                <p class="mb-0 text-sm">Becario más activo: <span id="programaMasFrecuente"></span></p>
               </div>
               <div class="d-flex mt-2">
                 <i class="material-icons text-sm my-auto me-1">date_range</i>
@@ -133,16 +133,16 @@
               </div>
             </div>
             <div class="card-body">
-              <h6 class="mb-0">Flujo de Entrada Mensual</h6>
+              <h6 class="mb-0">Horas Trabajadas Mensuales</h6>
               <p class="text-sm">Estadísticas del semestre actual</p>
               <hr class="dark horizontal">
               <div class="d-flex">
-                <i class="material-icons text-sm my-auto me-1">trending_up</i>
-                <p class="mb-0 text-sm">Total de visitas del semestre: <span id="totalVisitasSemestre"></span></p>
+                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                <p class="mb-0 text-sm">Total horas del semestre: <span id="totalVisitasSemestre"></span> hrs</p>
               </div>
               <div class="d-flex mt-2">
                 <i class="material-icons text-sm my-auto me-1">calendar_today</i>
-                <p class="mb-0 text-sm">Mes con más visitas: <span id="mesMasFrecuente"></span></p>
+                <p class="mb-0 text-sm">Mes con más horas: <span id="mesMasFrecuente"></span></p>
               </div>
               <div class="d-flex mt-2">
                 <i class="material-icons text-sm my-auto me-1">date_range</i>
@@ -161,16 +161,16 @@
               </div>
             </div>
             <div class="card-body">
-              <h6 class="mb-0">Flujo de Entrada Semanal</h6>
+              <h6 class="mb-0">Horas Trabajadas Semanales</h6>
               <p class="text-sm">Estadísticas de la semana actual</p>
               <hr class="dark horizontal">
               <div class="d-flex">
-                <i class="material-icons text-sm my-auto me-1">trending_up</i>
-                <p class="mb-0 text-sm">Total de visitas de la semana: <span id="totalVisitasSemana"></span></p>
+                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                <p class="mb-0 text-sm">Total horas de la semana: <span id="totalVisitasSemana"></span> hrs</p>
               </div>
               <div class="d-flex mt-2">
                 <i class="material-icons text-sm my-auto me-1">calendar_today</i>
-                <p class="mb-0 text-sm">Día con más visitas: <span id="diaMasFrecuente"></span></p>
+                <p class="mb-0 text-sm">Día con más horas: <span id="diaMasFrecuente"></span></p>
               </div>
               <div class="d-flex mt-2">
                 <i class="material-icons text-sm my-auto me-1">date_range</i>

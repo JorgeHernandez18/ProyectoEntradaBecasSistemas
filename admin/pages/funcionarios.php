@@ -12,7 +12,7 @@ include "../controladores/filtro_funcionarios.php";
   <link rel="apple-touch-icon" sizes="76x76" href="../../favicon.ico">
   <link rel="icon" type="image/ico" href="../../favicon.ico">
   <title>
-    BECL - UFPS
+    GESTIÓN DE BECARIOS - INGENIERÍA DE SISTEMAS UFPS
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
@@ -55,23 +55,15 @@ include "../controladores/filtro_funcionarios.php";
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">table_view</i>
               </div>
-              <span class="nav-link-text ms-1">Registro Entrada</span>
+              <span class="nav-link-text ms-1">Registros de Becarios</span>
             </a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link text-white" href="../pages/registros_computo.php">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">computer</i>
-            </div>
-            <span class="nav-link-text ms-1">Registro Computo</span>
-          </a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-white active bg-gradient-primary" href="../pages/funcionarios.php">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">face</i>
+                <i class="material-icons opacity-10">school</i>
               </div>
-              <span class="nav-link-text ms-1">Funcionarios BECL</span>
+              <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
           <li class="nav-item mt-3">
@@ -95,9 +87,9 @@ include "../controladores/filtro_funcionarios.php";
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Funcionarios BECL</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Gestión de Becarios</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Registro</h6>
+          <h6 class="font-weight-bolder mb-0">Gestión de Becarios</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-end w-100">
@@ -126,17 +118,41 @@ include "../controladores/filtro_funcionarios.php";
     <!-- End Navbar -->
      
     <div class="container-fluid py-4">
+      
+      <!-- Mensajes de éxito o error -->
+      <?php if (isset($_SESSION['mensaje'])): ?>
+        <div class="row">
+          <div class="col-12">
+            <div class="alert alert-<?php echo $_SESSION['tipo_mensaje'] == 'success' ? 'success' : 'danger'; ?> alert-dismissible fade show" role="alert">
+              <?php echo $_SESSION['mensaje']; ?>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
+        <?php 
+          unset($_SESSION['mensaje']);
+          unset($_SESSION['tipo_mensaje']); 
+        ?>
+      <?php endif; ?>
+      
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
                 <div class="d-flex justify-content-between align-items-center px-3">
-                  <h6 class="text-white text-capitalize mb-0">FUNCIONARIOS BECL</h6><h6 class="text-white text-capitalize mb-0">TOTAL REGISTROS: <span id="totalRegistros" class="text-white"><?php echo $_SESSION['totalRegistros']; ?></span></h6>
-                  <!-- Botón para cambiar el orden -->
-                  <button id="ordenarBtn" class="btn btn-success me-2">
-                    <i class="material-icons">arrow_downward</i> Ordenar por Código
-                  </button>
+                  <h6 class="text-white text-capitalize mb-0">GESTIÓN DE BECARIOS</h6>
+                  <div class="d-flex align-items-center">
+                    <h6 class="text-white text-capitalize mb-0 me-3">TOTAL: <span id="totalRegistros" class="text-white"><?php echo $_SESSION['totalRegistros']; ?></span></h6>
+                    <!-- Botón para agregar nuevo becario -->
+                    <button class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#modalAgregarBecario">
+                      <i class="material-icons">add</i> Nuevo Becario
+                    </button>
+                    <!-- Botón para cambiar el orden -->
+                    <button id="ordenarBtn" class="btn btn-success">
+                      <i class="material-icons">arrow_downward</i> Ordenar por Código
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -144,61 +160,40 @@ include "../controladores/filtro_funcionarios.php";
             <div class="row">
                 <?php  
                 while ($f = mysqli_fetch_array($resultado)) {
-                    // Obtener la foto del funcionario desde la tabla becl_funcionario
-                    $codigoFuncionario = $f['cardnumber']; // Código del funcionario
-
-                    // Primero, buscar la foto del funcionario actual
-                    $queryFoto = "SELECT foto FROM becl_funcionario WHERE codigo = ?";
-                    $stmtFoto = $conexion->prepare($queryFoto);
-                    $stmtFoto->bind_param("s", $codigoFuncionario);
-                    $stmtFoto->execute();
-                    $resultadoFoto = $stmtFoto->get_result();
-
-                    // Verificar si el código existe en la base de datos
-                    if ($resultadoFoto->num_rows > 0) {
-                        // Si existe, obtener la foto
-                        $fotoFuncionario = $resultadoFoto->fetch_assoc();
-                        $urlFoto = $fotoFuncionario['foto']; // Usar la foto del funcionario
+                    // Obtener la foto del becario o usar imagen por defecto
+                    if (!empty($f['foto']) && file_exists('../assets/fotos_becarios/' . $f['foto'])) {
+                        $urlFoto = '../assets/fotos_becarios/' . $f['foto'];
                     } else {
-                        // Si no existe, buscar la foto predeterminada con código 11111
-                        $queryFotoPredeterminada = "SELECT foto FROM becl_funcionario WHERE codigo = '11111'";
-                        $stmtFotoPredeterminada = $conexion->prepare($queryFotoPredeterminada);
-                        $stmtFotoPredeterminada->execute();
-                        $resultadoFotoPredeterminada = $stmtFotoPredeterminada->get_result();
-
-                        if ($resultadoFotoPredeterminada->num_rows > 0) {
-                            // Si existe la foto predeterminada, obtenerla
-                            $fotoPredeterminada = $resultadoFotoPredeterminada->fetch_assoc();
-                            $urlFoto = $fotoPredeterminada['foto']; // Usar la foto predeterminada
-                        } else {
-                            // Si no existe la foto predeterminada, usar una imagen por defecto
-                            $urlFoto = "https://img.freepik.com/vector-gratis/gradiente-azul-usuario_78370-4692.jpg?semt=ais_hybrid";
-                        }
+                        $urlFoto = "https://img.freepik.com/vector-gratis/gradiente-azul-usuario_78370-4692.jpg?semt=ais_hybrid";
                     }
                 ?>
                     <div class="col-xl-2 col-md-2 mb-xl-2 mb-2">
                         <div class="card card-blog card-plain">
                             <div class="card-header p-0 m-2">
                                 <!-- Enlace alrededor de la foto -->
-                                <a href="profile.php?cardnumber=<?php echo $f['cardnumber']; ?>" class="d-block shadow-xl border-radius-xl">
+                                <a href="profile.php?codigo=<?php echo $f['codigo']; ?>" class="d-block shadow-xl border-radius-xl">
                                     <!-- Foto con efecto hover -->
                                     <img src="<?php echo $urlFoto; ?>" 
-                                        alt="Foto de <?php echo $f['firstname'] . ' ' . $f['surname']; ?>" 
+                                        alt="Foto de <?php echo $f['nombre_completo']; ?>" 
                                         style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; transition: transform 0.3s ease;">
                                 </a>
                             </div>
                             <div class="card-body p-3">
-                                <p class="mb-0 text-sm">Funcionario BECL</p>
+                                <p class="mb-0 text-sm">Becario - Ingeniería de Sistemas</p>
                                 <!-- Enlace alrededor del nombre -->
-                                <a href="profile.php?cardnumber=<?php echo $f['cardnumber']; ?>" style="text-decoration: none; color: inherit;">
-                                    <h5>
-                                      <?php echo ucwords(strtolower($f['firstname'])); ?>
-                                      <?php echo ucwords(strtolower($f['surname'])); ?>
-                                    </h5>
+                                <a href="profile.php?codigo=<?php echo $f['codigo']; ?>" style="text-decoration: none; color: inherit;">
+                                    <h5><?php echo ucwords(strtolower($f['nombre_completo'])); ?></h5>
                                 </a>
-                                <p class="mb-4 text-sm">
-                                    Codigo: <?php echo $f['cardnumber']; ?>
+                                <p class="mb-2 text-sm">
+                                    Código: <?php echo $f['codigo']; ?>
                                 </p>
+                                <p class="mb-2 text-sm">
+                                    Estado: <span class="badge bg-<?php echo $f['estado'] == 'activo' ? 'success' : 'secondary'; ?>"><?php echo ucfirst($f['estado']); ?></span>
+                                </p>
+                                <!-- Botón para editar becario -->
+                                <button class="btn btn-warning btn-sm w-100" onclick="editarBecario('<?php echo $f['codigo']; ?>')">
+                                    <i class="material-icons">edit</i> Editar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -331,6 +326,246 @@ include "../controladores/filtro_funcionarios.php";
         ordenarBtn.innerHTML = '<i class="material-icons">arrow_downward</i> Ordenar por Código';
       }
     });
+
+    // Función para editar becario
+    function editarBecario(codigo) {
+      // Cargar datos del becario
+      fetch(`../controladores/obtener_becario.php?codigo=${codigo}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById('editCodigo').value = data.becario.codigo;
+            document.getElementById('editCodigoDisplay').value = data.becario.codigo;
+            document.getElementById('editNombre').value = data.becario.nombre_completo;
+            document.getElementById('editCorreo').value = data.becario.correo;
+            document.getElementById('editTelefono').value = data.becario.telefono || '';
+            document.getElementById('editSemestre').value = data.becario.semestre || '';
+            document.getElementById('editHorasSemanales').value = data.becario.horas_semanales || 20;
+            document.getElementById('editFechaInicio').value = data.becario.fecha_inicio;
+            document.getElementById('editEstado').value = data.becario.estado;
+            
+            // Manejar foto actual
+            var fotoActual = document.getElementById('fotoActual');
+            var eliminarBtn = document.getElementById('eliminarFoto');
+            
+            if (data.becario.foto && data.becario.foto !== '') {
+              fotoActual.src = '../assets/fotos_becarios/' + data.becario.foto;
+              fotoActual.style.display = 'block';
+              eliminarBtn.style.display = 'inline-block';
+            } else {
+              fotoActual.style.display = 'none';
+              eliminarBtn.style.display = 'none';
+            }
+            
+            // Mostrar modal
+            var modal = new bootstrap.Modal(document.getElementById('modalEditarBecario'));
+            modal.show();
+          } else {
+            alert('Error al cargar datos del becario');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error al conectar con el servidor');
+        });
+    }
+
+    // Función para vista previa de imagen
+    function previewImage(input, previewId) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+          var preview = document.getElementById(previewId);
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // Función para eliminar foto actual
+    function eliminarFotoActual() {
+      if (confirm('¿Estás seguro de que deseas eliminar la foto actual?')) {
+        var codigo = document.getElementById('editCodigo').value;
+        
+        fetch('../controladores/eliminar_foto.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ codigo: codigo })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Ocultar foto actual y botón eliminar
+            document.getElementById('fotoActual').style.display = 'none';
+            document.getElementById('eliminarFoto').style.display = 'none';
+            alert('Foto eliminada exitosamente');
+          } else {
+            alert('Error al eliminar la foto: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error al conectar con el servidor');
+        });
+      }
+    }
   </script>
+
+  <!-- Modal para Agregar Nuevo Becario -->
+  <div class="modal fade" id="modalAgregarBecario" tabindex="-1" role="dialog" aria-labelledby="modalAgregarBecarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregarBecarioLabel">Agregar Nuevo Becario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="../controladores/agregar_becario.php" method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Código</label>
+                  <input type="text" name="codigo" class="form-control" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Semestre</label>
+                  <input type="number" name="semestre" class="form-control" min="1" max="10">
+                </div>
+              </div>
+            </div>
+            <div class="input-group input-group-outline mb-3">
+              <label class="form-label">Nombre Completo</label>
+              <input type="text" name="nombre_completo" class="form-control" required>
+            </div>
+            <div class="input-group input-group-outline mb-3">
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" name="correo" class="form-control" required>
+            </div>
+            <div class="input-group input-group-outline mb-3">
+              <label class="form-label">Teléfono</label>
+              <input type="tel" name="telefono" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Foto del Becario</label>
+              <input type="file" name="foto" class="form-control" accept="image/*" onchange="previewImage(this, 'previewAgregar')">
+              <small class="form-text text-muted">Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB.</small>
+              <div class="mt-2">
+                <img id="previewAgregar" src="#" alt="Vista previa" style="max-width: 150px; max-height: 150px; display: none; border-radius: 8px;">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Horas Semanales</label>
+                  <input type="number" name="horas_semanales" class="form-control" value="20" min="1" max="40">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group input-group-outline mb-3">
+                  <label class="form-label">Fecha de Inicio</label>
+                  <input type="date" name="fecha_inicio" class="form-control" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Agregar Becario</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Editar Becario -->
+  <div class="modal fade" id="modalEditarBecario" tabindex="-1" role="dialog" aria-labelledby="modalEditarBecarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalEditarBecarioLabel">Editar Becario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="../controladores/editar_becario.php" method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+            <input type="hidden" id="editCodigo" name="codigo">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group input-group-outline mb-3 is-filled">
+                  <label class="form-label">Código</label>
+                  <input type="text" id="editCodigoDisplay" class="form-control" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group input-group-outline mb-3 is-filled">
+                  <label class="form-label">Semestre</label>
+                  <input type="number" id="editSemestre" name="semestre" class="form-control" min="1" max="10">
+                </div>
+              </div>
+            </div>
+            <div class="input-group input-group-outline mb-3 is-filled">
+              <label class="form-label">Nombre Completo</label>
+              <input type="text" id="editNombre" name="nombre_completo" class="form-control" required>
+            </div>
+            <div class="input-group input-group-outline mb-3 is-filled">
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" id="editCorreo" name="correo" class="form-control" required>
+            </div>
+            <div class="input-group input-group-outline mb-3 is-filled">
+              <label class="form-label">Teléfono</label>
+              <input type="tel" id="editTelefono" name="telefono" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Foto del Becario</label>
+              <input type="file" name="foto" class="form-control" accept="image/*" onchange="previewImage(this, 'previewEditar')">
+              <small class="form-text text-muted">Dejar vacío para mantener la foto actual. Formatos: JPG, PNG, GIF. Max: 2MB.</small>
+              <div class="mt-2">
+                <img id="previewEditar" src="#" alt="Vista previa" style="max-width: 150px; max-height: 150px; display: none; border-radius: 8px;">
+                <img id="fotoActual" src="#" alt="Foto actual" style="max-width: 150px; max-height: 150px; border-radius: 8px; margin-right: 10px;">
+                <button type="button" id="eliminarFoto" class="btn btn-danger btn-sm" style="display: none;" onclick="eliminarFotoActual()">
+                  <i class="material-icons">delete</i> Eliminar Foto
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="input-group input-group-outline mb-3 is-filled">
+                  <label class="form-label">Horas Semanales</label>
+                  <input type="number" id="editHorasSemanales" name="horas_semanales" class="form-control" min="1" max="40">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="input-group input-group-outline mb-3 is-filled">
+                  <label class="form-label">Fecha de Inicio</label>
+                  <input type="date" id="editFechaInicio" name="fecha_inicio" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="input-group input-group-outline mb-3 is-filled">
+                  <label class="form-label">Estado</label>
+                  <select id="editEstado" name="estado" class="form-control">
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="finalizado">Finalizado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

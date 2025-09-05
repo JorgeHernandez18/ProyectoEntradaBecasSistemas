@@ -33,12 +33,7 @@ try {
     }
     $arregloUsuario = $_SESSION['datos_login'];
 
-    // Determinar la sede
-    if ($arregloUsuario['nombre'] == 'entradabecl') {
-        $sede = 'becl';
-    } else {
-        $sede = 'bcs';
-    }
+    // Sistema de becarios - no necesita sede
 
     // Verificar el método de la solicitud
     if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -52,13 +47,10 @@ try {
         handleError("Datos de formulario incompletos");
     }
 
-    // Consulta para verificar el código
-    $query = "SELECT vista_borrowers.cardnumber, vista_borrowers.surname, vista_borrowers.firstname, vista_borrowers.email, 
-              S.lib AS carrera, vista_authorised_values.lib AS departamento 
-              FROM vista_borrowers 
-              LEFT JOIN vista_authorised_values S ON vista_borrowers.sort2 = S.authorised_value 
-              LEFT JOIN vista_authorised_values ON vista_borrowers.sort1 = vista_authorised_values.authorised_value 
-              WHERE vista_borrowers.cardnumber = ?";
+    // Consulta para verificar el código del becario
+    $query = "SELECT codigo, nombre_completo, correo, semestre, horas_semanales 
+              FROM becarios_info 
+              WHERE codigo = ? AND estado = 'activo'";
 
     $stmt = $conexion->prepare($query);
     if (!$stmt) {
@@ -71,7 +63,7 @@ try {
     $resultado = $stmt->get_result();
 
     // Consulta para obtener el número de registros del día
-    $consultaDia = "SELECT COUNT(*) as totalDia FROM becl_registro WHERE DATE(entrada) = CURDATE()";
+    $consultaDia = "SELECT COUNT(*) as totalDia FROM becarios_registro WHERE DATE(entrada) = CURDATE()";
     $stmtDia = $conexion->prepare($consultaDia);
     if (!$stmtDia) {
         handleError("Error en la preparación de la consulta de registros del día: " . $conexion->error);
@@ -83,16 +75,16 @@ try {
     $registrosDia = $resultadoDia->fetch_assoc()['totalDia'];
 
     if ($resultado->num_rows > 0) {
-        $estudiante = $resultado->fetch_assoc();
-        $nombre = $estudiante['firstname'] . ' ' . $estudiante['surname'];
-        $correo = $estudiante['email'];
-        $programa = $estudiante['carrera'];
-        $facultad = $estudiante['departamento'];
+        $becario = $resultado->fetch_assoc();
+        $nombre = $becario['nombre_completo'];
+        $correo = $becario['correo'];
+        $semestre = $becario['semestre'];
+        $horasSemanales = $becario['horas_semanales'];
         $fechaHoraActual = date('Y-m-d H:i:s');
 
         if ($tipoRegistro == 'salida') {
             // Lógica para registro de salida
-            $queryUltimoRegistro = "SELECT * FROM becl_registro WHERE codigo = ? ORDER BY id DESC LIMIT 1";
+            $queryUltimoRegistro = "SELECT * FROM becarios_registro WHERE codigo = ? AND salida IS NULL ORDER BY id DESC LIMIT 1";
             $stmt = $conexion->prepare($queryUltimoRegistro);
             if (!$stmt) {
                 handleError("Error en la preparación de la consulta de último registro: " . $conexion->error);
@@ -106,13 +98,21 @@ try {
             if ($resultadoUltimoRegistro->num_rows > 0) {
                 $registro = $resultadoUltimoRegistro->fetch_assoc();
                 $idRegistro = $registro['id'];
+                $entrada = $registro['entrada'];
                 
-                $queryActualizarSalida = "UPDATE becl_registro SET salida = ? WHERE id = ?";
+                // Calcular horas trabajadas
+                $entradaTime = new DateTime($entrada);
+                $salidaTime = new DateTime($fechaHoraActual);
+                $diferencia = $entradaTime->diff($salidaTime);
+                $horasTrabajadas = $diferencia->h + ($diferencia->i / 60);
+                $horasTrabajadas = round($horasTrabajadas, 2);
+                
+                $queryActualizarSalida = "UPDATE becarios_registro SET salida = ?, horas_trabajadas = ? WHERE id = ?";
                 $stmtActualizar = $conexion->prepare($queryActualizarSalida);
                 if (!$stmtActualizar) {
                     handleError("Error en la preparación de la actualización de salida: " . $conexion->error);
                 }
-                $stmtActualizar->bind_param("si", $fechaHoraActual, $idRegistro);
+                $stmtActualizar->bind_param("sdi", $fechaHoraActual, $horasTrabajadas, $idRegistro);
                 if (!$stmtActualizar->execute()) {
                     handleError("Error al ejecutar la actualización de salida: " . $stmtActualizar->error);
                 }
@@ -123,22 +123,22 @@ try {
                     'codigo' => $codigo,
                     'hora' => $fechaHoraActual,
                     'tipo' => 'salida',
-                    'programa' => $programa,
-                    'facultad' => $facultad,
+                    'semestre' => $semestre,
+                    'horas_trabajadas' => $horasTrabajadas,
                     'registroDia' => $registrosDia,
-                    'mensaje' => 'Salida registrada exitosamente',
+                    'mensaje' => 'Salida registrada exitosamente - ' . $horasTrabajadas . ' horas trabajadas',
                 ]);
             } else {
                 handleError('No se encontró una entrada sin salida para este estudiante');
             }
         } else {
             // Lógica para registro de entrada
-            $queryInsertar = "INSERT INTO becl_registro (nombre, correo, codigo, programa, facultad, entrada, sede) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $queryInsertar = "INSERT INTO becarios_registro (nombre, correo, codigo, entrada) VALUES (?, ?, ?, ?)";
             $stmtInsertar = $conexion->prepare($queryInsertar);
             if (!$stmtInsertar) {
                 handleError("Error en la preparación de la inserción de entrada: " . $conexion->error);
             }
-            $stmtInsertar->bind_param("sssssss", $nombre, $correo, $codigo, $programa, $facultad, $fechaHoraActual, $sede);
+            $stmtInsertar->bind_param("ssss", $nombre, $correo, $codigo, $fechaHoraActual);
             if (!$stmtInsertar->execute()) {
                 handleError("Error al ejecutar la inserción de entrada: " . $stmtInsertar->error);
             }
@@ -150,15 +150,14 @@ try {
                 'hora' => $fechaHoraActual,
                 'tipo' => 'entrada',
                 'correo' => $correo,
-                'programa' => $programa,
-                'facultad' => $facultad,
-                'sede' => $sede,
+                'semestre' => $semestre,
+                'horas_semanales' => $horasSemanales,
                 'registroDia' => $registrosDia,
                 'mensaje' => 'Entrada registrada exitosamente'
             ]);
         }
     } else {
-        handleError('El código ingresado no existe en la base de datos');
+        handleError('El código de becario ingresado no existe o está inactivo');
     }
 } catch (Exception $e) {
     handleError("Error inesperado: " . $e->getMessage());

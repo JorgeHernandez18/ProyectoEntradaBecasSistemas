@@ -15,7 +15,7 @@
       data: {
         labels: <?php echo $programasJSON; ?>,
         datasets: [{
-          label: "Visitas por Programa",
+          label: "Registros por Becario",
           tension: 0.4,
           borderWidth: 0,
           borderRadius: 4,
@@ -34,7 +34,7 @@
           },
           title: {
             display: true,
-            text: 'Top 7 Programas más Frecuentes en la Biblioteca',
+            text: 'Becarios con más registros en el semestre',
             color: '#fff',
             font: {
               size: 16,
@@ -103,7 +103,7 @@
       data: {
         labels: meses,
         datasets: [{
-          label: "Registros mensuales",
+          label: "Horas mensuales",
           tension: 0,
           borderWidth: 0,
           pointRadius: 5,
@@ -186,7 +186,7 @@
       data: {
         labels: <?php echo $diasSemanaJSON; ?>,
         datasets: [{
-          label: "Entradas de la semana actual",
+          label: "Horas de la semana actual",
           tension: 0.4,
           borderWidth: 0,
           borderRadius: 4,
@@ -269,9 +269,19 @@
     
     // Función para actualizar la información adicional
     function actualizarInformacion() {
-      var totalVisitas = parseInt(totales[0])+parseInt(totales[1])+parseInt(totales[2])+parseInt(totales[3])+parseInt(totales[4])+parseInt(totales[5]);
-      var indexMaxVisitas = totales.indexOf(Math.max(...totales));
-      var programaMasFrecuente = programas[0];
+      // Calcular total de registros de forma segura
+      var totalVisitas = 0;
+      if (totales && totales.length > 0) {
+        totalVisitas = totales.reduce(function(sum, valor) {
+          return sum + (parseInt(valor) || 0);
+        }, 0);
+      }
+      
+      // Encontrar el becario más activo
+      var programaMasFrecuente = 'Sin datos';
+      if (programas && programas.length > 0) {
+        programaMasFrecuente = programas[0];
+      }
       
       document.getElementById('totalVisitas').textContent = totalVisitas;
       document.getElementById('programaMasFrecuente').textContent = programaMasFrecuente;
@@ -298,7 +308,7 @@
       var maxVisitas = Math.max(...totalesSemana);
       var indexMaxVisitas = totalesSemana.indexOf(maxVisitas);
       var diaMasFrecuente = diasSemana[indexMaxVisitas];
-      document.getElementById('diaMasFrecuente').textContent = diaMasFrecuente + ' (' + maxVisitas + ' visitas)';
+      document.getElementById('diaMasFrecuente').textContent = diaMasFrecuente + ' (' + maxVisitas + ' hrs)';
 
       // Establecer el período de la semana
       var inicioSemana = '<?php echo $inicioSemana; ?>';

@@ -13,7 +13,7 @@ include "../controladores/filtro_paginacion.php";
   <link rel="apple-touch-icon" sizes="76x76" href="../../favicon.ico">
   <link rel="icon" type="image/ico" href="../../favicon.ico">
   <title>
-    BECL - UFPS
+    Registros de Becarios - Ingeniería de Sistemas UFPS
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
@@ -56,23 +56,15 @@ include "../controladores/filtro_paginacion.php";
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">table_view</i>
               </div>
-              <span class="nav-link-text ms-1">Registro Entrada</span>
+              <span class="nav-link-text ms-1">Registros de Becarios</span>
             </a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link text-white" href="../pages/registros_computo.php">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">computer</i>
-            </div>
-            <span class="nav-link-text ms-1">Registro Computo</span>
-          </a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-white" href="../pages/funcionarios.php">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">face</i>
+                <i class="material-icons opacity-10">school</i>
               </div>
-              <span class="nav-link-text ms-1">Funcionarios BECL</span>
+              <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
           <li class="nav-item mt-3">
@@ -147,10 +139,9 @@ include "../controladores/filtro_paginacion.php";
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Código</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Programa Académico</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Facultad</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Entrada</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Salida</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Horas Trabajadas</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -161,7 +152,15 @@ include "../controladores/filtro_paginacion.php";
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div>
-                            <img src="../assets/img/user.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
+                            <?php
+                            // Determinar la URL de la foto
+                            if (!empty($f['foto']) && file_exists('../assets/fotos_becarios/' . $f['foto'])) {
+                                $fotoUrl = '../assets/fotos_becarios/' . $f['foto'];
+                            } else {
+                                $fotoUrl = '../assets/img/user.jpg';
+                            }
+                            ?>
+                            <img src="<?php echo $fotoUrl; ?>" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
                           </div>
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm"><?php echo $f['nombre']; ?></h6>
@@ -173,16 +172,13 @@ include "../controladores/filtro_paginacion.php";
                         <p class="text-xs font-weight-bold mb-0"><?php echo $f['codigo']; ?></p>
                       </td>
                       <td>
-                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['programa']; ?></p>
+                        <p class="text-xs font-weight-bold mb-0"><?php echo date('Y-m-d H:i', strtotime($f['entrada'])); ?></p>
                       </td>
                       <td>
-                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['facultad']; ?></p>
+                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['salida'] ? date('Y-m-d H:i', strtotime($f['salida'])) : 'En curso'; ?></p>
                       </td>
                       <td>
-                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['entrada']; ?></p>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['salida']; ?></p>
+                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['horas_trabajadas'] ? number_format($f['horas_trabajadas'], 2) . ' hrs' : '-'; ?></p>
                       </td>
                     </tr>
                     <?php  

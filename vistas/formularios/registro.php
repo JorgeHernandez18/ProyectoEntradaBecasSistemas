@@ -23,7 +23,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../../favicon.ico">
   <link rel="icon" type="image/ico" href="../../favicon.ico">
   <title>
-    ENTRADA BIBLIOTECA UFPS
+    REGISTRO BECARIOS - INGENIERÍA DE SISTEMAS UFPS
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
@@ -75,7 +75,7 @@
             <div class="card z-index-0 fadeIn3 fadeInBottom">
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">REGISTRO DE ENTRADA</h4>
+                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">REGISTRO DE BECARIOS</h4>
                 <div class="widget">
                   <div class="fecha">
                     <p id="diaSemana" class="diaSemana"></p>,

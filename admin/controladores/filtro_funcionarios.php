@@ -1,19 +1,25 @@
 <?php
 include "../controladores/seguridad.php";
-// Inicializa la consulta base y el array de parámetros
-$baseQuery = "FROM vista_borrowers WHERE sort1 = '25Y'";
+include "../../modelo/conexion.php";
+
+// Inicializa la consulta base para becarios
+$baseQuery = "FROM becarios_info WHERE 1=1";
 $params = array();
 
-// Maneja el filtrado por fecha
+// Maneja el filtrado por estado
+if(isset($_GET['estado']) && !empty($_GET['estado'])) {
+    $estado = $_GET['estado'];
+    $baseQuery .= " AND estado = ?";
+    $params[] = $estado;
+}
+
+// Maneja el filtrado por fecha de inicio
 if(isset($_GET['from_date']) && isset($_GET['to_date']) && !empty($_GET['from_date']) && !empty($_GET['to_date']))
 {
     $from_date = $_GET['from_date'];
     $to_date = $_GET['to_date'];
 
-    // Ajusta la fecha final para incluir todo el día
-    $to_date = date('Y-m-d', strtotime($to_date . ' +1 day'));
-
-    $baseQuery .= " AND entrada >= ? AND entrada < ?";
+    $baseQuery .= " AND fecha_inicio >= ? AND fecha_inicio <= ?";
     $params[] = $from_date;
     $params[] = $to_date;
 }
@@ -21,13 +27,10 @@ if(isset($_GET['from_date']) && isset($_GET['to_date']) && !empty($_GET['from_da
 // Maneja la búsqueda por término
 $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
 if (!empty($busqueda)) {
-    $baseQuery .= " AND (surname LIKE ? OR 
-                         firstname LIKE ? OR
-                         cardnumber LIKE ? OR 
-                         sort2 LIKE ? OR 
-                         sort1 LIKE ? OR 
-                         email LIKE ?)";
-    $params = array_merge($params, array_fill(0, 6, "%$busqueda%"));
+    $baseQuery .= " AND (nombre_completo LIKE ? OR 
+                         codigo LIKE ? OR 
+                         correo LIKE ?)";
+    $params = array_merge($params, array_fill(0, 3, "%$busqueda%"));
 }
 
 // Número de registros por página
@@ -61,9 +64,9 @@ $orden = isset($_GET['orden']) ? $_GET['orden'] : 'nombre';
 
 // Definir la columna de ordenación
 if ($orden === 'codigo') {
-    $orderBy = "cardnumber DESC"; // Ordenar por código
+    $orderBy = "codigo DESC"; // Ordenar por código
 } else {
-    $orderBy = "firstname ASC"; // Ordenar por nombre (por defecto)
+    $orderBy = "nombre_completo ASC"; // Ordenar por nombre (por defecto)
 }
 
 // Consulta para obtener los registros de la página actual

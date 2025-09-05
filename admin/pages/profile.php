@@ -27,7 +27,7 @@ if ($resultadoFoto->num_rows > 0) {
 
 // Consulta para obtener TODOS los registros (sin filtrar por mes)
 $queryRegistros = "SELECT entrada, salida 
-                   FROM becl_registro 
+                   FROM becarios_registro 
                    WHERE codigo = ? 
                    ORDER BY entrada ASC";
 
@@ -97,23 +97,15 @@ $resultadoRegistros = $stmtRegistros->get_result();
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">table_view</i>
               </div>
-              <span class="nav-link-text ms-1">Registro Entrada</span>
+              <span class="nav-link-text ms-1">Registros de Becarios</span>
             </a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link text-white" href="../pages/registros_computo.php">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">computer</i>
-            </div>
-            <span class="nav-link-text ms-1">Registro Computo</span>
-          </a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-white active bg-gradient-primary" href="../pages/funcionarios.php">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">face</i>
+                <i class="material-icons opacity-10">school</i>
               </div>
-              <span class="nav-link-text ms-1">Funcionarios BECL</span>
+              <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
           <li class="nav-item mt-3">
@@ -137,7 +129,7 @@ $resultadoRegistros = $stmtRegistros->get_result();
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Funcionarios BECL</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Perfil de Becario</li>
           </ol>
           <h6 class="font-weight-bolder mb-0">INFORMACIÓN</h6>
         </nav>
@@ -282,7 +274,7 @@ $resultadoRegistros = $stmtRegistros->get_result();
                   <ul class="list-group">
                     <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Codigo:</strong> &nbsp; <?php echo $empleado['cardnumber'] ; ?></li>
                     <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Correo:</strong> &nbsp; <?php echo $empleado['email'] ; ?></li>
-                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Facultad:</strong> &nbsp; DIVISIÓN DE BIBLIOTECA</li>
+                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Programa:</strong> &nbsp; INGENIERÍA DE SISTEMAS</li>
                   </ul>
                 </div>
               </div>

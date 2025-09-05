@@ -1,7 +1,7 @@
 <?php
 // Consulta para obtener TODOS los registros (sin filtrar por mes)
 $queryRegistros = "SELECT entrada, salida 
-                   FROM becl_registro 
+                   FROM becarios_registro 
                    WHERE codigo = ? 
                    ORDER BY entrada ASC";
 

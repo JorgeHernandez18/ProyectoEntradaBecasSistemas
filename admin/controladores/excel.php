@@ -21,7 +21,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'downloadExcel') {
     $sheet->setCellValue('H1', 'Sede');
 
     // Inicializa la consulta base y el array de parámetros
-    $baseQuery = "SELECT * FROM becl_registro WHERE 1=1";
+    $baseQuery = "SELECT * FROM becarios_registro WHERE 1=1";
     $params = array();
 
     // Maneja el filtrado por fecha
