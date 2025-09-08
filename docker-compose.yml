@@ -17,7 +17,6 @@ services:
       - deployment/config/app.env
     environment:
       - TZ=America/Bogota
-      - DB_HOST=172.17.0.1
     ports:
       - "${PORT_5}:80"
     volumes:
