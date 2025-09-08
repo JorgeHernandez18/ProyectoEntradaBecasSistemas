@@ -17,8 +17,9 @@ services:
       - deployment/config/app.env
     environment:
       - TZ=America/Bogota
-      - DB_HOST=localhost
-      - APACHE_PORT=${PORT_0}
+      - DB_HOST=172.17.0.1
+    ports:
+      - "${PORT_0}:80"
     volumes:
       # Fotos de becarios (persistente)
       - fotos_becarios:/app/admin/assets/fotos_becarios
@@ -27,7 +28,6 @@ services:
       - logs_apache:/var/log/apache2
       # Archivos temporales
       - temp_uploads:/tmp/uploads
-    network_mode: "host"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/vistas/formularios/index.php"]
       interval: 30s
@@ -44,10 +44,10 @@ services:
       - PGADMIN_DEFAULT_EMAIL=admin@becarios.ufps.edu.co
       - PGADMIN_DEFAULT_PASSWORD=admin123
       - PGADMIN_DISABLE_POSTFIX=true
-      - PGADMIN_LISTEN_PORT=${PORT_1}
+    ports:
+      - "${PORT_1}:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-    network_mode: "host"
     profiles:
       - development
 
