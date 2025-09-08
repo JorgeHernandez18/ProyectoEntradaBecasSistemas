@@ -19,7 +19,7 @@ services:
       - TZ=America/Bogota
       - DB_HOST=172.17.0.1
     ports:
-      - "${PORT_0}:80"
+      - "${PORT_5}:80"
     volumes:
       # Fotos de becarios (persistente)
       - fotos_becarios:/app/admin/assets/fotos_becarios
