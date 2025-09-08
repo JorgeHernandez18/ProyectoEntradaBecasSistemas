@@ -66,6 +66,14 @@ include "../controladores/filtro_funcionarios.php";
               <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="../pages/horarios.php">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">schedule</i>
+              </div>
+              <span class="nav-link-text ms-1">Gestión de Horarios</span>
+            </a>
+          </li>
           <li class="nav-item mt-3">
             <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Cuenta</h6>
           </li>
@@ -163,7 +171,7 @@ include "../controladores/filtro_funcionarios.php";
             <div class="col-12 mt-4">
             <div class="row">
                 <?php  
-                while ($f = mysqli_fetch_array($resultado)) {
+                while ($f = $resultado->fetch_assoc()) {
                     // Obtener la foto del becario o usar imagen por defecto
                     if (!empty($f['foto']) && file_exists('../assets/fotos_becarios/' . $f['foto'])) {
                         $urlFoto = '../assets/fotos_becarios/' . $f['foto'];
@@ -194,15 +202,23 @@ include "../controladores/filtro_funcionarios.php";
                                 <p class="mb-2 text-sm">
                                     Estado: <span class="badge bg-<?php echo $f['estado'] == 'activo' ? 'success' : 'secondary'; ?>"><?php echo ucfirst($f['estado']); ?></span>
                                 </p>
-                                <!-- Botones para editar y eliminar becario -->
-                                <div class="d-flex gap-2">
+                                <!-- Botones para editar, ver horarios y eliminar becario -->
+                                <div class="d-flex gap-1 mb-2">
                                     <button class="btn btn-warning btn-sm flex-fill" onclick="editarBecario('<?php echo $f['codigo']; ?>')">
                                         <i class="material-icons">edit</i> Editar
                                     </button>
-                                    <button class="btn btn-danger btn-sm flex-fill" onclick="eliminarBecario('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
-                                        <i class="material-icons">delete</i> Eliminar
+                                    <button class="btn btn-info btn-sm flex-fill" onclick="verHorarios('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
+                                        <i class="material-icons">schedule</i> Horarios
                                     </button>
                                 </div>
+                                <div class="d-flex gap-1 mb-2">
+                                    <button class="btn btn-success btn-sm flex-fill" onclick="exportarRegistrosBecario('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
+                                        <i class="material-icons">download</i> Excel
+                                    </button>
+                                </div>
+                                <button class="btn btn-danger btn-sm w-100" onclick="eliminarBecario('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
+                                    <i class="material-icons">delete</i> Eliminar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -424,6 +440,46 @@ include "../controladores/filtro_funcionarios.php";
       }
     }
 
+    // Función para ver horarios del becario
+    function verHorarios(codigo, nombre) {
+      fetch(`../controladores/obtener_horarios_becario.php?codigo=${codigo}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById('horariosNombreBecario').textContent = nombre;
+            document.getElementById('horariosTotalHoras').textContent = data.total_horas_semanales;
+            
+            const tbody = document.getElementById('horariosTableBody');
+            tbody.innerHTML = '';
+            
+            if (data.horarios.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay horarios programados</td></tr>';
+            } else {
+              data.horarios.forEach(horario => {
+                const row = `
+                  <tr>
+                    <td class="text-sm">${horario.dia_semana}</td>
+                    <td class="text-sm">${horario.hora_inicio} - ${horario.hora_fin}</td>
+                    <td class="text-sm">${horario.horas_asignadas} hrs</td>
+                    <td class="text-sm">${horario.observaciones || '-'}</td>
+                  </tr>
+                `;
+                tbody.innerHTML += row;
+              });
+            }
+            
+            var modal = new bootstrap.Modal(document.getElementById('modalVerHorarios'));
+            modal.show();
+          } else {
+            alert('Error al cargar horarios del becario');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error al conectar con el servidor');
+        });
+    }
+
     // Función para eliminar becario
     function eliminarBecario(codigo, nombre) {
       if (confirm(`¿Estás seguro de que deseas eliminar al becario ${nombre}?\n\nEsta acción eliminará:\n- La información del becario\n- Todos sus registros de entrada/salida\n- Su foto (si tiene)\n\nEsta acción NO se puede deshacer.`)) {
@@ -448,6 +504,17 @@ include "../controladores/filtro_funcionarios.php";
           alert('Error al conectar con el servidor');
         });
       }
+    }
+    
+    // Función para exportar registros de un becario específico
+    function exportarRegistrosBecario(codigo, nombre) {
+      const params = new URLSearchParams();
+      params.append('action', 'downloadExcel');
+      params.append('codigo_becario', codigo);
+      params.append('nombre_becario', nombre);
+      
+      // Redirigir al controlador de Excel con los parámetros del becario
+      window.open('../controladores/excel.php?' + params.toString(), '_blank');
     }
   </script>
 
@@ -657,6 +724,44 @@ include "../controladores/filtro_funcionarios.php";
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Ver Horarios -->
+  <div class="modal fade" id="modalVerHorarios" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Horarios de <span id="horariosNombreBecario"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <strong>Total de horas semanales programadas:</strong> <span id="horariosTotalHoras"></span> horas
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Día</th>
+                  <th>Horario</th>
+                  <th>Horas</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody id="horariosTableBody">
+                <!-- Los horarios se cargan dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <a href="../pages/horarios.php" class="btn btn-primary">
+            <i class="material-icons">edit</i> Gestionar Horarios
+          </a>
+        </div>
       </div>
     </div>
   </div>

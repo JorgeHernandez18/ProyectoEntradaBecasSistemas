@@ -9,9 +9,12 @@
     </div>
     <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+<?php
+$currentPage = basename($_SERVER['REQUEST_URI'], '.php');
+?>
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-primary" href="../pages/dashboard.php">
+          <a class="nav-link text-white <?php echo ($currentPage == 'dashboard') ? 'active bg-gradient-primary' : ''; ?>" href="../pages/dashboard.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
@@ -19,7 +22,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="../pages/registros.php">
+          <a class="nav-link text-white <?php echo ($currentPage == 'registros') ? 'active bg-gradient-primary' : ''; ?>" href="../pages/registros.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
@@ -27,15 +30,39 @@
           </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="../pages/funcionarios.php">
+            <a class="nav-link text-white <?php echo ($currentPage == 'funcionarios') ? 'active bg-gradient-primary' : ''; ?>" href="../pages/funcionarios.php">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">school</i>
               </div>
               <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
+        <li class="nav-item">
+            <a class="nav-link text-white <?php echo ($currentPage == 'horarios') ? 'active bg-gradient-primary' : ''; ?>" href="../pages/horarios.php">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">schedule</i>
+              </div>
+              <span class="nav-link-text ms-1">Gestión de Horarios</span>
+            </a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link text-white <?php echo ($currentPage == 'auto_salidas') ? 'active bg-gradient-primary' : ''; ?>" href="../pages/auto_salidas.php">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">timer</i>
+              </div>
+              <span class="nav-link-text ms-1">Auto Salidas</span>
+            </a>
+          </li>
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Cuenta</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white <?php echo ($currentPage == 'configuracion') ? 'active bg-gradient-primary' : ''; ?>" href="../pages/configuracion.php">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">settings</i>
+            </div>
+            <span class="nav-link-text ms-1">Configuración</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white " href="../../controladores/cerrar_sesion.php">

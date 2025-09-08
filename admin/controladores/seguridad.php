@@ -14,4 +14,7 @@ if ($arregloUsuario['nivel'] != 'admin') {
     header("location: ../../vistas/formularios/index.php");
     exit();
 }
+
+// Verificar salidas automáticas (se ejecuta cada 10 minutos automáticamente)
+include_once "verificar_auto_salidas.php";
 ?>

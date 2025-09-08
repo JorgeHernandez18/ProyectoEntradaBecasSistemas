@@ -38,7 +38,8 @@ if (!empty($params)) {
 }
 $stmt->execute();
 $totalRegistrosQuery = $stmt->get_result();
-$totalRegistros = mysqli_fetch_assoc($totalRegistrosQuery)['total'];
+$rowTotal = $totalRegistrosQuery->fetch_assoc();
+$totalRegistros = $rowTotal['total'] ?? 0;
 
 // Guarda este valor en una variable de sesión para usarlo en la vista
 $_SESSION['totalRegistros'] = $totalRegistros;
@@ -54,12 +55,12 @@ $paginaActual = max(1, min($paginaActual, $totalPaginas));
 $inicio = ($paginaActual - 1) * $registrosPorPagina;
 
 // Consulta para obtener los registros de la página actual
-$stmt = $conexion->prepare("SELECT br.*, bi.foto $baseQuery ORDER BY br.id DESC LIMIT ?, ?");
+$stmt = $conexion->prepare("SELECT br.*, bi.foto " . $baseQuery . " ORDER BY br.id DESC LIMIT ?, ?");
 if (!empty($params)) {
     $types = str_repeat('s', count($params)) . 'ii';
-    $stmt->bind_param($types, ...[...$params, $inicio, $registrosPorPagina]);
+    $stmt->bind_param($types, ...[...$params, $registrosPorPagina, $inicio]);
 } else {
-    $stmt->bind_param('ii', $inicio, $registrosPorPagina);
+    $stmt->bind_param('ii', $registrosPorPagina, $inicio);
 }
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -76,6 +77,9 @@ if(isset($_GET['ajax'])) {
         }
         
         $salidaFormateada = $f['salida'] ? date('Y-m-d H:i', strtotime($f['salida'])) : 'En curso';
+        if ($f['salida'] && isset($f['salida_automatica']) && $f['salida_automatica']) {
+            $salidaFormateada .= ' <span class="badge badge-sm bg-gradient-warning">AUTO</span>';
+        }
         $horasFormateadas = $f['horas_trabajadas'] ? number_format($f['horas_trabajadas'], 2) . ' hrs' : '-';
         
         $output .= "<tr>

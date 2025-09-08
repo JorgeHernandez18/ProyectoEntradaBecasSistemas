@@ -20,12 +20,9 @@ try {
     if (!file_exists("../modelo/conexion.php")) {
         handleError("Archivo de conexión no encontrado");
     }
-    include "../modelo/conexion.php";
+    include_once "../modelo/conexion.php";
 
-    // Verificar la conexión
-    if ($conexion->connect_error) {
-        handleError("Error de conexión: " . $conexion->connect_error);
-    }
+    // La verificación de conexión ya se maneja en el archivo de conexión
 
     // Verificar la sesión
     if (!isset($_SESSION['datos_login'])) {
@@ -53,28 +50,20 @@ try {
               WHERE codigo = ? AND estado = 'activo'";
 
     $stmt = $conexion->prepare($query);
-    if (!$stmt) {
-        handleError("Error en la preparación de la consulta: " . $conexion->error);
-    }
     $stmt->bind_param("s", $codigo);
-    if (!$stmt->execute()) {
-        handleError("Error al ejecutar la consulta: " . $stmt->error);
-    }
+    $stmt->execute();
     $resultado = $stmt->get_result();
 
-    // Consulta para obtener el número de registros del día
-    $consultaDia = "SELECT COUNT(*) as totalDia FROM becarios_registro WHERE DATE(entrada) = CURDATE()";
+    // Consulta para obtener el número de registros del día (usar CURRENT_DATE para PostgreSQL)
+    $consultaDia = "SELECT COUNT(*) as totalDia FROM becarios_registro WHERE DATE(entrada) = CURRENT_DATE";
     $stmtDia = $conexion->prepare($consultaDia);
-    if (!$stmtDia) {
-        handleError("Error en la preparación de la consulta de registros del día: " . $conexion->error);
-    }
-    if (!$stmtDia->execute()) {
-        handleError("Error al ejecutar la consulta de registros del día: " . $stmtDia->error);
-    }
+    $stmtDia->execute();
     $resultadoDia = $stmtDia->get_result();
-    $registrosDia = $resultadoDia->fetch_assoc()['totalDia'];
+    $rowDia = $resultadoDia->fetch_assoc();
+    $registrosDia = $rowDia['totalDia'] ?? 0;
 
     if ($resultado->num_rows > 0) {
+        $resultado->reset();
         $becario = $resultado->fetch_assoc();
         $nombre = $becario['nombre_completo'];
         $correo = $becario['correo'];
@@ -86,16 +75,12 @@ try {
             // Lógica para registro de salida
             $queryUltimoRegistro = "SELECT * FROM becarios_registro WHERE codigo = ? AND salida IS NULL ORDER BY id DESC LIMIT 1";
             $stmt = $conexion->prepare($queryUltimoRegistro);
-            if (!$stmt) {
-                handleError("Error en la preparación de la consulta de último registro: " . $conexion->error);
-            }
             $stmt->bind_param("s", $codigo);
-            if (!$stmt->execute()) {
-                handleError("Error al ejecutar la consulta de último registro: " . $stmt->error);
-            }
+            $stmt->execute();
             $resultadoUltimoRegistro = $stmt->get_result();
             
             if ($resultadoUltimoRegistro->num_rows > 0) {
+                $resultadoUltimoRegistro->reset();
                 $registro = $resultadoUltimoRegistro->fetch_assoc();
                 $idRegistro = $registro['id'];
                 $entrada = $registro['entrada'];
@@ -104,26 +89,26 @@ try {
                 $entradaTime = new DateTime($entrada);
                 $salidaTime = new DateTime($fechaHoraActual);
                 $diferencia = $entradaTime->diff($salidaTime);
-                $horasTrabajadas = $diferencia->h + ($diferencia->i / 60);
+                
+                // Calcular total de horas considerando días, horas, minutos y segundos
+                $totalMinutos = ($diferencia->days * 24 * 60) + ($diferencia->h * 60) + $diferencia->i + ($diferencia->s / 60);
+                $horasTrabajadas = $totalMinutos / 60;
                 $horasTrabajadas = round($horasTrabajadas, 2);
                 
                 $queryActualizarSalida = "UPDATE becarios_registro SET salida = ?, horas_trabajadas = ? WHERE id = ?";
                 $stmtActualizar = $conexion->prepare($queryActualizarSalida);
-                if (!$stmtActualizar) {
-                    handleError("Error en la preparación de la actualización de salida: " . $conexion->error);
-                }
                 $stmtActualizar->bind_param("sdi", $fechaHoraActual, $horasTrabajadas, $idRegistro);
-                if (!$stmtActualizar->execute()) {
-                    handleError("Error al ejecutar la actualización de salida: " . $stmtActualizar->error);
-                }
+                $stmtActualizar->execute();
 
                 echo json_encode([
                     'success' => true,
                     'nombre' => $nombre,
                     'codigo' => $codigo,
+                    'correo' => $correo,
+                    'semestre' => $semestre,
+                    'horas_semanales' => $horasSemanales,
                     'hora' => $fechaHoraActual,
                     'tipo' => 'salida',
-                    'semestre' => $semestre,
                     'horas_trabajadas' => $horasTrabajadas,
                     'registroDia' => $registrosDia,
                     'mensaje' => 'Salida registrada exitosamente - ' . $horasTrabajadas . ' horas trabajadas',
@@ -135,13 +120,8 @@ try {
             // Lógica para registro de entrada
             $queryInsertar = "INSERT INTO becarios_registro (nombre, correo, codigo, entrada) VALUES (?, ?, ?, ?)";
             $stmtInsertar = $conexion->prepare($queryInsertar);
-            if (!$stmtInsertar) {
-                handleError("Error en la preparación de la inserción de entrada: " . $conexion->error);
-            }
             $stmtInsertar->bind_param("ssss", $nombre, $correo, $codigo, $fechaHoraActual);
-            if (!$stmtInsertar->execute()) {
-                handleError("Error al ejecutar la inserción de entrada: " . $stmtInsertar->error);
-            }
+            $stmtInsertar->execute();
 
             echo json_encode([
                 'success' => true,

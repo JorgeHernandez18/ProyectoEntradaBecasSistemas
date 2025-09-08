@@ -1,7 +1,7 @@
 <?php
 session_start(); // Inicia la sesión o reanuda una sesión existente.
 
-include "../modelo/conexion.php"; // Incluye el archivo de conexión a la base de datos.
+include_once "../modelo/conexion.php"; // Incluye el archivo de conexión a la base de datos.
 
 if (isset($_POST['usuario']) && isset($_POST['password'])) {
     // Verifica que se hayan enviado los campos 'usuario' y 'password' a través de POST.
@@ -20,6 +20,7 @@ if (isset($_POST['usuario']) && isset($_POST['password'])) {
     
     // Verifica si el usuario existe y la contraseña es correcta
     if ($resultado->num_rows > 0) {
+        $resultado->reset(); // Resetear el índice para PostgreSQL adapter
         $datos_usuario = $resultado->fetch_assoc();
         
         // Verifica la contraseña usando password_verify para bcrypt

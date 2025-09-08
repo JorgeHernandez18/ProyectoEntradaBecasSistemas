@@ -67,6 +67,14 @@ include "../controladores/filtro_paginacion.php";
               <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="../pages/horarios.php">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">schedule</i>
+              </div>
+              <span class="nav-link-text ms-1">Gestión de Horarios</span>
+            </a>
+          </li>
           <li class="nav-item mt-3">
             <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Cuenta</h6>
           </li>
@@ -146,7 +154,7 @@ include "../controladores/filtro_paginacion.php";
                   </thead>
                   <tbody>
                   <?php  
-                    while($f = mysqli_fetch_array($resultado)){
+                    while($f = $resultado->fetch_assoc()){
                   ?>
                     <tr>
                       <td>
@@ -175,7 +183,18 @@ include "../controladores/filtro_paginacion.php";
                         <p class="text-xs font-weight-bold mb-0"><?php echo date('Y-m-d H:i', strtotime($f['entrada'])); ?></p>
                       </td>
                       <td>
-                        <p class="text-xs font-weight-bold mb-0"><?php echo $f['salida'] ? date('Y-m-d H:i', strtotime($f['salida'])) : 'En curso'; ?></p>
+                        <p class="text-xs font-weight-bold mb-0">
+                          <?php 
+                          if ($f['salida']) {
+                            echo date('Y-m-d H:i', strtotime($f['salida']));
+                            if (isset($f['salida_automatica']) && $f['salida_automatica']) {
+                              echo ' <span class="badge badge-sm bg-gradient-warning">AUTO</span>';
+                            }
+                          } else {
+                            echo 'En curso';
+                          }
+                          ?>
+                        </p>
                       </td>
                       <td>
                         <p class="text-xs font-weight-bold mb-0"><?php echo $f['horas_trabajadas'] ? number_format($f['horas_trabajadas'], 2) . ' hrs' : '-'; ?></p>
@@ -263,5 +282,29 @@ include "../controladores/filtro_paginacion.php";
   <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
   <script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
   <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
+  
+  <script>
+    // Llenar el total de registros desde PHP
+    document.addEventListener('DOMContentLoaded', function() {
+      const totalRegistros = <?php echo $_SESSION['totalRegistros'] ?? 0; ?>;
+      document.getElementById('totalRegistros').textContent = totalRegistros;
+    });
+    
+    // Función para exportar a Excel
+    function descargarExcel() {
+      // Obtener parámetros de filtro actuales
+      const urlParams = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams();
+      params.append('action', 'downloadExcel');
+      
+      // Agregar filtros si existen
+      if (urlParams.get('from_date')) params.append('from_date', urlParams.get('from_date'));
+      if (urlParams.get('to_date')) params.append('to_date', urlParams.get('to_date'));
+      if (urlParams.get('busqueda')) params.append('busqueda', urlParams.get('busqueda'));
+      
+      // Redirigir al controlador de Excel
+      window.open('../controladores/excel.php?' + params.toString(), '_blank');
+    }
+  </script>
 </body>
 </html>

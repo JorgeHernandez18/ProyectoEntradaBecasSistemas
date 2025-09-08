@@ -45,7 +45,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-lg mb-0 text-capitalize">Total Registros</p>
-                <h4 class="mb-0"><?php echo number_format($totalRegistros); ?></h4>
+                <h4 class="mb-0"><?php echo number_format($totalRegistros ?? 0); ?></h4>
               </div>
             </div>
             <div class="card-footer p-3"></div>
@@ -59,7 +59,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-lg mb-0 text-capitalize">Registros del día</p>
-                <h4 class="mb-0"><?php echo number_format($registrosDia); ?></h4>
+                <h4 class="mb-0"><?php echo number_format($registrosDia ?? 0); ?></h4>
               </div>
             </div>
             <div class="card-footer p-3"></div>
@@ -73,7 +73,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-lg mb-0 text-capitalize">Registros del semestre</p>
-                <h4 class="mb-0"><?php echo number_format($registrosSemestre); ?></h4>
+                <h4 class="mb-0"><?php echo number_format($registrosSemestre ?? 0); ?></h4>
               </div>
             </div>
             <div class="card-footer p-3"></div>

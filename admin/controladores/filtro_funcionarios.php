@@ -44,7 +44,8 @@ if (!empty($params)) {
 }
 $stmt->execute();
 $totalRegistrosQuery = $stmt->get_result();
-$totalRegistros = mysqli_fetch_assoc($totalRegistrosQuery)['total'];
+$rowTotal = $totalRegistrosQuery->fetch_assoc();
+$totalRegistros = $rowTotal['total'] ?? 0;
 
 // Guarda este valor en una variable de sesión para usarlo en la vista
 $_SESSION['totalRegistros'] = $totalRegistros;
@@ -70,12 +71,12 @@ if ($orden === 'codigo') {
 }
 
 // Consulta para obtener los registros de la página actual
-$stmt = $conexion->prepare("SELECT * $baseQuery ORDER BY $orderBy LIMIT ?, ?");
+$stmt = $conexion->prepare("SELECT * " . $baseQuery . " ORDER BY " . $orderBy . " LIMIT ?, ?");
 if (!empty($params)) {
     $types = str_repeat('s', count($params)) . 'ii';
-    $stmt->bind_param($types, ...[...$params, $inicio, $registrosPorPagina]);
+    $stmt->bind_param($types, ...[...$params, $registrosPorPagina, $inicio]);
 } else {
-    $stmt->bind_param('ii', $inicio, $registrosPorPagina);
+    $stmt->bind_param('ii', $registrosPorPagina, $inicio);
 }
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -83,7 +84,7 @@ $resultado = $stmt->get_result();
 // Si es una solicitud AJAX, devuelve solo los datos de la tabla
 if(isset($_GET['ajax'])) {
 
-    while($f = mysqli_fetch_array($resultado)){
+    while($f = $resultado->fetch_assoc()){
     }
     echo json_encode([
         'totalPaginas' => $totalPaginas,

@@ -75,8 +75,9 @@ function actualizarVentanaFlotante(data) {
     const tipoRegistroSpan = document.getElementById('tipoRegistro');
     tipoRegistroSpan.textContent = data.tipo;
     tipoRegistroSpan.className = data.tipo === 'entrada' ? 'tipo-registro-entrada' : 'tipo-registro-salida';
-    document.getElementById('programaEstudiante').textContent = data.programa;
-    document.getElementById('facultadEstudiante').textContent = data.facultad;
+    document.getElementById('correoEstudiante').textContent = data.correo;
+    document.getElementById('semestreEstudiante').textContent = data.semestre + '° Semestre';
+    document.getElementById('horasSemanalesEstudiante').textContent = data.horas_semanales + ' horas/semana';
     document.getElementById('floatingWindow').classList.add('show');
 }
 

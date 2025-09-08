@@ -2,7 +2,7 @@
   // inicia sesion
   session_start(); 
   // incluye la base de datos
-  include "../../modelo/conexion.php";
+  include_once "../../modelo/conexion.php";
    // extrae los datos de la sesion
    $arregloUsuario = $_SESSION['datos_login'];
   
@@ -127,10 +127,11 @@
             <h5>Información del Estudiante</h5>
             <p><span>Nombre:</span> <strong id="nombreEstudiante"></strong></p>
             <p><span>Código:</span> <strong id="codigoEstudiante"></strong></p>
+            <p><span>Correo:</span> <strong id="correoEstudiante"></strong></p>
+            <p><span>Semestre:</span> <strong id="semestreEstudiante"></strong></p>
+            <p><span>Horas Semanales:</span> <strong id="horasSemanalesEstudiante"></strong></p>
             <p><span>Hora de Registro:</span> <strong id="horaRegistro"></strong></p>
             <p><span>Tipo de Registro:</span> <strong id="tipoRegistro" class="registro-tipo"></strong></p>
-            <p><span>Programa:</span> <strong id="programaEstudiante"></strong></p>
-            <p><span>Facultad:</span> <strong id="facultadEstudiante"></strong></p>
           </div>
         </div>
       </div>

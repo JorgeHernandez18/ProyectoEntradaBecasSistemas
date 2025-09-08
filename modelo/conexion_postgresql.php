@@ -1,11 +1,13 @@
 <?php
 // Configuración de conexión a PostgreSQL
-$host = 'host.containers.internal';  // o host.containers.internal en contenedor
+#$host = 'host.containers.internal';  // o host.containers.internal en contenedor
+$host = 'localhost';
 $port = '5432';
 $dbname = 'becarios_sistemas';
-$user = 'becario';
-$password = 'becarios';
-
+#$user = 'becario';
+#$password = 'becarios';
+$user = 'postgres';
+$password = '1804';
 try {
     // Crear conexión PDO para PostgreSQL
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
@@ -16,6 +18,7 @@ try {
     ]);
     
     // Para compatibilidad con código existente, crear objeto que simule mysqli
+    if (!class_exists('PostgreSQLAdapter')) {
     class PostgreSQLAdapter {
         private $pdo;
         
@@ -62,10 +65,16 @@ try {
             $query = preg_replace('/DEFAULT CHARSET=\w+/i', '', $query);
             $query = preg_replace('/COLLATE=\w+/i', '', $query);
             
+            // Conversión de LIMIT offset, count a LIMIT count OFFSET offset
+            $query = preg_replace('/LIMIT\s+(\?),\s*(\?)/i', 'LIMIT $2 OFFSET $1', $query);
+            $query = preg_replace('/LIMIT\s+(\d+),\s*(\d+)/i', 'LIMIT $2 OFFSET $1', $query);
+            
             return $query;
         }
     }
+    }
     
+    if (!class_exists('PostgreSQLStatement')) {
     class PostgreSQLStatement {
         private $stmt;
         private $result;
@@ -90,9 +99,17 @@ try {
             return new PostgreSQLResult($this->result);
         }
         
+        public function close() {
+            // PDO no necesita cierre explícito, pero lo agregamos para compatibilidad
+            $this->stmt = null;
+            return true;
+        }
+        
         public $error;
     }
+    }
     
+    if (!class_exists('PostgreSQLResult')) {
     class PostgreSQLResult {
         private $stmt;
         private $data;
@@ -101,6 +118,7 @@ try {
         public function __construct($stmt) {
             $this->stmt = $stmt;
             $this->data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->num_rows = count($this->data);
         }
         
         public $num_rows;
@@ -112,17 +130,19 @@ try {
             return null;
         }
         
+        public function reset() {
+            $this->index = 0;
+        }
+        
         public function __get($name) {
             if ($name === 'num_rows') {
-                return count($this->data);
+                return $this->num_rows;
             }
         }
     }
-    
-    // Función para simular mysqli_fetch_array
-    function mysqli_fetch_array($result) {
-        return $result->fetch_assoc();
     }
+    
+    // mysqli_fetch_array será manejado por el adaptador
     
     $conexion = new PostgreSQLAdapter($conexion_pdo);
     

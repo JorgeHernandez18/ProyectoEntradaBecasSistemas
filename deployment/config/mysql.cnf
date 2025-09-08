@@ -1,0 +1,43 @@
+# ==========================================
+# Configuración MySQL/MariaDB personalizada
+# ==========================================
+
+[mysqld]
+# Configuración de charset
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+init-connect = 'SET NAMES utf8mb4'
+
+# Configuración de zona horaria
+default-time-zone = '-05:00'
+
+# Configuración de rendimiento
+innodb_buffer_pool_size = 256M
+innodb_log_file_size = 64M
+innodb_flush_log_at_trx_commit = 2
+innodb_file_per_table = 1
+
+# Configuración de conexiones
+max_connections = 100
+max_connect_errors = 10
+table_open_cache = 2000
+max_allowed_packet = 16M
+
+# Configuración de logs
+general_log = 0
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql/slow.log
+long_query_time = 2
+
+# Configuración de seguridad
+local_infile = 0
+bind-address = 0.0.0.0
+
+# Configuración de SQL Mode
+sql_mode = STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+[mysql]
+default-character-set = utf8mb4
+
+[client]
+default-character-set = utf8mb4

@@ -34,8 +34,9 @@ document.getElementById('registroForm').addEventListener('submit', function(even
                   tipoRegistroSpan.classList.add('tipo-registro-salida');
                   tipoRegistroSpan.classList.remove('tipo-registro-entrada');
                 }
-                document.getElementById('programaEstudiante').textContent = data.programa;
-                document.getElementById('facultadEstudiante').textContent = data.facultad;
+                document.getElementById('correoEstudiante').textContent = data.correo;
+                document.getElementById('semestreEstudiante').textContent = data.semestre + '° Semestre';
+                document.getElementById('horasSemanalesEstudiante').textContent = data.horas_semanales + ' horas/semana';
                 document.getElementById('floatingWindow').classList.add('show');
 
                  // Mostrar el mensaje de éxito correspondiente

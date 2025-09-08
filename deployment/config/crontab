@@ -1,0 +1,17 @@
+# ==========================================
+# Crontab para Sistema de Becarios
+# ==========================================
+
+# Ejecutar verificación de auto-salidas cada 10 minutos
+*/10 * * * * www-data /usr/local/bin/php /app/controladores/auto_salida.php >> /var/log/becarios/cron.log 2>&1
+
+# Limpiar logs antiguos diariamente a las 2:00 AM
+0 2 * * * root find /var/log/becarios/ -name "*.log" -mtime +30 -delete
+
+# Limpiar archivos temporales semanalmente
+0 3 * * 0 root find /tmp/ -name "becarios_*" -mtime +7 -delete
+
+# Backup de base de datos diario a las 1:00 AM (opcional)
+# 0 1 * * * root /app/deployment/scripts/backup_db.sh
+
+# Línea vacía requerida por cron
