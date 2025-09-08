@@ -1,11 +1,13 @@
 <?php
-// Configuración de conexión a PostgreSQL
-#$host = 'host.containers.internal';  // o host.containers.internal en contenedor
+/**
+ * Archivo de conexión para desarrollo local
+ * En Docker se reemplaza por enlace simbólico a conexion_docker.php
+ */
+
+// Configuración para desarrollo local
 $host = 'localhost';
 $port = '5432';
 $dbname = 'becarios_sistemas';
-#$user = 'becario';
-#$password = 'becarios';
 $user = 'postgres';
 $password = '1804';
 try {

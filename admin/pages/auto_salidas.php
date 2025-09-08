@@ -116,7 +116,7 @@ include "../controladores/seguridad.php";
                               FROM becarios_registro br 
                               LEFT JOIN becarios_info bi ON br.codigo = bi.codigo 
                               WHERE br.salida_automatica = true 
-                              AND br.entrada >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+                              AND br.entrada >= CURRENT_DATE - INTERVAL '7 days'
                               ORDER BY br.entrada DESC";
                     $resultado = $conexion->query($query);
                     

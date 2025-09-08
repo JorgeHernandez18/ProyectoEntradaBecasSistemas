@@ -10,7 +10,10 @@
     <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
 <?php
-$currentPage = basename($_SERVER['REQUEST_URI'], '.php');
+// Obtener el nombre de la página actual para activar el menú correspondiente
+$currentPage = basename($_SERVER['PHP_SELF'], '.php');
+// Debug: verificar la detección de página
+// echo "<!-- DEBUG: currentPage = $currentPage -->";
 ?>
       <ul class="navbar-nav">
         <li class="nav-item">

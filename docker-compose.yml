@@ -34,23 +34,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-
-  # pgAdmin para administración de BD (opcional, solo para desarrollo)
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: becarios_pgadmin
-    restart: unless-stopped
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@becarios.ufps.edu.co
-      - PGADMIN_DEFAULT_PASSWORD=admin123
-      - PGADMIN_DISABLE_POSTFIX=true
-    ports:
-      - "${PORT_1}:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    profiles:
-      - development
-
 # Volúmenes nombrados para persistencia (sin PostgreSQL, usa BD externa)
 volumes:
   pgadmin_data:

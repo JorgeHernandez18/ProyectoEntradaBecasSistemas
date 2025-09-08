@@ -87,14 +87,14 @@ COPY deployment/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY deployment/scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Exponer puerto
-EXPOSE 80
-
 # Variables de entorno por defecto
 ENV APACHE_DOCUMENT_ROOT=/app
 ENV APACHE_LOG_DIR=/var/log/apache2
+ENV APACHE_PORT=80
 ENV PHP_TIMEZONE=America/Bogota
 ENV APP_ENV=production
+
+EXPOSE ${APACHE_PORT}
 
 # Punto de entrada
 ENTRYPOINT ["/entrypoint.sh"]
