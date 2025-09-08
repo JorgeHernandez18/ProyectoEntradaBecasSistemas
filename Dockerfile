@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y \
 COPY deployment/config/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Habilitar mod_rewrite para Apache
-RUN a2enmod rewrite
+RUN a2enmod rewrite headers
 
 # Configurar Apache
 COPY deployment/config/apache.conf /etc/apache2/sites-available/000-default.conf
