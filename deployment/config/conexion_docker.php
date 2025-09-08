@@ -9,7 +9,7 @@
 date_default_timezone_set(getenv('PHP_TIMEZONE') ?: 'America/Bogota');
 
 // Configuración de la base de datos desde variables de entorno
-$host = getenv('DB_HOST') ?: 'host.containers.internal';
+$host = getenv('DB_HOST') ?: 'localhost';
 $port = getenv('DB_PORT') ?: '5432';
 $database = getenv('DB_NAME') ?: 'becarios_sistemas';
 $username = getenv('DB_USER') ?: 'becario';

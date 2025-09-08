@@ -26,12 +26,9 @@ services:
       - logs_apache:/var/log/apache2
       # Archivos temporales
       - temp_uploads:/tmp/uploads
-    ports:
-      - "${PORT_0}:80"  # Puerto principal de la aplicación web
-    networks:
-      - becarios_network
-    extra_hosts:
-      - "host.containers.internal:host-gateway"
+    network_mode: "host"
+    environment:
+      - APACHE_PORT=${PORT_0}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/vistas/formularios/index.php"]
       interval: 30s
@@ -50,12 +47,9 @@ services:
       - PGADMIN_DISABLE_POSTFIX=true
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-    ports:
-      - "${PORT_1}:80"  # Puerto para pgAdmin (usa PORT_1 ya que no hay BD contenedor)
-    networks:
-      - becarios_network
-    extra_hosts:
-      - "host.containers.internal:host-gateway"
+    network_mode: "host"
+    environment:
+      - PGADMIN_LISTEN_PORT=${PORT_1}
     profiles:
       - development
 
@@ -77,11 +71,4 @@ volumes:
     name: becarios_temp
     driver: local
 
-# Red personalizada
-networks:
-  becarios_network:
-    name: becarios_network
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+# Red: Usando network_mode: "host" para acceso directo al PostgreSQL del servidor

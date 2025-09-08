@@ -80,6 +80,14 @@ echo "Configurando zona horaria: ${PHP_TIMEZONE}"
 echo "${PHP_TIMEZONE}" > /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata
 
+# Configurar Apache para usar el puerto dinámico
+echo "Configurando Apache en puerto: ${APACHE_PORT:-80}"
+if [ -n "${APACHE_PORT}" ] && [ "${APACHE_PORT}" != "80" ]; then
+    echo "Listen ${APACHE_PORT}" >> /etc/apache2/ports.conf
+    envsubst < /etc/apache2/sites-available/000-default.conf > /tmp/000-default.conf
+    mv /tmp/000-default.conf /etc/apache2/sites-available/000-default.conf
+fi
+
 # Crear archivo de estado
 echo "Sistema iniciado correctamente - $(date)" > /app/logs/sistema_status.log
 
