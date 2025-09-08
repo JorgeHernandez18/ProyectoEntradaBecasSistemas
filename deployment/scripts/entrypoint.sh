@@ -9,14 +9,8 @@ echo "==========================================="
 echo "Iniciando Sistema de Becarios UFPS v1.0"
 echo "==========================================="
 
-# Esperar a que la base de datos esté lista
-echo "Conectando a PostgreSQL existente en el servidor..."
-until PGPASSWORD="${DB_PASSWORD}" pg_isready -h"${DB_HOST}" -p"${DB_PORT}" -U"${DB_USER}" -d"${DB_NAME}" -q; do
-    echo "Esperando conexión a PostgreSQL existente..."
-    sleep 2
-done
-
-echo "✓ Base de datos conectada"
+# La base de datos se configura manualmente via Adminer
+echo "✓ La base de datos será configurada manualmente via Adminer"
 
 # Crear directorios necesarios
 echo "Configurando directorios..."
@@ -34,46 +28,11 @@ chown -R www-data:www-data /tmp/uploads
 chmod -R 755 /app/admin/assets/fotos_becarios
 chmod -R 755 /app/logs
 
-# Verificar si las tablas del sistema existen en la BD
-echo "Verificando estructura de base de datos PostgreSQL existente..."
-PGPASSWORD="${DB_PASSWORD}" psql -h"${DB_HOST}" -p"${DB_PORT}" -U"${DB_USER}" -d"${DB_NAME}" -c "\dt" > /tmp/tables.txt 2>/dev/null || {
-    echo "⚠ Error al verificar tablas en la base de datos existente"
-    echo "💡 La base de datos 'becarios_sistemas' debe estar creada previamente"
-    echo "💡 Ejecutar manualmente: deployment/database/init_postgresql.sql"
-}
-
-# Verificar si existen las tablas principales del sistema
-if ! grep -q "becarios_admin" /tmp/tables.txt 2>/dev/null; then
-    echo "ℹ️ Sistema detecta que es la primera instalación"
-    echo "📋 Instalando estructura de base de datos..."
-    
-    # Intentar crear la estructura
-    if PGPASSWORD="${DB_PASSWORD}" psql -h"${DB_HOST}" -p"${DB_PORT}" -U"${DB_USER}" -d"${DB_NAME}" < /app/deployment/database/init_postgresql.sql; then
-        echo "✅ Estructura de base de datos instalada correctamente"
-    else
-        echo "❌ Error al instalar estructura de base de datos"
-        echo "💡 Verificar permisos del usuario 'becario' en la base de datos"
-        echo "💡 O ejecutar manualmente el archivo: deployment/database/init_postgresql.sql"
-    fi
-else
-    echo "✅ Estructura de base de datos ya existe"
-fi
-
-# Ejecutar migraciones adicionales si existen
-if [ -d "/app/deployment/database/migrations" ]; then
-    echo "Verificando migraciones PostgreSQL..."
-    for migration in /app/deployment/database/migrations/*.sql; do
-        if [ -f "$migration" ]; then
-            echo "Ejecutando migración: $(basename "$migration")"
-            PGPASSWORD="${DB_PASSWORD}" psql -h"${DB_HOST}" -p"${DB_PORT}" -U"${DB_USER}" -d"${DB_NAME}" < "$migration" || {
-                echo "⚠ Error en migración: $(basename "$migration")"
-            }
-        fi
-    done
-fi
-
-# Limpiar archivos temporales
-rm -f /tmp/tables.txt
+# Instrucciones para configuración manual de BD
+echo "📋 Para configurar la base de datos:"
+echo "   1. Acceder a Adminer en puerto 8080"
+echo "   2. Conectar a PostgreSQL con tus credenciales"
+echo "   3. Importar archivo: deployment/database/init_postgresql.sql"
 
 # Configurar zona horaria
 echo "Configurando zona horaria: ${PHP_TIMEZONE}"

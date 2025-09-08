@@ -29,11 +29,11 @@ services:
       # Archivos temporales
       - temp_uploads:/tmp/uploads
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/vistas/formularios/index.php"]
+      test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 10s
 
   # pgAdmin para administración de BD (opcional, solo para desarrollo)
   pgadmin:
