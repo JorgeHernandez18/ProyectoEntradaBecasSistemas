@@ -1,2 +1,12 @@
+# Archivos de configuración sensibles
+*.sql
+
+# Variables de entorno
+.env
+
+# Archivos de Docker/Podman
+*.log
+
+# Archivos específicos
 usuario_entrada.sql 
 becarios.sql

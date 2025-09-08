@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Servicio de aplicación web PHP/Apache
+  web:
+    image: php:8.1-apache
+    container_name: becarios_web
+    volumes:
+      - .:/var/www/html
+      - ./docker/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/apache2.conf:/etc/apache2/apache2.conf
+    ports:
+      - "${PORT_0}:80"
+    restart: unless-stopped
+    environment:
+      # Configuración para usar PostgreSQL del servidor host
+      - DB_HOST=host.containers.internal
+      - DB_NAME=becarios_sistemas
+      - DB_USER=becarios_user
+      - DB_PASSWORD=becarios_pass_2025
+      - DB_PORT=5432
+      - DB_TYPE=pgsql
+    extra_hosts:
+      # Permite acceder al PostgreSQL del host desde el contenedor
+      - "host.containers.internal:host-gateway"
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y libzip-dev zip libpng-dev libjpeg-dev libfreetype6-dev libpq-dev &&
+        docker-php-ext-configure gd --with-freetype --with-jpeg &&
+        docker-php-ext-install pdo pdo_pgsql pgsql gd zip &&
+        a2enmod rewrite &&
+        chown -R www-data:www-data /var/www/html &&
+        chmod -R 755 /var/www/html &&
+        chmod -R 777 /var/www/html/admin/assets/fotos_becarios &&
+        apache2-foreground
+      "
