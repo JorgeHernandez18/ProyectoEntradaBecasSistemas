@@ -153,10 +153,9 @@ include "../controladores/seguridad.php";
                       <td>
                         <p class="text-xs font-weight-bold mb-0"><?php echo number_format($f['horas_trabajadas'], 2) . ' hrs'; ?></p>
                       </td>
-                      <td style="max-width: 200px;">
-                        <p class="text-xs mb-0" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-                           title="<?php echo htmlspecialchars($f['observaciones']); ?>">
-                          <?php echo htmlspecialchars(substr($f['observaciones'], 0, 50)) . (strlen($f['observaciones']) > 50 ? '...' : ''); ?>
+                      <td style="max-width: 300px;">
+                        <p class="text-xs mb-0" style="word-wrap: break-word; white-space: normal;">
+                          <?php echo htmlspecialchars($f['observaciones']); ?>
                         </p>
                       </td>
                     </tr>
