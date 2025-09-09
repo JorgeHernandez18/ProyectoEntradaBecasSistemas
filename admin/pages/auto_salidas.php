@@ -120,8 +120,8 @@ include "../controladores/seguridad.php";
                               ORDER BY br.entrada DESC";
                     $resultado = $conexion->query($query);
                     
-                    if ($resultado && $resultado->num_rows > 0) {
-                      while ($f = $resultado->fetch_assoc()) {
+                    if ($resultado && $resultado->rowCount() > 0) {
+                      while ($f = $resultado->fetch()) {
                         // Determinar la URL de la foto
                         if (!empty($f['foto']) && file_exists('../assets/fotos_becarios/' . $f['foto'])) {
                             $fotoUrl = '../assets/fotos_becarios/' . $f['foto'];
