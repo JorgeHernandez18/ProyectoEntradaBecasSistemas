@@ -2,6 +2,7 @@
 session_start();
 include "../controladores/seguridad.php";
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
