@@ -1,0 +1,2324 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict p5DAbgxQWaLpweCwGqBsLdpiyfb1ShpZCsEkanG2hS3v5YeGtJa8Ie8jDHJO668
+
+-- Dumped from database version 16.10
+-- Dumped by pg_dump version 16.10
+
+-- Started on 2025-11-12 07:55:43 -05
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 3738 (class 1262 OID 16545)
+-- Name: asistencia; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE asistencia WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'C';
+
+
+ALTER DATABASE asistencia OWNER TO postgres;
+
+\unrestrict p5DAbgxQWaLpweCwGqBsLdpiyfb1ShpZCsEkanG2hS3v5YeGtJa8Ie8jDHJO668
+\connect asistencia
+\restrict p5DAbgxQWaLpweCwGqBsLdpiyfb1ShpZCsEkanG2hS3v5YeGtJa8Ie8jDHJO668
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 215 (class 1259 OID 16546)
+-- Name: admin; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.admin (
+    id integer NOT NULL,
+    usuario text,
+    clave text
+);
+
+
+ALTER TABLE public.admin OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 16551)
+-- Name: admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.admin_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.admin_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3739 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.admin_id_seq OWNED BY public.admin.id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 16552)
+-- Name: estado; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.estado (
+    id integer NOT NULL,
+    codigo text,
+    nombre text,
+    estado text
+);
+
+
+ALTER TABLE public.estado OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 16557)
+-- Name: estado_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.estado_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.estado_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3740 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: estado_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.estado_id_seq OWNED BY public.estado.id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 16558)
+-- Name: registros; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.registros (
+    id integer NOT NULL,
+    codigo text,
+    nombre text,
+    tipo text,
+    fecha text,
+    hora text,
+    actividad text
+);
+
+
+ALTER TABLE public.registros OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 16563)
+-- Name: registros_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.registros_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.registros_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3741 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: registros_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.registros_id_seq OWNED BY public.registros.id;
+
+
+--
+-- TOC entry 221 (class 1259 OID 16564)
+-- Name: usuarios; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.usuarios (
+    id integer NOT NULL,
+    codigo text,
+    nombre text
+);
+
+
+ALTER TABLE public.usuarios OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 16569)
+-- Name: usuarios_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.usuarios_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.usuarios_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3742 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: usuarios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.usuarios_id_seq OWNED BY public.usuarios.id;
+
+
+--
+-- TOC entry 3565 (class 2604 OID 16570)
+-- Name: admin id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.admin ALTER COLUMN id SET DEFAULT nextval('public.admin_id_seq'::regclass);
+
+
+--
+-- TOC entry 3566 (class 2604 OID 16571)
+-- Name: estado id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.estado ALTER COLUMN id SET DEFAULT nextval('public.estado_id_seq'::regclass);
+
+
+--
+-- TOC entry 3567 (class 2604 OID 16572)
+-- Name: registros id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.registros ALTER COLUMN id SET DEFAULT nextval('public.registros_id_seq'::regclass);
+
+
+--
+-- TOC entry 3568 (class 2604 OID 16573)
+-- Name: usuarios id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios ALTER COLUMN id SET DEFAULT nextval('public.usuarios_id_seq'::regclass);
+
+
+--
+-- TOC entry 3725 (class 0 OID 16546)
+-- Dependencies: 215
+-- Data for Name: admin; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.admin (id, usuario, clave) FROM stdin;
+1	admin	1234
+\.
+
+
+--
+-- TOC entry 3727 (class 0 OID 16552)
+-- Dependencies: 217
+-- Data for Name: estado; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.estado (id, codigo, nombre, estado) FROM stdin;
+979	07477	Pedro Yesid Hernandez Jimenez	entrada
+984	04813	Luis Antonio Caicedo Guerrero	entrada
+989	03947	Eusen Enrique Penaranda Carrillo	entrada
+997	1152197	Daniel Eduardo Toloza Anaya	entrada
+998	1193508	Etni Salen Mendoza Garcia	entrada
+999	1152225	Andres Felipe Camacho Ramirez	entrada
+1000	1152240	Henry Alexander Blanco Rolon	entrada
+1001	1152252	Juan Sebastian Guerrero Bautista	entrada
+1002	1152284	Diego Alejandro Jaimes Torrado	entrada
+1003	1152251	Cesar Camilo Izquierdo Gallardo	entrada
+1004	07382	Gerson Jair Navarro Gomez	entrada
+1005	5544	DIANE MILENA ROJAS VERGEL	entrada
+\.
+
+
+--
+-- TOC entry 3729 (class 0 OID 16558)
+-- Dependencies: 219
+-- Data for Name: registros; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.registros (id, codigo, nombre, tipo, fecha, hora, actividad) FROM stdin;
+1	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-12	12:22:13	
+2	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-12	14:12:46	Instalacion de programas SF402
+3	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-15	08:02:38	
+4	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-15	08:10:48	
+5	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-15	08:11:29	
+6	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-15	08:12:19	
+7	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-15	08:13:31	
+8	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-15	08:14:06	
+9	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-15	08:14:23	
+10	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-15	08:14:58	
+11	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-15	08:15:24	
+12	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-15	08:15:50	
+13	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-15	09:07:44	video MX LINUX sobre su rendimiento
+14	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-15	09:09:09	
+15	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-15	09:58:14	
+16	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-15	10:06:58	Verificacion y actualizacion de programas en  sf402 y instlacion de QGis
+17	1193508	Etni Salen Mendoza Garcia	Salida	2025-09-15	10:13:02	archivar
+18	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-15	10:18:37	
+19	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-15	10:19:50	Arreglo de documentos de contenido programatico de un estudiante
+20	1152393	Juan Camilo Guarin Solano	Salida	2025-09-15	10:05:43	actualizacion de programas
+21	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-15	10:05:58	aqcutalizacion de programas
+22	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-15	11:57:22	administrativo
+23	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-15	12:01:23	administrativo
+24	07382	Gerson Jair Navarro Gomez	Salida	2025-09-15	12:01:41	administrativo
+25	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-15	12:01:58	sb instalacion de programas
+26	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-15	12:02:47	
+27	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-15	12:20:06	revision de computadores de depedencias de bienestar universitario, departamento de diseño y mecanico, entrega de soporte tecnico a vicerectoria y asistente de estudios.
+28	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-15	12:24:38	Revisión e instalación de los softwares en el salón SB402
+29	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-15	13:56:40	
+30	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-15	14:04:03	
+31	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-15	14:04:33	
+32	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-15	14:04:46	
+33	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-15	14:07:11	actualizar equipos
+34	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-15	14:07:53	
+35	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-15	14:00:23	
+36	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-15	14:08:46	
+37	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-15	14:10:18	
+38	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-15	14:10:05	
+39	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-15	14:46:39	
+40	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-15	15:13:36	verificacion de programas sb
+41	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-15	16:02:59	Mantenimiento programas de equipos Salon SB403
+42	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-15	16:08:53	
+43	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-15	17:07:48	Mantenimiento de equipos en el salon sb 403
+44	07382	Gerson Jair Navarro Gomez	Salida	2025-09-15	17:57:20	administrativo
+45	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-15	17:59:02	administrativo
+46	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-15	18:03:02	Separaciòn por carpetas de curriculos
+47	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-15	18:04:51	primera clase del curso de python\ncalificacion de ejercicios de curso de online gbd\nasesoria de calculo diferencial
+48	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-15	18:05:30	administrativo
+49	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-15	18:08:59	Asesorias.
+50	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-15	18:19:01	Administrativo
+51	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-16	06:28:09	
+52	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-16	06:28:46	
+53	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-16	07:09:41	
+54	1152188	Clara Ines Porras Mancilla	Ingreso	2025-09-16	08:00:56	
+55	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-16	08:01:18	
+56	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-16	08:01:52	
+57	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-16	08:08:21	
+58	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-16	08:58:38	
+59	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-16	09:59:43	
+60	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-16	10:01:36	
+61	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-16	10:02:44	Revisión de inventario e instalación de programas equipo SF
+62	1193508	Etni Salen Mendoza Garcia	Salida	2025-09-16	10:04:45	ARCHIVO
+64	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-16	10:06:27	INSTLACIONJ PROGRAMAS FABLAB
+67	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-16	10:16:06	
+68	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-15	19:00:00	administrador
+69	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-16	10:52:37	
+70	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-16	08:00:00	
+71	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-16	11:03:34	
+72	1152188	Clara Ines Porras Mancilla	Salida	2025-09-16	12:01:08	Descarga de archivo digital DATARSOFT
+73	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-16	12:04:57	administrador
+74	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-16	12:05:21	mantenimiento oficina
+75	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-16	12:05:47	Oficina mantenimiento
+76	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-16	12:06:40	Actualizacion equipos SB
+77	07382	Gerson Jair Navarro Gomez	Salida	2025-09-16	12:07:08	administrador
+78	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-16	12:08:08	Revisión programas pc SB402-15
+79	1152349	Santiago Corredor Jaramillo	Salida	2025-09-16	12:09:42	oficina
+80	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-16	12:13:06	administrativo
+81	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-16	13:53:58	
+82	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-16	13:54:27	
+83	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-16	13:55:18	
+84	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-16	13:55:49	
+85	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-16	13:56:05	
+86	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-16	13:56:37	
+87	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-16	13:56:54	
+88	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-16	13:57:49	
+89	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-16	13:58:23	
+90	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-16	14:02:29	
+91	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-16	14:06:42	
+92	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-16	14:06:57	
+93	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-16	14:12:25	
+95	1152430	Juan David Kher Sanchez	Ingreso	2025-09-16	15:04:17	
+96	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-16	15:54:48	
+97	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-16	15:55:05	
+98	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-16	16:04:00	instalacion de la maquina virtual sb401
+99	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-16	16:04:46	instalacion virtual box y kali linux sb401
+100	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-16	16:05:13	Mantenimiento de equipos de sb 401
+101	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-16	16:13:10	Instalación de Windows XP y Linux para virtual machine de SB401
+102	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-16	17:55:33	ADMINISTRATIVO
+103	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-16	17:57:59	cambio hdmi SA402 y cambio disco duro + instalacion de windows 11
+104	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-16	18:00:12	dictar curso de python para estudiantes del grupo del dia martes\ncalificacion de ejercicios de online gbd\nasesorias de amigo acadèmico
+105	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-16	18:01:08	Archivaciòn y catalogaciòn de microcurriculos
+106	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-09-16	18:02:32	Cambio de videobean SB402\nInstalación de virtual box y maquinas virtuales de winxp y kali linux SB401 equipos 1, 2, 25, 26, 27
+107	1152430	Juan David Kher Sanchez	Salida	2025-09-16	18:03:30	instalacion de maquinas virtuales kali linux y windows xp en SB401
+108	07382	Gerson Jair Navarro Gomez	Salida	2025-09-16	18:06:27	administrativo
+109	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-16	18:08:49	Instalacion de la maquina virtual
+110	1152393	Juan Camilo Guarin Solano	Salida	2025-09-16	18:10:20	actualizacion de maquina virtual
+111	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-16	18:12:43	Asesorias.
+112	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-16	18:18:46	administrativo
+113	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-17	06:27:43	
+115	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-17	07:47:48	
+116	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-17	07:55:09	
+117	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-17	07:57:50	
+118	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-17	07:59:58	
+119	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-17	08:07:05	
+120	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-17	08:08:23	
+121	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-17	08:08:47	
+122	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-17	08:09:01	
+123	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-17	08:12:01	
+124	1152349	Santiago Corredor Jaramillo	Salida	2025-09-17	09:13:14	Actualizacion de programas en el SF-404
+125	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-17	09:22:29	
+126	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-16	19:48:12	administrativo
+127	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-17	08:00:13	
+128	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-17	09:52:08	Arreglo de excel con los diferentes factores (avance)
+129	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-17	09:57:39	actualizaron programas SF404
+130	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-17	10:00:13	Mantenimiento programas SF404
+131	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-17	10:00:45	
+132	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-17	10:03:15	formateo e instlacionde programas fablab
+133	1152393	Juan Camilo Guarin Solano	Salida	2025-09-17	10:04:36	actualizacion de progrmas en sf404
+134	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-17	10:05:41	
+135	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-17	10:08:58	
+136	1152590	Juan Fernando Vanegas Camacho	Salida	2025-09-17	11:59:03	Actualizacion de programas SF404
+137	07382	Gerson Jair Navarro Gomez	Salida	2025-09-17	12:00:56	administrativo
+138	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-17	12:02:07	Adminstrativo
+139	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-17	12:17:38	Actualizar programa en sf404
+140	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-17	12:31:33	administrativo
+141	1152349	Santiago Corredor Jaramillo	Salida	2025-09-17	12:35:51	Actualizacion de programas SF 404
+142	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-17	12:58:07	ADMINISTRATIVO
+143	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-17	13:52:07	
+144	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-17	13:55:54	
+145	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-17	13:56:30	
+146	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-17	14:00:22	
+147	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-17	14:02:39	
+148	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-17	14:05:08	
+149	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-17	14:05:31	
+150	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-17	14:06:01	
+151	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-17	14:11:44	
+152	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-17	14:17:29	
+153	1152430	Juan David Kher Sanchez	Ingreso	2025-09-17	15:09:46	
+154	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-17	15:31:01	
+155	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-17	15:58:04	
+156	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-17	16:05:34	
+157	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-17	16:10:04	Instalaciòn y actualizaciòn de programas en SA401
+158	1152590	Juan Fernando Vanegas Camacho	Salida	2025-09-17	16:10:48	Actualizacion de programas en SA401
+159	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-17	17:53:34	formateo e instalacion de programas FABLAB
+160	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-17	17:54:34	formateo de windows 11 en el fablab y reparacion de discos duros
+161	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-09-17	17:55:45	Instlacion y actualizacion de software SA401 equipos 16, 19, 21, 22 y 24
+162	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-17	17:56:34	dictar curso de python grupo dia miercoles\ncalificacion de ejercicios online gbd dicho curso\ndisposicion a asesorias
+163	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-17	17:57:39	actulizaron programas de SA-401
+164	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-17	17:59:49	
+165	1152430	Juan David Kher Sanchez	Salida	2025-09-17	18:00:01	actualizar sa401
+166	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-17	18:00:31	archivo
+167	07382	Gerson Jair Navarro Gomez	Salida	2025-09-17	18:01:29	administrativo
+168	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-17	18:02:19	administrativo
+169	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-17	18:02:49	verificacion programas sa401
+171	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-17	14:06:10	
+172	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-17	18:07:21	Asesorias amigo academico.
+173	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-17	18:08:30	administrativo
+174	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-17	18:24:36	administrativo
+175	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-18	06:08:24	
+176	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-18	07:41:27	
+177	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-18	07:57:41	
+178	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-18	08:02:34	
+179	1152188	Clara Ines Porras Mancilla	Ingreso	2025-09-18	08:05:17	
+180	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-18	08:06:45	
+181	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-18	08:45:42	
+182	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-18	09:59:11	
+183	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-18	11:52:07	anexo de tablas al ecxel de la ingeniera
+184	07382	Gerson Jair Navarro Gomez	Salida	2025-09-18	11:55:07	administrativo
+185	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-18	11:57:33	Desintalacion y fragmentacion en sf404
+186	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-18	12:01:21	Actualizacion y desfragmentacion de discos SF404
+187	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-18	12:04:45	Mantenimiento FabLab instalacion de windows 11 y software
+188	1152188	Clara Ines Porras Mancilla	Salida	2025-09-18	12:07:08	Descarga de archivo digital DATARSOFT
+189	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-18	13:50:56	
+190	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-18	08:00:59	
+191	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-18	12:02:21	
+192	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-18	14:03:01	
+193	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-18	13:53:34	
+194	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-18	13:57:41	
+195	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-18	13:58:04	
+196	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-18	13:58:42	administrativo
+197	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-18	13:58:53	
+198	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-18	13:59:39	
+199	1152188	Clara Ines Porras Mancilla	Ingreso	2025-09-18	13:59:56	
+200	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-18	14:01:20	
+201	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-18	14:02:21	
+202	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-18	14:03:16	
+203	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-18	14:07:57	
+204	1152430	Juan David Kher Sanchez	Ingreso	2025-09-18	14:08:18	
+205	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-18	14:08:57	
+206	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-18	14:09:51	
+207	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-18	14:10:11	
+208	1152337	Alex Felipe Sanchez Castano	Ingreso	2025-09-18	14:16:43	
+209	1152393	Juan Camilo Guarin Solano	Salida	2025-09-18	16:00:37	actualizacion de QGIS en sf404
+210	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-18	16:01:20	Mantenimiento programas sc401
+211	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-18	16:02:04	Actualizacion de programas
+212	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-18	16:03:55	maquinas virtuales sa411
+213	1152188	Clara Ines Porras Mancilla	Salida	2025-09-18	16:23:11	Descarga archivo digital DATARSOFT
+214	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-18	16:42:24	
+215	1152337	Alex Felipe Sanchez Castano	Salida	2025-09-18	16:48:16	monitoria estructuras de datos
+216	1152430	Juan David Kher Sanchez	Salida	2025-09-18	17:04:03	configuracion maquinas virtuales
+217	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-18	17:17:20	Asesorias amigo academico.
+218	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-18	17:54:43	mantenimiento e instalacion de software fablab
+219	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-18	17:56:48	intalacion software fablab
+220	1152590	Juan Fernando Vanegas Camacho	Salida	2025-09-18	17:57:16	actualizacion programas sc401
+221	07382	Gerson Jair Navarro Gomez	Salida	2025-09-18	18:01:03	administrativo
+222	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-18	18:04:45	administrativo
+223	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-18	18:08:36	ASESORIA AMIGO ACADEMICO
+224	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-18	18:10:02	archivo
+225	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-18	18:10:22	maquinas virtuales en en sa11
+226	1193508	Etni Salen Mendoza Garcia	Salida	2025-09-17	12:14:28	archivo
+227	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-18	18:16:23	administrativo
+228	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-18	12:17:11	
+229	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-18	14:17:49	
+230	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-18	18:17:59	administrativo
+231	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-16	18:19:42	
+232	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-19	06:28:46	
+233	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-19	07:40:36	
+234	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-19	08:04:50	
+235	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-19	08:20:16	
+236	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-19	10:00:21	
+237	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-19	10:00:35	
+238	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-19	10:00:54	
+239	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-19	10:03:24	instalaciòn software equipo sb
+240	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-19	11:03:14	Mantenimiento de programas sf403
+241	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-19	11:55:45	
+242	07382	Gerson Jair Navarro Gomez	Salida	2025-09-19	11:57:59	administrativo
+243	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-19	12:01:25	Actualizacion de programas
+244	1152393	Juan Camilo Guarin Solano	Salida	2025-09-19	12:01:49	Actualizacion de programas
+245	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-19	13:48:29	administrativo
+246	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-19	13:54:42	
+247	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-19	13:57:16	
+248	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-19	13:57:30	
+249	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-19	14:01:17	
+250	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-19	14:01:32	
+251	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-19	14:01:47	
+252	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-19	14:02:24	Actualizacion y mantenimiento de equipos SF
+253	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-19	14:03:13	
+254	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-19	14:04:54	
+255	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-19	14:07:10	
+256	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-19	14:12:02	
+257	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-19	14:24:08	
+258	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-19	15:55:49	se actualizaron los programas de SC-401
+259	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-19	15:59:52	Mantenimiento programas sc401
+260	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-19	16:00:33	Actualizacion programas sc 401
+261	1152393	Juan Camilo Guarin Solano	Salida	2025-09-19	16:01:16	actualizacion de la sala sc401
+262	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-19	16:01:45	
+263	1193508	Etni Salen Mendoza Garcia	Salida	2025-09-19	16:04:47	recepcion de documentos
+264	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-19	16:09:15	Archivado de microcurriculos
+265	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-19	17:07:14	Mantenimiento sala 3d fablab y limpieza de equipos en el ViveLab
+266	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-19	17:36:58	limpieza vivelab
+267	07382	Gerson Jair Navarro Gomez	Salida	2025-09-19	17:59:32	administrativo
+268	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-19	18:01:39	asesoria amigo academico
+269	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-19	18:07:37	instalacion arduino
+270	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-19	18:16:29	administrativo
+271	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-19	18:21:23	adminstrativo
+272	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-22	06:34:33	
+273	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-22	07:14:18	
+274	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-22	07:52:47	
+275	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-22	07:56:09	
+276	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-22	07:57:19	
+277	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-22	07:58:20	
+278	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-22	07:59:03	
+279	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-22	08:03:17	
+280	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-22	08:11:19	
+281	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-22	08:15:08	
+282	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-22	08:57:10	Revision de equipos en Inventario de Division de Sistemas
+283	1152337	Alex Felipe Sanchez Castano	Ingreso	2025-09-22	09:53:10	
+284	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-22	09:53:41	
+285	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-09-22	09:57:55	Actualizacion de software SD
+286	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-22	10:00:03	Actualizacion de programas
+287	1152393	Juan Camilo Guarin Solano	Salida	2025-09-22	10:01:05	Actualizacion de programas
+288	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-22	10:02:41	llenado de tablas en el excel de la ingeniera Pilar
+289	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-22	10:13:08	verificacion sd401
+290	1152337	Alex Felipe Sanchez Castano	Salida	2025-09-22	11:53:56	Correccion de ejercicios
+291	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-22	11:55:22	se actualizaron programas de SD401
+292	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-22	11:57:01	
+293	07382	Gerson Jair Navarro Gomez	Salida	2025-09-22	11:59:39	administrativo
+294	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-22	12:18:49	administrativo
+295	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-22	13:57:39	
+296	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-22	13:59:38	
+297	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-22	14:03:34	
+298	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-22	14:06:07	
+299	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-22	14:06:43	
+300	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-22	14:07:09	
+301	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-22	14:10:53	
+302	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-22	14:11:36	
+303	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-22	14:14:14	Actualizacion equipos SD
+304	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-22	14:27:06	
+305	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-22	15:16:21	activacion licencia(17) arreglo(21) en sd401
+306	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-22	16:16:35	Mantenimiento programas SD402
+307	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-22	17:04:45	Mantenimiento de equipos de sd402
+308	07382	Gerson Jair Navarro Gomez	Salida	2025-09-22	17:14:25	administrativo
+309	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-22	17:14:52	
+310	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-22	17:15:25	
+311	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-22	17:16:04	prueba 1.02
+312	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-22	17:51:10	Asesorias amigo academico.
+313	07382	Gerson Jair Navarro Gomez	Salida	2025-09-22	17:55:27	administrativo
+314	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-22	18:03:18	Archivado de microcurriculos
+315	1152349	Santiago Corredor Jaramillo	Salida	2025-09-22	18:04:38	Actualizacion de programas SD402
+316	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-22	18:05:27	asesoria amigo academico
+317	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-22	14:01:21	
+318	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-22	18:12:11	administrativo
+319	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-22	18:28:06	administrativo
+321	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-22	18:36:04	administrativo
+322	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-23	07:32:36	
+323	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-23	07:55:59	
+324	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-23	07:57:35	
+325	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-23	07:59:11	
+326	1152188	Clara Ines Porras Mancilla	Ingreso	2025-09-23	08:00:05	
+327	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-23	08:10:37	
+328	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-23	08:17:21	
+329	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-23	08:37:26	
+330	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-23	08:43:56	
+331	1152590	Juan Fernando Vanegas Camacho	Salida	2025-09-23	09:56:13	Disponibilidad oficina de mantenimiento
+332	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-23	10:01:32	
+333	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-23	10:02:05	Instalaciòn de programas equipos SD
+334	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-23	10:03:06	
+335	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-23	10:05:47	
+336	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-23	10:18:33	INSTALACION PROGRAMAS VIVELAB
+337	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-23	10:54:18	
+338	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-23	11:04:11	
+339	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-23	11:05:36	MOdificacion de alñgunos microcurriculos
+340	1152349	Santiago Corredor Jaramillo	Salida	2025-09-23	11:58:48	Mantenimiento de equipos en oficina
+341	07382	Gerson Jair Navarro Gomez	Salida	2025-09-23	12:01:07	administrativo
+342	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-23	12:03:35	administrativo
+343	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-23	12:06:41	Mantenimiento sf404
+344	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-23	12:07:15	Revision de internet y actualizacion SF404
+345	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-23	12:08:02	Revisión e instalación de prgoramas SF 404
+346	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-23	12:09:34	oficina mantenimiento
+348	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-23	12:11:42	administrativo
+347	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-23	09:05:55	
+349	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-23	14:00:24	
+350	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-23	13:50:13	
+351	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-23	13:53:27	
+352	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-23	13:54:07	
+353	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-23	13:56:12	
+354	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-23	13:57:24	
+355	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-23	13:57:54	
+356	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-23	13:58:24	
+357	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-23	14:02:05	
+358	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-23	14:02:30	
+359	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-23	14:06:06	
+360	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-23	14:08:05	
+361	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-23	14:11:45	
+362	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-23	14:19:41	administrativo
+363	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-23	14:19:55	
+364	1152337	Alex Felipe Sanchez Castano	Ingreso	2025-09-23	14:30:33	
+365	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-23	15:57:54	Instalacion de unity SA-403
+366	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-23	15:58:43	Revisón equipos SA
+367	1152430	Juan David Kher Sanchez	Ingreso	2025-09-23	16:00:02	
+368	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-23	16:00:30	
+369	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-23	16:01:44	Mantenimiento programas SA403
+370	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-23	16:02:37	Mantenimiento programas sa403
+371	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-23	16:03:07	
+372	1152337	Alex Felipe Sanchez Castano	Salida	2025-09-23	17:08:35	ejercicios online gbd
+373	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-23	17:43:07	VISITA AINVENTARIO PARA EXTRAER COMPUTADORES FUNCIONALES
+374	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-23	17:45:12	Revision de equipos en el almacen de divison de sistemas
+375	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-23	17:49:00	Asesorias amigo academico.
+376	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-23	17:58:57	administrativo
+377	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-23	18:01:31	Archivado de microcurriculo
+378	07382	Gerson Jair Navarro Gomez	Salida	2025-09-23	18:02:58	administrativo
+379	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-23	18:04:26	Actualizacion de programas
+380	1152430	Juan David Kher Sanchez	Salida	2025-09-23	18:05:22	actualizacion programas sc402
+381	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-09-23	18:07:07	Instalacion de unity SA403 equipos 1, 2, 3, 7, 8, 9, 10, 11. Actualizacion de software SC402 equipo 1
+382	1152393	Juan Camilo Guarin Solano	Salida	2025-09-23	18:08:23	actualizacion en la sala sc 402
+383	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-23	18:20:00	administrativo
+384	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-24	07:24:49	
+385	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-24	07:52:57	
+386	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-24	07:57:03	
+387	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-24	07:57:33	
+388	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-24	08:01:29	
+389	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-24	08:05:28	
+390	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-24	08:09:36	
+391	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-24	08:12:12	
+392	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-24	08:13:53	
+393	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-24	09:51:22	Acomodacion de micreocurriculos
+394	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-24	09:51:55	
+395	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-24	09:57:44	Mantenimiento programas SF402
+396	1152393	Juan Camilo Guarin Solano	Salida	2025-09-24	09:59:48	ACTUALIZACION DE PROGRAMAS EN SF402
+397	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-24	10:00:54	INSTALO PROGRAMAS DE SF-402
+398	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-24	10:01:20	
+399	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-24	10:04:16	
+400	1152590	Juan Fernando Vanegas Camacho	Salida	2025-09-24	11:51:08	Revision impresora en FU
+401	07382	Gerson Jair Navarro Gomez	Salida	2025-09-24	11:58:20	administrativo
+402	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-24	11:59:22	Trabajo en oficina, organizacion documentos
+403	1152349	Santiago Corredor Jaramillo	Salida	2025-09-24	12:12:16	actualizacion de programas sf404
+404	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-24	08:16:29	
+405	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-24	12:17:30	administrativo
+406	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-24	13:54:37	
+407	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-24	13:55:55	
+408	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-24	13:56:20	administrativo
+409	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-24	13:56:35	
+410	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-24	13:56:58	
+411	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-24	13:57:43	
+412	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-24	13:58:35	
+413	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-24	13:59:07	
+414	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-24	14:01:37	
+415	1152430	Juan David Kher Sanchez	Ingreso	2025-09-24	14:02:50	
+416	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-24	14:08:30	
+417	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-24	14:10:09	
+418	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-24	14:14:54	
+419	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-24	14:17:08	
+420	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-24	15:15:45	
+421	1152590	Juan Fernando Vanegas Camacho	Salida	2025-09-24	15:53:14	Actualizacion de programas en SB404
+422	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-24	16:01:52	Instalaciòn Virtual BOX salones sb linux y windows
+423	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-24	16:05:58	llenado de tablas al ecxel y a su vez creacion de certificado de calificaciones para dianis
+424	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-24	16:08:22	
+425	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-24	16:35:47	Revisión e instalación programas SB404
+426	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-24	17:46:45	bloqueo de aplicacions en sc 401 y formateo pcs en vivelab
+427	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-24	17:50:31	Configuracion de equipos SC401 para evitar el uso de IA, y actualizacion de windows equipos en el vivelab
+571	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-29	14:22:27	
+428	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-24	17:52:10	Asesorias amigo academico.
+429	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-24	17:57:14	Archivado de microcurriculos
+430	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-24	17:58:23	asesoria amigo academico en el area de estructura de datos
+431	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-24	17:58:51	administrativo
+432	07382	Gerson Jair Navarro Gomez	Salida	2025-09-24	17:59:48	administrativo
+433	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-09-24	18:04:35	Verificacion de software SB404 equipos 22, 25, 18, 17, 29, 14, 15
+434	1152430	Juan David Kher Sanchez	Salida	2025-09-24	18:06:10	mantenimiento programas sala sb404
+435	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-24	18:08:11	oficina/salon sb402 fondos y programas
+436	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-25	06:30:08	
+437	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-25	07:58:24	
+438	1152188	Clara Ines Porras Mancilla	Ingreso	2025-09-25	07:59:06	
+439	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-25	08:01:12	
+440	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-25	08:04:13	
+441	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-25	08:07:37	
+442	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-25	08:11:28	
+443	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-25	08:19:14	
+444	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-25	08:30:45	
+445	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-25	09:24:32	
+446	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-25	09:43:39	
+447	1152349	Santiago Corredor Jaramillo	Salida	2025-09-25	09:51:26	actualizacion programas SF403
+448	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-25	08:00:02	
+449	07382	Gerson Jair Navarro Gomez	Salida	2025-09-25	11:59:22	administrativo
+450	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-25	11:59:53	Mantenimiento Vivelab
+451	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-25	12:00:35	Anexo de informacion al ecxel
+452	1152188	Clara Ines Porras Mancilla	Salida	2025-09-25	12:01:17	Descarga archivo digital DATARSOFT
+453	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-25	12:04:02	Actualizacion de equipos SF403
+454	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-25	12:04:41	verificacion y eliminacion de programas en sf402
+455	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-25	12:06:22	REVISIÓN E INSTALACIÓN PROGRAMAS SF402
+456	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-25	12:16:37	ADMINISTRATIVO
+457	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-25	13:49:08	
+458	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-25	13:54:35	
+459	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-25	13:55:03	
+460	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-25	13:59:05	
+461	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-25	13:59:28	
+462	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-25	13:59:53	
+463	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-25	14:01:37	
+464	1152430	Juan David Kher Sanchez	Ingreso	2025-09-25	14:05:21	
+465	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-25	14:05:40	
+466	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-25	14:08:16	
+467	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-25	14:09:12	
+468	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-25	14:10:29	
+469	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-25	14:18:26	ADMINISTRATIVO
+470	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-25	14:18:46	
+471	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-25	14:21:38	
+472	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-25	14:24:26	
+473	1152337	Alex Felipe Sanchez Castano	Ingreso	2025-09-25	15:30:06	
+474	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-25	15:59:24	se amarraron los cables de los PC sc-402
+475	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-25	16:03:41	Amarrar cables SC402
+476	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-25	16:04:08	Llevar equipos con luis
+477	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-25	16:04:38	Safe browser en sa401
+478	1152430	Juan David Kher Sanchez	Salida	2025-09-25	16:05:34	configuracion safe browser sa401
+479	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-25	16:06:37	Amarre de cables en SC 402
+480	1152337	Alex Felipe Sanchez Castano	Salida	2025-09-25	17:37:58	monitoria estructuras
+481	1152590	Juan Fernando Vanegas Camacho	Salida	2025-09-25	17:50:57	Se amarraron los cables de sc 402 y se desinstalaron los programas no utiles en sf 404
+482	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-25	17:54:09	Mantenimiento vivelab
+483	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-25	17:54:36	mantenimiento vivelab
+484	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-25	17:58:04	asesoria amigos academicos
+485	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-25	17:58:32	Asesorias amigo academico.
+486	07382	Gerson Jair Navarro Gomez	Salida	2025-09-25	18:04:27	administrativo
+487	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-25	18:05:09	Archivado de microcurriculos
+488	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-25	18:15:02	administrativo
+489	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-25	18:36:22	administrativo
+490	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-26	07:37:14	
+491	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-26	07:56:54	
+492	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-26	07:58:32	
+493	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-26	08:02:49	
+494	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-26	08:05:12	
+495	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-26	08:23:40	
+496	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-26	09:50:27	
+497	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-26	09:56:14	Archivado de microcurriculos
+498	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-26	10:00:05	
+499	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-26	10:01:02	
+500	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-26	10:03:44	Instalaciòn programas SF
+501	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-26	10:06:18	
+502	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-26	11:00:47	oficina mantenimiento
+503	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-26	11:55:51	Trabajo en oficina, revision
+504	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-26	11:58:08	
+505	07382	Gerson Jair Navarro Gomez	Salida	2025-09-26	12:00:40	administrativo
+506	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-26	12:02:15	administrativo
+507	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-26	12:05:06	Instalación de Windows 7 computador SD403-28
+508	1152349	Santiago Corredor Jaramillo	Salida	2025-09-26	12:55:43	mantenimiento de equipos en oficina
+509	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-26	13:50:20	
+510	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-26	13:54:13	
+511	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-26	13:55:33	
+512	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-26	13:56:22	
+513	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-26	13:56:56	
+514	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-26	08:00:19	
+515	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-26	12:00:45	
+516	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-26	13:59:29	
+517	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-26	14:00:09	
+518	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-26	14:01:45	
+519	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-26	14:06:45	
+520	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-26	14:07:56	administrativo
+521	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-26	14:08:10	
+522	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-26	14:09:13	Actualizacion equipos SF402
+523	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-26	14:09:36	
+524	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-26	14:15:08	
+525	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-26	14:15:50	
+526	1152349	Santiago Corredor Jaramillo	Salida	2025-09-26	15:57:37	Actualizacion de programas SF401 pc 16 y 17
+527	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-26	15:58:22	
+528	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-26	15:59:02	Mantenimiento programas SF401
+529	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-26	16:00:15	se actualizaron programas sf401
+530	1193508	Etni Salen Mendoza Garcia	Salida	2025-09-26	16:00:58	archivo y documentos de excel
+531	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-26	16:02:19	Archivaciòn de microcurriculos
+532	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-26	16:55:32	Clonado de discos con mxlinux para su uso en el departamento de derecho
+533	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-26	16:57:16	clonado discos
+534	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-26	17:40:49	Asesorias amigo academico.
+535	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-26	17:48:18	administrativo
+536	07382	Gerson Jair Navarro Gomez	Salida	2025-09-26	17:54:56	administrativo
+537	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-29	07:33:03	
+538	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-29	07:50:01	
+539	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-29	07:55:03	
+540	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-29	07:57:28	
+541	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-29	08:03:26	
+542	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-29	08:05:13	
+543	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-29	08:05:36	
+544	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-29	08:07:46	
+545	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-29	08:51:09	
+546	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-29	09:51:35	Anexos de tablas al excel e informacion
+547	1152188	Clara Ines Porras Mancilla	Ingreso	2025-09-29	09:56:51	
+548	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-09-29	09:57:51	
+549	1152393	Juan Camilo Guarin Solano	Salida	2025-09-29	10:00:44	actualizacion de los programas en la sala sc 401
+550	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-29	10:03:31	
+551	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-09-29	10:06:07	Actualizacion software SC401 equipos 7 y 8
+552	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-29	10:10:27	revicion y actualizacion programas sc401
+553	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-29	11:55:27	
+554	1152188	Clara Ines Porras Mancilla	Salida	2025-09-29	12:02:45	Descarga archivo digital datarsoft
+555	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-09-29	12:03:25	administrativo
+556	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-29	12:04:21	Revisión y prueba de teclados y mouse programa de Derecho
+557	07382	Gerson Jair Navarro Gomez	Salida	2025-09-29	12:05:06	administrativo
+558	1152329	Camilo Andres Sanchez Martinez	Salida	2025-09-29	12:08:28	se revisaron mouse y teclados en el programa derecho
+559	1193508	Etni Salen Mendoza Garcia	Salida	2025-09-29	13:53:57	archivos y datarsoft
+560	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-29	13:54:13	
+561	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-29	13:58:32	
+562	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-29	13:59:01	
+563	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-29	13:59:20	
+564	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-29	13:59:41	
+565	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-29	14:00:27	
+566	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-29	14:00:51	
+567	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-29	14:01:10	
+568	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-09-29	14:03:49	
+569	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-29	14:07:34	Actualizacion equipos SB
+570	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-29	14:05:37	
+572	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-29	15:11:46	Amarrado de cables sb403
+573	1152225	Andres Felipe Camacho Ramirez	Salida	2025-09-29	16:16:40	Amarre de cables en sb403 y limpieza de mouses en sala de equipos de facultad de derecho
+574	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-09-29	16:20:41	verificar internet SF 404
+575	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-29	16:59:25	cableado sb 403
+576	1152349	Santiago Corredor Jaramillo	Salida	2025-09-29	17:51:17	Mantenimiento de equipos sala SA411
+577	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-29	17:56:09	Asesorias amigo academico.
+578	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-29	17:57:27	Archivado de microcurriculos
+579	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-29	17:58:31	curso de fundamentos d epython\nasesorias amigos academicos
+580	07382	Gerson Jair Navarro Gomez	Salida	2025-09-29	18:00:14	administrativo
+581	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-29	18:05:11	administrativo
+582	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-24	19:00:24	
+583	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-23	17:00:23	administrativo
+584	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-26	21:00:50	administrativo
+585	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-29	21:41:27	administrativo
+586	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-30	07:33:48	
+587	1152188	Clara Ines Porras Mancilla	Ingreso	2025-09-30	07:56:20	
+588	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-30	08:00:02	
+589	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-09-30	08:00:43	
+590	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-09-30	08:04:08	
+591	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-30	08:13:51	
+592	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-09-30	08:16:54	
+593	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-09-30	08:20:25	
+594	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-09-30	08:43:22	
+595	1151860	Luis Eduardo Soto Garcia	Salida	2025-09-30	09:59:39	Revisión e instalción de programas SD403-28
+596	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-30	10:00:15	
+597	1193508	Etni Salen Mendoza Garcia	Salida	2025-09-30	10:01:12	DATARSOFT
+598	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-09-30	10:11:22	
+599	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-09-30	10:53:45	
+600	1152349	Santiago Corredor Jaramillo	Ingreso	2025-09-30	11:02:37	
+601	1152349	Santiago Corredor Jaramillo	Salida	2025-09-30	11:52:46	Mantenimiento de equipos en oficina
+602	07382	Gerson Jair Navarro Gomez	Salida	2025-09-30	12:00:25	administrativo
+603	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-30	12:04:15	limpieza de mouse en la facultad de derecho
+604	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-09-30	12:04:44	Limpieza de equipos facultad de derecho
+605	1152188	Clara Ines Porras Mancilla	Salida	2025-09-30	12:05:12	Descarga archivo digital datarsoft
+606	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-09-30	13:00:48	
+607	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-09-30	13:55:32	
+608	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-09-30	13:55:57	
+609	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-09-30	13:56:21	
+610	1152200	Javier Sneider Rincon Moreno	Salida	2025-09-30	13:57:33	oficina mantenimiento
+611	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-30	13:59:02	adminstrativo
+612	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-09-30	13:59:17	
+613	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-30	13:59:40	Salas SF
+614	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-09-30	13:59:54	
+615	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-09-30	14:01:56	
+616	1152430	Juan David Kher Sanchez	Ingreso	2025-09-30	14:02:22	
+617	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-09-30	14:02:42	
+618	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-09-30	14:03:03	
+619	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-09-30	14:04:59	
+620	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-09-30	14:06:21	
+621	1152337	Alex Felipe Sanchez Castano	Ingreso	2025-09-30	14:12:06	
+622	07382	Gerson Jair Navarro Gomez	Ingreso	2025-09-30	14:26:37	
+623	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-09-30	14:33:00	
+624	1152393	Juan Camilo Guarin Solano	Ingreso	2025-09-30	15:56:44	
+625	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-09-30	16:03:23	instalacion de equipos derecho
+626	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-09-30	16:08:48	Equipos SF404
+627	1152307	Nefer Sneyder Rojas Porras	Salida	2025-09-30	16:13:04	Arreglo de documentos y modificacion de los mismos
+628	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-09-30	17:44:36	Administrativo
+629	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-09-30	17:45:37	instalacion, configuracion de mxlinux y limpieza de equipos
+630	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-09-30	17:47:25	instalacion y configuracion mxlinux
+631	1152430	Juan David Kher Sanchez	Salida	2025-09-30	17:48:05	instalacion windows 11 y actualizacion programas
+632	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-09-30	17:55:36	Asesorias amigo academico.
+633	1152393	Juan Camilo Guarin Solano	Salida	2025-09-30	17:56:28	mantenimiento de computadoras en sala de abogados
+634	1152337	Alex Felipe Sanchez Castano	Salida	2025-09-30	17:57:21	ejercicios estructuras de datos
+635	1152208	Erika Alejandra Sanchez Soto	Salida	2025-09-30	17:59:22	Archivado de microcurriculos
+636	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-09-30	18:00:22	revision de equipos SF402 del 4 al 11
+637	07382	Gerson Jair Navarro Gomez	Salida	2025-09-30	18:02:53	administrativo
+638	04813	Luis Antonio Caicedo Guerrero	Salida	2025-09-30	18:03:23	administrativo
+639	1152240	Henry Alexander Blanco Rolon	Salida	2025-09-30	18:06:10	curso de python\nasesorias amigos acadèmicos
+640	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-01	08:03:06	
+641	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-01	08:03:32	
+642	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-01	08:08:59	
+643	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-01	08:09:47	
+644	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-01	08:10:22	
+645	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-01	08:16:08	
+646	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-01	08:34:22	
+647	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-01	08:51:24	
+648	1152349	Santiago Corredor Jaramillo	Salida	2025-10-01	09:11:30	Mantenimiento de equipos en oficina
+649	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-01	09:58:49	
+650	1152393	Juan Camilo Guarin Solano	Salida	2025-10-01	10:01:14	actualizacion salon sf 402
+651	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-01	10:01:40	
+652	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-01	10:05:42	Mantenimiento de programas SF402
+653	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-01	10:09:06	
+654	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-01	10:10:42	Mantenimiento programas SF402
+655	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-01	10:12:44	
+656	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-01	08:10:32	
+657	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-09-30	21:41:53	
+658	1152349	Santiago Corredor Jaramillo	Salida	2025-10-01	11:52:08	Mantenimiento sf402
+659	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-01	11:57:37	Actualizacion de programas sf402
+660	07382	Gerson Jair Navarro Gomez	Salida	2025-10-01	12:01:04	administrativo
+661	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-01	12:05:50	adm
+662	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-01	12:18:15	Actualizaciòn de PC, SF402
+663	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-01	13:57:34	
+664	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-01	13:59:18	
+665	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-01	13:59:37	
+666	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-01	14:00:19	
+667	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-01	14:01:15	
+668	1152430	Juan David Kher Sanchez	Ingreso	2025-10-01	14:02:32	
+669	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-01	14:02:54	
+670	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-01	14:03:43	
+671	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-01	14:04:31	
+672	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-01	14:12:03	
+673	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-01	14:13:17	ADMINISTRATIVO
+674	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-01	14:13:31	
+675	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-01	14:14:05	
+676	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-01	14:17:42	
+677	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-01	14:22:32	
+678	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-01	13:00:56	administrativo
+679	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-01	16:00:22	
+680	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-01	16:05:17	Organización evento buscando carrera
+681	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-01	16:12:03	instalacion de project  y su activacion sb404
+682	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-01	16:17:39	Actualizacion de programas, transporte de objetos
+683	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-01	16:18:32	Actualizacion de programas, transporte de objetos
+684	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-01	17:44:09	instalacion y configuracion de mxlinux en la facultad de derecho
+685	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-01	17:47:59	limpieza pcs derecho
+686	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-01	17:54:29	curso de python\nasesoria amigo acadèmico
+687	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-01	17:54:56	Asesorias amigo academico.
+688	07382	Gerson Jair Navarro Gomez	Salida	2025-10-01	17:57:39	administrativo
+689	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-01	18:00:24	Actualizacion de programas SF-401, SB-404 y translado de mesas al coliseo
+690	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-01	09:50:17	administrativo
+691	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-01	18:10:45	Archivado de microcurriculos y decoraciòn de evento
+692	1152430	Juan David Kher Sanchez	Salida	2025-10-01	18:16:28	acompañamiento y ordernamiento evento universidad
+693	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-01	18:17:42	Apoyo logistico feria de carreras en coliseo
+694	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-01	18:39:01	administrativas
+695	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-02	07:57:13	
+696	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-02	08:00:18	
+697	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-02	08:14:48	
+698	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-02	08:16:15	
+699	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-02	08:20:50	
+700	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-02	09:56:49	Acompañamiento "buscando carreras"
+701	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-02	10:11:20	
+702	1152349	Santiago Corredor Jaramillo	Salida	2025-10-02	10:19:12	Soporte en el evento de presentacion de carreras
+703	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-02	11:18:42	
+704	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-02	11:54:42	
+705	07382	Gerson Jair Navarro Gomez	Salida	2025-10-02	11:55:20	administrativo
+706	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-02	11:58:56	
+707	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-02	12:04:16	Organizacion evento "Buscando carrera"
+708	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-02	12:09:50	
+709	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-02	12:10:40	beca y coliseo
+710	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-02	13:29:04	
+711	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-02	13:41:10	
+712	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-02	13:55:57	
+713	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-02	13:58:21	
+714	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-02	13:58:56	
+715	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-02	13:59:24	
+716	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-02	14:00:50	
+717	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-02	14:02:02	
+718	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-02	14:02:28	
+719	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-02	14:05:23	Acompañamiento en "Buscando Carreras"
+720	1152349	Santiago Corredor Jaramillo	Salida	2025-10-02	14:05:58	Apoyo en la presentacion de carreras
+721	1152337	Alex Felipe Sanchez Castano	Ingreso	2025-10-02	14:08:41	
+722	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-02	14:18:30	
+723	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-02	14:28:15	
+724	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-02	15:57:17	Colaboracion con el evento de buscando carrera
+725	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-02	16:00:16	matenimiento equipos en oficina
+726	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-02	16:00:57	Mantenimiento equipos de oficna
+727	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-02	16:01:44	Apoyo evento buscando carrera
+728	1152337	Alex Felipe Sanchez Castano	Salida	2025-10-02	17:21:28	asesoria estructuras de datos
+729	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-02	17:31:20	instalacion pcs consultorio juridico
+730	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-02	17:37:55	Asesorias amigo academico.
+731	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-02	17:50:52	Administrativo
+732	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-02	17:53:49	Ubicacion de computadores en el consultorio de derecho
+733	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-02	07:54:19	
+734	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-02	12:00:00	administrativo
+735	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-02	13:30:13	
+736	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-02	18:00:35	administrativo
+737	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-02	17:58:41	Archivado de microcurriculos
+738	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-02	17:59:03	buscando carrera
+739	1152188	Clara Ines Porras Mancilla	Salida	2025-10-02	18:00:03	Descarga archivo digital datarsoft
+740	07382	Gerson Jair Navarro Gomez	Salida	2025-10-02	18:06:11	administrativo
+741	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-03	07:41:30	
+742	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-03	07:53:25	
+743	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-03	08:13:14	
+744	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-03	08:15:49	
+745	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-03	08:19:10	
+746	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-03	08:55:28	
+747	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-03	09:50:23	Archivado de microcurriculos
+748	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-03	10:00:23	
+749	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-03	10:02:41	
+750	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-03	10:03:07	
+751	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-03	10:09:14	
+752	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-03	10:15:25	Verificación programas SF404
+753	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-03	11:03:03	
+754	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-03	11:03:49	Actualizacion de programas sf403
+755	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-03	11:54:23	
+756	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-03	12:00:16	Actualizacion de programas
+757	1152393	Juan Camilo Guarin Solano	Salida	2025-10-03	12:00:51	actualizacion sf pc 11
+758	07382	Gerson Jair Navarro Gomez	Salida	2025-10-03	12:01:46	administrativo
+759	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-03	12:02:13	Programas SF403
+760	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-03	13:42:50	
+761	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-03	13:51:43	
+762	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-03	13:56:16	
+763	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-03	14:00:13	
+764	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-03	14:00:31	
+765	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-03	14:03:12	
+766	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-03	14:04:10	Actualizacion equipos SF403
+767	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-03	14:05:12	
+768	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-03	14:06:04	
+769	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-03	14:50:05	
+770	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-03	15:03:23	
+771	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-03	15:38:16	administrativo
+772	1152393	Juan Camilo Guarin Solano	Salida	2025-10-03	15:54:22	actualizacion en SF 404 dos pc
+773	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-03	15:56:35	Mantenimiento programas SF404
+774	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-03	16:02:38	
+775	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-03	16:03:05	Actualizacion programas sf 404
+776	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-03	16:04:04	se actualizo programas de SF404
+777	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-03	16:06:07	Archivado de microcurriculos
+778	1193508	Etni Salen Mendoza Garcia	Salida	2025-10-03	17:07:31	archivo
+779	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-03	17:10:09	Configuracion y ubicacion de computadores en la facultad de derecho
+780	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-03	17:31:05	Asesorias amigo academico.
+781	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-03	17:37:39	Anexo de tablas al excel y correccion de documentos
+782	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-03	17:54:31	Adminstrativo
+857	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-07	14:16:04	ADM
+783	07382	Gerson Jair Navarro Gomez	Salida	2025-10-03	17:58:15	administrativo
+784	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-03	18:03:45	Revisión de inventario
+785	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-03	18:18:59	administrativo
+786	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-06	07:40:16	
+787	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-06	07:57:52	
+788	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-06	07:58:19	
+789	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-06	07:58:52	
+790	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-06	08:02:06	
+791	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-06	08:02:49	
+792	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-06	08:09:08	
+793	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-06	08:11:04	
+794	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-03	08:00:55	
+795	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-03	18:30:10	evento tic
+796	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-06	09:30:43	
+797	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-06	09:55:40	
+798	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-06	09:56:21	Anexo de tablas al documento
+799	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-06	09:58:07	
+800	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-06	09:59:02	Trabajo en oficina
+801	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-06	09:59:40	Apoyo en oficina de mantenimiento
+802	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-06	11:56:04	
+803	07382	Gerson Jair Navarro Gomez	Salida	2025-10-06	12:01:12	administrativo
+804	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-06	12:04:02	adm
+805	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-06	12:08:43	revisando computadores en el programa de derecho
+806	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-06	12:27:20	Revisión e instalación de programas SD401
+807	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-06	14:01:34	
+808	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-06	14:04:32	Actualizacion equipos SF
+809	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-06	14:07:21	
+810	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-06	14:07:44	
+811	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-06	14:08:08	
+812	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-06	14:09:02	
+813	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-06	14:13:48	
+814	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-06	14:14:09	
+815	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-06	16:07:28	Mantenimiento programas SA402
+816	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-06	17:01:59	ACTUALIZACION PROGRAMAS SA402
+817	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-06	17:52:35	Administrativo
+818	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-06	17:53:45	administrativo
+819	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-06	17:58:43	Asesorias amigo academico.
+820	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-06	18:02:09	Archivado de microcurriculos
+821	1152349	Santiago Corredor Jaramillo	Salida	2025-10-06	18:03:47	Actualizacion de programas, netbeans y postgress en SA402
+822	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-06	21:08:37	
+823	07382	Gerson Jair Navarro Gomez	Salida	2025-10-06	18:11:38	administrativo
+824	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-06	18:19:50	adm
+825	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-07	07:21:26	
+826	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-07	07:55:09	
+827	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-07	07:57:22	
+828	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-07	08:01:06	
+829	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-07	08:02:41	
+830	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-07	08:06:40	
+831	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-07	08:07:45	
+832	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-07	08:08:51	
+833	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-07	09:48:55	
+834	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-07	09:50:34	Mantenimiento de programas
+835	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-07	09:57:25	vivelab
+836	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-07	10:00:23	
+837	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-07	10:00:50	Sala SF404
+838	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-07	10:01:05	
+839	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-07	11:03:00	
+840	1152188	Clara Ines Porras Mancilla	Salida	2025-10-07	11:59:22	Descarga archivo digital DATARSOFT
+841	07382	Gerson Jair Navarro Gomez	Salida	2025-10-07	12:02:56	administrativo
+842	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-07	12:04:27	Actualizacion de programas SF 404
+843	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-07	12:06:01	VERIFICACION DE XAMPP EN SF404
+844	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-07	12:06:56	Actualizacion equipos SF404
+845	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-07	12:20:34	Revisón e instalación de programas en SF404
+846	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-07	13:20:23	
+847	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-07	13:50:03	
+848	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-07	13:57:42	
+849	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-07	13:58:03	
+850	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-07	13:58:28	
+851	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-07	13:58:57	
+852	1152430	Juan David Kher Sanchez	Ingreso	2025-10-07	14:01:38	
+853	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-07	14:02:11	
+854	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-07	14:03:03	
+855	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-07	14:10:31	
+856	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-07	14:12:00	
+858	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-07	14:16:30	
+859	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-07	14:17:37	
+860	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-07	15:56:06	
+861	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-07	16:04:20	Revisòn salones SF
+862	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-07	16:06:10	actualizacion de programas sa402
+863	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-07	16:08:48	Anexos de tablas al excel y correccion de la misma
+864	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-07	16:15:02	mantenimiento programas sf403
+865	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-07	16:20:44	
+866	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-07	17:36:14	Asesorias amigo academico.
+867	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-07	17:40:52	reubicacion pcs derecho
+868	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-07	17:51:41	Archivado de microcurriculos
+869	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-07	18:01:43	mantenimiento vivelab
+870	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-07	18:04:38	Revision de instalacion XAMP en SF403 equipos 03, 05, 06, 07, 08, Revision de extensiones de bluej SA403 toda la sala
+871	1152393	Juan Camilo Guarin Solano	Salida	2025-10-07	18:05:16	revicion de xamp sf403
+872	07382	Gerson Jair Navarro Gomez	Salida	2025-10-07	18:05:55	administrativo
+873	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-07	18:08:07	Administrativo
+874	1152430	Juan David Kher Sanchez	Salida	2025-10-07	18:08:44	actualizacion programas sa402
+875	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-07	18:20:08	administrativo
+876	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-07	18:21:15	sa402 programas
+877	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-08	07:46:45	
+878	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-08	07:53:53	
+879	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-08	07:55:30	
+880	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-08	07:58:15	
+881	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-08	08:02:28	
+882	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-08	08:06:33	
+883	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-08	08:12:43	
+884	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-08	08:13:06	
+885	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-08	08:17:58	
+886	1152349	Santiago Corredor Jaramillo	Salida	2025-10-08	08:56:07	soporte en oficina
+887	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-07	21:00:00	
+888	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-08	09:43:02	
+889	1152393	Juan Camilo Guarin Solano	Salida	2025-10-08	09:58:43	actualizacion de programas en SF 404
+890	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-08	09:59:30	actualizar programas sf404
+891	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-08	10:01:30	
+892	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-08	10:11:41	
+893	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-08	10:12:09	
+894	1193508	Etni Salen Mendoza Garcia	Salida	2025-10-08	10:14:56	archivo y cartas
+895	1152430	Juan David Kher Sanchez	Ingreso	2025-10-08	10:16:44	
+896	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-08	11:27:00	Entrega del ecxel a la ingeniera
+897	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-08	11:56:55	Actualizacion de programas
+898	1152430	Juan David Kher Sanchez	Salida	2025-10-08	12:00:46	programas sf404
+899	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-08	12:01:17	Actualizacion de programas SF404
+900	07382	Gerson Jair Navarro Gomez	Salida	2025-10-08	12:01:53	administrativo
+901	1152349	Santiago Corredor Jaramillo	Salida	2025-10-08	12:22:34	actualizacion de programas sf404
+902	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-08	13:55:37	
+903	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-08	13:55:56	
+904	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-08	13:56:51	
+905	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-08	14:00:28	
+906	1152430	Juan David Kher Sanchez	Ingreso	2025-10-08	14:02:47	
+907	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-08	14:04:13	
+908	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-08	14:05:05	
+909	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-08	14:05:27	
+910	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-08	14:08:03	adm
+911	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-08	14:08:20	
+912	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-08	14:22:27	
+913	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-08	15:55:05	
+914	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-08	15:56:58	Archivado de microcurriculos
+915	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-08	16:04:44	Revisión salas SA
+916	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-08	16:07:04	
+917	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-08	16:07:38	Actualizacion de programas
+918	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-08	16:58:19	mantenimiento sala SA414 actualizacion de postgres y w11
+919	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-08	17:02:29	arreglo sa414
+920	07382	Gerson Jair Navarro Gomez	Salida	2025-10-08	17:55:29	administrativo
+921	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-08	17:57:37	Asesorias amigo academico.
+922	1152430	Juan David Kher Sanchez	Salida	2025-10-08	17:59:16	instalacion, configuracion de programas y formateo pc sa402
+923	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-08	18:00:16	Actualizacion software SA414 equipos 1, 2, 3, 19, 20, 24
+924	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-08	18:07:03	Actualizando pc en la sala SA-414 y de 5 a 6 cuidando el puesto de la secretaria
+925	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-08	18:23:49	Administrativo
+926	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-08	18:28:47	Revicion de netbeans,postgrest y bluej en el sa402
+927	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-08	19:00:00	administrativo
+928	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-08	18:55:03	administrativo
+929	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-09	07:37:00	
+930	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-09	07:50:47	
+931	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-09	07:55:09	
+932	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-09	07:56:02	
+933	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-09	08:04:00	
+934	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-09	08:10:50	
+935	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-09	08:18:44	
+936	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-09	08:31:08	
+937	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-09	09:49:43	
+938	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-09	09:52:58	
+939	1152349	Santiago Corredor Jaramillo	Salida	2025-10-09	09:56:14	Instalacion windows11 y programas
+940	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-09	08:56:39	
+941	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-09	09:57:31	
+942	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-09	11:42:58	mantenimiento SA414 y actualizacion a w11
+943	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-09	11:56:44	Revision del excel
+944	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-09	11:57:24	Archivado de microcurriculos
+945	07382	Gerson Jair Navarro Gomez	Salida	2025-10-09	12:00:36	administrativo
+946	1152188	Clara Ines Porras Mancilla	Salida	2025-10-09	12:01:06	Descarga archivo digital datarsoft
+947	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-09	12:22:40	Actualizacion sf401
+948	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-09	12:23:08	Actualizacion equipos SF401
+949	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-09	13:57:59	
+950	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-09	13:58:34	
+951	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-09	13:59:40	
+952	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-09	14:00:03	
+953	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-09	14:01:40	
+954	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-09	14:01:58	
+955	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-09	14:02:38	
+956	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-09	14:03:27	
+957	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-09	14:03:59	adm
+958	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-09	14:04:25	
+959	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-09	14:06:08	
+960	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-09	14:11:33	
+961	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-09	14:11:49	
+962	1152430	Juan David Kher Sanchez	Ingreso	2025-10-09	14:54:36	
+963	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-09	16:13:14	Instalacion programas sa414
+964	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-09	17:21:25	Asesorias amigo academico.
+965	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-09	17:44:55	Mantenimiento de equipos SA403
+966	1152430	Juan David Kher Sanchez	Salida	2025-10-09	17:45:48	actualizacion de programas e instalacion de windows 11
+967	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-09	17:47:46	mantenimiento e instalacion w11 sa414
+968	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-09	17:50:56	instalacion programas sa414
+969	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-09	17:53:17	Archivado de microcurriculos
+970	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-09	17:55:49	Revisión e instalación de programas SA403
+971	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-09	18:00:33	Actualizando programas de SA-414
+972	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-09	18:01:06	Mantenimiento en oficina
+973	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-09	19:00:51	administrativo
+974	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-09	18:07:00	Administrativo
+975	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-09	18:18:58	admi
+976	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-09	18:32:10	adm
+977	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-01	08:00:51	administrativo
+978	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-01	18:59:44	administrativo
+984	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-10	14:03:57	
+985	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-14	06:43:06	
+986	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-14	07:56:01	
+987	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-14	08:05:56	
+988	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-14	08:07:27	
+989	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-14	08:07:42	
+990	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-14	08:11:50	
+991	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-14	08:17:44	
+992	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-14	08:40:32	
+993	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-14	09:53:01	Mantenimiento de programas
+994	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-14	09:55:17	
+995	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-14	10:02:28	Revisión de equipos SD403
+996	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-14	10:02:43	
+997	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-14	10:07:32	
+998	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-14	10:12:34	
+999	07382	Gerson Jair Navarro Gomez	Salida	2025-10-14	11:59:49	administrativo
+1000	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-14	12:02:09	Revision libreoffice sd403
+1001	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-14	12:02:42	Reparacion LibreOffice SD403
+1002	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-14	12:03:16	Revisión Libre Office SD403
+1003	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-14	12:04:01	Revicion libre office sd403 equipos 1-3
+1004	1152188	Clara Ines Porras Mancilla	Salida	2025-10-14	12:09:44	Descarga archivo digital DATARSOFT
+1005	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-14	13:47:06	
+1006	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-14	13:56:23	
+1007	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-14	13:56:42	
+1008	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-14	13:56:59	
+1009	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-14	13:57:20	
+1010	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-14	13:57:37	
+1011	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-14	13:57:57	
+1012	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-14	13:59:08	
+1013	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-14	13:59:29	
+1014	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-14	13:59:47	
+1015	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-14	14:01:17	
+1016	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-14	14:04:32	
+1017	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-14	14:04:56	
+1018	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-14	14:06:47	
+1019	1152430	Juan David Kher Sanchez	Ingreso	2025-10-14	14:08:37	
+1020	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-14	14:20:23	
+1021	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-14	15:57:02	se actualizo programas en el salon SA-414 y se movio computadores en biblioteca
+1022	1152393	Juan Camilo Guarin Solano	Salida	2025-10-14	15:57:40	actualizacion de la sala sa411
+1023	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-14	15:58:22	Actualización sala SA411 y traslado de equipos en biblioteca
+1024	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-14	16:01:28	Mantenimiento programas sa411
+1025	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-14	16:01:54	Actualizacion de programas sa411
+1026	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-14	16:02:15	
+1027	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-14	16:04:45	Terminacion de ecxel de la Ing Pilar
+1028	1193508	Etni Salen Mendoza Garcia	Salida	2025-10-14	16:07:24	archivo
+1029	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-14	16:09:48	revicion de versiones en sa y toco formatear equipo 15
+1030	1152430	Juan David Kher Sanchez	Salida	2025-10-14	17:00:49	actualizacion proigramas sa411
+1031	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-14	17:31:19	Asesorias amigo academico.
+1032	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-14	17:38:47	administrativo
+1033	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-14	17:43:29	ajuste sa414
+1034	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-14	17:51:11	instalacion de w11 y software en la sala SA414
+1035	07382	Gerson Jair Navarro Gomez	Salida	2025-10-14	17:54:48	ADMINISTRATIVO
+1036	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-14	17:56:44	Archivado de microcurriculos
+1037	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-14	18:01:44	asesoria amigo acadèmico
+1038	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-14	18:03:29	Actualizacion de software SA411 equipos 04, 05, 06
+1039	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-14	18:04:48	actualizacion de programas
+1040	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-15	06:26:59	
+1041	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-15	07:50:27	
+1042	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-15	07:52:46	
+1043	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-15	07:55:37	
+1044	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-15	07:56:20	
+1045	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-15	08:02:20	
+1046	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-15	08:08:01	
+1047	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-15	08:18:13	
+1048	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-15	08:49:44	
+1049	1152349	Santiago Corredor Jaramillo	Salida	2025-10-15	09:18:00	Mantenimiento en oficina
+1050	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-15	09:53:40	
+1051	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-15	09:58:08	
+1052	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-15	10:05:18	
+1053	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-15	10:07:47	Mantenimiento programas sd403
+1054	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-15	10:08:55	se actualizo programas en el salon SD-403
+1055	1152393	Juan Camilo Guarin Solano	Salida	2025-10-15	10:10:29	reviconde de libre office en SD 403
+1056	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-15	10:17:52	
+1057	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-15	10:22:51	
+1058	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-14	21:00:00	
+1059	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-15	11:13:08	Hablar con la ing de nuevas indicaciones
+1060	07382	Gerson Jair Navarro Gomez	Salida	2025-10-15	12:00:31	administativo
+1061	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-15	12:10:08	administrativo
+1062	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-15	11:59:02	Actualizacion de programas
+1063	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-15	12:10:18	Revision salas sa
+1064	1152349	Santiago Corredor Jaramillo	Salida	2025-10-15	12:10:52	Mantenimiento en oficina
+1065	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-15	12:21:17	Mantenimiento de Oficina
+1066	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-15	13:16:28	
+1067	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-15	13:29:05	
+1068	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-15	13:54:26	
+1069	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-15	13:57:10	
+1070	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-15	13:57:38	
+1071	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-15	13:58:13	
+1072	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-15	14:01:34	adm
+1073	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-15	14:01:49	
+1074	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-15	14:02:20	
+1075	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-15	14:02:44	
+1076	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-15	14:03:48	
+1077	1152430	Juan David Kher Sanchez	Ingreso	2025-10-15	14:06:22	
+1078	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-15	14:11:01	
+1079	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-15	15:52:44	Mantenimiento SD403
+1080	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-15	15:56:04	
+1081	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-15	15:57:51	
+1082	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-15	16:05:12	Revisión de libre office y programas SD403
+1083	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-15	16:09:11	Mantenimiento en oficina
+1084	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-15	17:07:25	actualizacion vivelab
+1085	1152430	Juan David Kher Sanchez	Salida	2025-10-15	17:15:58	revision sala y acomodamiento de sus componentes
+1086	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-15	17:50:18	Mantenimiento en la oficina
+1087	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-15	17:51:56	Actualizacion de software y windows 11 vivelab, instalacion de software en SA414
+1088	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-15	17:52:31	Archivado de microcurriculos
+1089	07382	Gerson Jair Navarro Gomez	Salida	2025-10-15	17:53:53	administrativo
+1090	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-15	17:55:31	asesoria de calculo y fundamentos de programaciòn
+1091	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-15	17:56:37	Asesorias amigo academico.
+1092	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-15	18:00:15	admini
+1093	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-15	18:01:28	Actualizacion libre office Sd 403 equipoas del  09 al 16
+1094	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-15	18:02:30	actualizacion de netbeans,posgrest, fondos  y safe en  equipos 1 - 5 sa401
+1095	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-15	14:00:00	
+1096	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-15	21:00:00	administrativo
+1097	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-15	18:30:33	administrativo
+1098	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-16	06:32:06	
+1099	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-16	07:55:45	
+1100	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-16	07:57:58	
+1101	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-16	07:59:47	
+1102	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-16	08:00:53	
+1103	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-16	08:10:49	
+1104	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-16	08:12:27	
+1105	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-16	08:15:50	
+1106	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-16	08:59:28	
+1107	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-16	09:45:36	
+1108	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-16	09:47:05	
+1109	1152349	Santiago Corredor Jaramillo	Salida	2025-10-16	09:58:44	Mantenimiento de equipos en la oficina, limpieza
+1110	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-16	10:05:59	Revisión y actualización de programas SF403
+1111	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-16	10:00:14	
+1112	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-16	11:58:57	administrativo
+1113	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-16	11:59:51	SF403 actualizacion de software
+1114	1152188	Clara Ines Porras Mancilla	Salida	2025-10-16	12:00:19	Descarga archivo digital DATARSOFT
+1115	07382	Gerson Jair Navarro Gomez	Salida	2025-10-16	12:00:45	administrativo
+1116	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-16	12:01:22	actualizacion sf403
+1117	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-16	12:04:34	Actualizacion equipos SF403
+1118	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-16	12:05:10	Adelanto de las indicaciones de la ingeniera
+1119	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-16	13:45:31	
+1120	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-16	13:53:19	
+1121	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-16	13:55:20	
+1122	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-16	13:57:41	
+1123	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-16	14:02:41	
+1124	1152430	Juan David Kher Sanchez	Ingreso	2025-10-16	14:03:06	
+1125	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-16	14:05:18	
+1126	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-16	14:05:57	
+1127	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-16	14:07:02	
+1128	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-16	14:09:59	
+1129	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-16	14:13:52	
+1130	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-16	15:58:18	Mantenimieno equipos oficina
+1131	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-16	16:00:07	revicion de safebrowser
+1132	1152188	Clara Ines Porras Mancilla	Salida	2025-10-16	16:00:53	Descarga archivo digital DATARSOFT
+1133	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-16	16:01:36	
+1134	1152430	Juan David Kher Sanchez	Salida	2025-10-16	16:02:41	revision programas
+1135	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-16	16:05:15	
+1136	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-16	17:04:51	Revision vivelab
+1137	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-16	17:17:26	Asesorias amigo academico.
+1138	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-16	17:53:17	Archivado de microcurriculos
+1139	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-16	17:56:32	Actualizacion de programas
+1140	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-16	18:04:16	Actualizacion de programas
+1141	07382	Gerson Jair Navarro Gomez	Salida	2025-10-16	18:05:53	administrativo
+1142	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-16	18:06:25	admini
+1143	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-16	18:07:07	Revisión e instalación de programas SA411
+1144	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-16	18:09:49	Administrativo
+1145	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-16	21:00:01	
+1146	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-16	18:48:49	asesoria amigos academicos
+1179	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-17	07:24:02	
+1180	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-17	07:53:48	
+1181	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-17	08:00:34	
+1182	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-17	08:03:14	
+1183	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-17	08:08:39	
+1184	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-17	08:15:28	
+1185	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-17	08:22:55	
+1186	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-17	08:24:17	
+1187	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-17	09:31:05	
+1188	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-17	09:00:00	
+1189	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-17	09:51:56	Archivado de microcurriculos
+1190	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-17	09:56:49	
+1191	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-17	09:57:11	
+1192	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-17	10:00:09	poyo Oficina - Revision SD402
+1193	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-17	10:08:32	SD402 Libre office
+1194	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-17	11:08:14	Actualizacion de programas SD 402
+1195	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-17	11:53:17	
+1196	07382	Gerson Jair Navarro Gomez	Salida	2025-10-17	11:54:46	ADMINISTRATIVO
+1197	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-17	11:57:16	Revisión e instalación programas SD402
+1198	1152393	Juan Camilo Guarin Solano	Salida	2025-10-17	12:03:56	ACTUALIZACIONDE PROGRAMAS EN SD 402
+1199	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-17	13:51:13	
+1200	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-17	13:54:19	
+1201	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-17	13:59:17	
+1202	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-17	14:00:21	
+1203	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-17	14:02:30	Actualizacion equipos SD402
+1204	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-17	14:03:33	
+1205	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-17	14:04:18	
+1206	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-17	14:06:04	
+1207	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-17	14:07:49	
+1208	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-17	12:00:09	administrativo
+1209	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-17	14:00:54	
+1210	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-17	14:14:03	
+1211	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-17	15:54:53	Archivado de microcurriculos
+1212	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-17	15:56:08	Se actualizaron programas del salon SD-402
+1213	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-17	16:00:14	Actualizacion programas sd402
+1214	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-17	16:00:30	
+1215	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-17	16:00:55	Actualizacion de programas sd402
+1216	1152393	Juan Camilo Guarin Solano	Salida	2025-10-17	16:02:14	actualizacion y mantenimiento en sd 402
+1217	1193508	Etni Salen Mendoza Garcia	Salida	2025-10-17	16:05:43	archivo
+1218	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-17	16:30:30	vivelab
+1219	07382	Gerson Jair Navarro Gomez	Salida	2025-10-17	17:54:07	administrativo
+1220	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-17	17:56:56	Asesorias amigo academico.
+1221	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-17	17:58:07	asesoria amigos academicos
+1222	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-17	18:04:48	Sala SA404
+1223	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-17	18:19:28	administrativo
+1224	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-17	20:00:00	administrativo
+1225	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-17	18:22:44	administrativo
+1226	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-20	07:56:30	
+1227	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-20	08:00:11	
+1228	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-20	08:00:46	
+1229	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-20	08:02:31	
+1230	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-20	08:03:02	
+1231	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-20	08:05:39	
+1232	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-20	08:11:27	
+1233	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-20	08:15:15	
+1234	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-20	08:23:48	
+1235	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-20	09:05:39	
+1236	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-20	09:51:57	Se hizo busqueda de informacion para anexar
+1237	1151860	Luis Eduardo Soto Garcia	Ingreso	2025-10-20	09:53:22	
+1238	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-20	09:56:02	
+1239	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-20	09:59:28	
+1240	1152393	Juan Camilo Guarin Solano	Salida	2025-10-20	10:01:17	revision de postgre en sa 411
+1241	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-20	10:01:42	Actualizacion de programas
+1242	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-20	10:21:53	
+1243	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-20	11:54:34	
+1244	1151860	Luis Eduardo Soto Garcia	Salida	2025-10-20	11:59:46	Llevada de pc a Admisiones
+1245	07382	Gerson Jair Navarro Gomez	Salida	2025-10-20	12:03:19	administrativo
+1246	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-20	12:04:23	Actualizacion postgre SA411 equipos 02, 09, 10, 11, 12, 16, 17, 18
+1247	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-20	12:04:55	revicion libre office en  sd401
+1248	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-20	12:06:29	Se revisaron los programas de SD-401
+1249	1152188	Clara Ines Porras Mancilla	Salida	2025-10-20	12:08:39	Asistencia en oficina
+1250	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-20	12:11:57	adm
+1251	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-20	13:52:36	
+1252	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-20	13:58:43	
+1253	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-20	13:59:53	
+1254	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-20	14:03:43	
+1255	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-20	14:06:38	
+1256	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-20	14:09:08	
+1257	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-20	14:09:38	Actualizacion equipos SD402
+1258	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-20	14:10:03	
+1259	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-20	14:12:22	
+1260	1152337	Alex Felipe Sanchez Castano	Ingreso	2025-10-20	14:17:08	
+1261	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-20	12:21:30	administrativo
+1262	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-20	14:00:52	
+1263	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-20	16:00:24	Actualizacion programas SB404
+1264	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-20	16:01:55	Arreglo de portateclados en sb404
+1265	1152337	Alex Felipe Sanchez Castano	Salida	2025-10-20	16:52:13	monitor estructuras de datos
+1266	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-20	16:59:58	Actualizacion programas sb 404
+1267	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-20	17:52:47	Archivado de microcurriculos
+1268	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-20	17:54:12	Asesorias amigo academico.
+1269	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-20	17:57:04	clase curso de python \nasesoria amigo acadèmico
+1270	07382	Gerson Jair Navarro Gomez	Salida	2025-10-20	18:01:20	administrativo
+1271	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-20	18:03:04	administrativo
+1272	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-20	18:16:15	Administrativo
+1273	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-21	07:30:49	
+1274	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-21	07:55:48	
+1275	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-21	07:59:30	
+1276	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-21	08:04:12	
+1277	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-21	08:05:13	
+1278	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-21	08:15:02	
+1279	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-21	08:20:34	
+1280	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-21	09:01:33	
+1281	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-21	09:54:32	Mantenimiento de programas
+1282	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-21	09:55:40	
+1283	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-21	10:00:01	
+1284	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-21	10:01:57	Desfragmentación de equipos e instalación libre office SD404
+1285	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-21	10:02:18	
+1286	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-21	11:14:01	
+1287	1152188	Clara Ines Porras Mancilla	Salida	2025-10-21	11:39:44	Descarga archivo digital DATARSOFT
+1288	07382	Gerson Jair Navarro Gomez	Salida	2025-10-21	11:57:29	administrativo
+1289	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-21	11:59:23	Oficina mantenimiento
+1290	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-21	12:05:57	Desfragmentar discos y modificar tiempos de suspension en SD404 equipo del 1 al 11
+1291	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-21	12:06:57	oficina mantenimiento
+1292	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-21	12:11:27	Desfragmentacion equipos SD404
+1293	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-21	13:00:37	
+1294	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-21	13:52:08	
+1295	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-21	13:53:00	
+1296	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-21	13:55:20	
+1297	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-21	13:55:54	
+1298	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-21	13:56:18	
+1299	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-21	13:56:36	
+1300	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-21	13:57:08	adm
+1301	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-21	13:57:22	
+1302	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-21	13:58:44	
+1303	1152430	Juan David Kher Sanchez	Ingreso	2025-10-21	13:59:01	
+1304	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-21	13:59:40	
+1305	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-21	13:59:58	
+1306	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-21	14:03:20	
+1307	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-21	14:05:03	
+1308	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-21	14:10:44	
+1309	1193508	Etni Salen Mendoza Garcia	Salida	2025-10-21	15:56:06	archivo
+1310	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-21	15:56:34	Archivado de microcurriculos
+1311	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-21	15:56:59	anexo de informacion
+1312	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-21	16:02:32	Actualizacion programas sb402
+1313	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-21	16:02:58	Actualizacion de programas sb402
+1314	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-21	16:04:35	Se actualizaron programas de SB-402
+1315	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-21	16:05:05	Revisión de impresoras
+1316	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-21	16:37:28	VIVELAB
+1317	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-21	17:51:21	Instalacion de software Vivelab
+1318	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-21	17:51:48	administrativo
+1319	1152430	Juan David Kher Sanchez	Salida	2025-10-21	18:01:33	revision programas y mantenimiento salas
+1320	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-21	18:02:14	asesoria de amigo academico
+1321	1152393	Juan Camilo Guarin Solano	Salida	2025-10-21	18:03:06	actualizacion en SB
+1322	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-21	18:03:33	Actualizacion de programas
+1323	07382	Gerson Jair Navarro Gomez	Salida	2025-10-21	18:04:26	administrativo
+1324	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-22	06:23:31	
+1325	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-22	07:51:29	
+1326	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-22	07:54:35	
+1327	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-22	07:55:57	
+1328	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-22	07:57:11	
+1329	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-22	07:59:44	
+1330	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-22	08:02:48	
+1331	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-22	08:03:21	
+1332	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-22	08:05:00	
+1333	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-22	08:09:28	
+1334	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-22	08:15:14	
+1335	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-22	09:56:55	
+1336	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-22	09:58:17	ANexo de infromacion y a su vez simulacro de evacuacion
+1337	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-22	09:58:52	
+1338	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-22	09:59:27	
+1339	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-22	10:01:20	
+1340	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-22	10:01:53	Mantenimiento equipos oficina
+1341	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-22	10:02:43	Mantenimiento en oficina
+1342	1152393	Juan Camilo Guarin Solano	Salida	2025-10-22	10:03:26	sala de mantenimiento
+1343	1152430	Juan David Kher Sanchez	Ingreso	2025-10-22	10:08:12	
+1344	1152430	Juan David Kher Sanchez	Salida	2025-10-22	11:56:41	mantienimiento safebrowser sb402
+1345	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-22	12:00:24	revision impresoras bienestar, instalar safebrowser SB402
+1346	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-22	12:00:57	Revisión impresoras bienestar universitario
+1347	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-22	09:01:17	
+1348	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-22	12:01:31	administrativo
+1349	07382	Gerson Jair Navarro Gomez	Salida	2025-10-22	12:02:32	adminstrativo
+1350	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-22	12:05:27	Mantenimiento de programas sb402
+1351	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-22	12:06:22	actualizacion de programas
+1352	1152349	Santiago Corredor Jaramillo	Salida	2025-10-22	12:52:14	Formateo de un pc en oficina WIN7
+1353	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-22	13:04:02	
+1354	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-22	13:59:34	
+1355	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-22	14:00:26	
+1356	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-22	14:01:00	
+1357	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-22	14:03:07	
+1358	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-22	14:06:48	
+1359	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-22	14:07:07	
+1360	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-22	14:11:15	
+1361	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-22	14:13:24	
+1362	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-22	14:26:35	adm
+1363	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-22	14:26:56	
+1364	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-22	14:59:55	
+1365	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-22	15:28:20	implementacion de nueva informacion y a su vez presentacvion de avances
+1366	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-22	15:51:18	
+1367	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-22	15:54:09	Limpieza SA401
+1368	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-22	16:00:43	
+1369	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-22	16:01:32	Instalacion software SA403. Limpieza de equipos SA401 y 402
+1370	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-22	16:03:35	Revisión de equipos SC
+1371	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-22	16:55:18	Mantenimiento en oficina
+1372	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-22	17:06:00	SA 401 402 403
+1373	1152393	Juan Camilo Guarin Solano	Salida	2025-10-22	17:52:14	mantenimiento en sa
+1374	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-22	17:53:32	Archivado de microcurriculos
+1375	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-22	17:54:42	Asesorias amigo academico.
+1376	07382	Gerson Jair Navarro Gomez	Salida	2025-10-22	18:00:21	administrativo
+1377	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-22	18:13:04	Limpieza pcs SA401 Y SA402
+1378	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-22	18:13:47	Limpieza de equipos sa 402 - 403
+1379	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-23	07:55:23	
+1380	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-23	07:55:54	
+1381	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-23	07:56:10	
+1382	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-23	08:01:28	
+1383	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-23	08:03:23	
+1384	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-23	08:20:13	
+1385	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-23	08:34:06	
+1386	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-23	09:09:02	
+1387	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-23	09:57:01	
+1388	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-23	09:58:07	Archivado de microcurriculos
+1389	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-23	10:05:21	Revisión equipos
+1390	1152349	Santiago Corredor Jaramillo	Salida	2025-10-23	10:10:35	Cambio de HDD a SSD de un equipo en oficina
+1391	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-23	10:11:05	
+1392	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-23	10:11:25	
+1393	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-23	11:53:47	ANexo de infromacion a la tabla de ecxel de la ingeniera y a su vez arreglo de microcurriculo
+1394	07382	Gerson Jair Navarro Gomez	Salida	2025-10-23	11:55:06	administrativo
+1395	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-23	12:09:55	oficina mantenimiento
+1396	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-23	12:11:02	Mantenimiento de equipos sala mantenimiento
+1397	1152188	Clara Ines Porras Mancilla	Salida	2025-10-23	12:59:59	Asistencia a oficina
+1398	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-23	13:00:21	
+1399	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-23	13:53:52	
+1400	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-23	13:54:22	
+1401	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-23	13:55:12	adm
+1402	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-23	13:55:50	
+1403	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-23	13:56:16	
+1404	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-23	13:56:35	
+1405	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-23	13:57:24	
+1406	1152430	Juan David Kher Sanchez	Ingreso	2025-10-23	13:57:47	
+1407	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-23	13:58:07	
+1408	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-23	13:58:30	
+1409	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-23	14:02:18	
+1410	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-23	14:02:52	
+1411	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-23	14:08:53	
+1412	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-23	14:14:46	
+1413	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-23	14:16:35	
+1414	1152188	Clara Ines Porras Mancilla	Salida	2025-10-23	16:01:59	Asistencia a oficina
+1415	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-23	16:03:38	actualizacion y eliminacion sc402
+1416	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-23	16:04:31	Actualizacion de programas y desfragmentacion de discos en SC402
+1417	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-23	16:05:46	actualizacion de programas
+1418	1152393	Juan Camilo Guarin Solano	Salida	2025-10-23	16:07:11	actualizacion en sc
+1419	1152430	Juan David Kher Sanchez	Salida	2025-10-23	16:07:45	mantinimento sc402
+1420	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-23	16:30:50	vivelab
+1421	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-23	17:20:25	Asesorias amigo academico.
+1422	07382	Gerson Jair Navarro Gomez	Salida	2025-10-23	17:53:53	administrativo
+1423	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-23	17:55:25	Archivado de microcurriculos
+1424	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-23	17:57:19	Asesorias de POO y creacion de GUI con java Swing
+1425	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-23	17:57:51	asesoria amigo academico
+1426	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-23	17:58:22	Actualizacion de programas sc402
+1427	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-23	18:28:14	administrativo
+1428	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-24	06:45:51	
+1429	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-24	07:56:09	
+1430	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-24	07:56:28	
+1431	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-24	08:14:39	
+1432	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-24	08:19:41	
+1433	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-23	20:46:40	administrativo
+1434	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-24	08:47:58	
+1435	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-24	09:50:28	Archivado de microcurriculos
+1436	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-24	09:55:14	
+1437	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-24	10:00:12	
+1438	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-24	10:03:51	
+1439	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-24	10:04:13	
+1440	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-24	10:08:45	
+1441	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-24	11:02:44	Actualizacion de programas sf402
+1442	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-24	12:00:53	administrativo
+1443	07382	Gerson Jair Navarro Gomez	Salida	2025-10-24	11:56:48	administrativo
+1444	1152393	Juan Camilo Guarin Solano	Salida	2025-10-24	11:58:39	mantenimiento en la sala SF
+1445	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-24	12:01:12	Revisión equipos SF
+1446	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-24	12:01:28	
+1447	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-24	12:12:25	actualizacion de programas
+1448	1152349	Santiago Corredor Jaramillo	Salida	2025-10-24	12:13:29	Mantenimiento pc 3 y 4 SF402
+1449	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-24	13:54:08	
+1450	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-24	13:58:27	
+1451	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-24	13:59:35	
+1452	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-24	13:59:59	
+1453	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-24	14:03:11	
+1454	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-24	14:04:04	
+1455	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-24	14:05:08	
+1456	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-24	14:05:38	
+1457	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-24	14:06:57	Mantenimiento equipos SF
+1458	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-24	14:10:46	
+1459	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-24	14:11:22	
+1460	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-24	14:13:50	
+1461	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-24	15:58:48	Limpiando los computadores de SA-411
+1462	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-24	15:59:16	
+1463	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-24	15:59:37	Limpieza de computadores sa411
+1464	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-24	16:00:31	Limpieza salas SA 411 y SA414
+1465	1152393	Juan Camilo Guarin Solano	Salida	2025-10-24	16:01:36	ACTUALIZACION EN SC
+1466	1193508	Etni Salen Mendoza Garcia	Salida	2025-10-24	17:00:02	ARCHIVO
+1467	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-24	17:03:46	Archivado de microcurriculos
+1468	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-24	17:19:47	Limpieza equipos SA414
+1469	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-24	17:54:41	Asesorias amigo academico.
+1470	07382	Gerson Jair Navarro Gomez	Salida	2025-10-24	17:56:14	administrativo
+1471	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-24	18:23:12	asesoria amigos academicoa
+1472	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-24	18:24:04	Asesorias de POO I al grupo de la ing Pilar Rojas
+1473	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-23	08:00:28	
+1474	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-23	12:00:57	taller de mantenimiento
+1475	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-24	18:41:45	adminstrativo
+1476	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-27	06:32:15	
+1477	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-27	07:49:46	
+1478	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-27	07:57:41	
+1479	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-27	07:58:29	
+1480	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-27	08:02:39	
+1481	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-27	08:09:30	
+1482	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-27	08:10:16	
+1483	1152430	Juan David Kher Sanchez	Ingreso	2025-10-27	08:12:05	
+1484	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-27	08:16:32	
+1485	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-10-27	08:24:37	
+1486	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-27	08:57:56	
+1487	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-27	09:51:49	
+1488	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-27	09:59:01	Actualización de software en SF402
+1489	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-27	10:00:10	actualizacion de programas
+1490	1152393	Juan Camilo Guarin Solano	Salida	2025-10-27	10:00:40	actualizacion en SF
+1491	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-27	10:03:16	Archivado de microcurriculos
+1492	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-27	10:07:12	Anexo de infromacion a la tabla d ecxel
+1493	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-27	10:12:21	
+1494	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-27	11:53:46	mantenimiento de SD-402
+1495	1152430	Juan David Kher Sanchez	Salida	2025-10-27	11:54:20	mantenimiento programas
+1496	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-27	11:57:49	
+1497	07382	Gerson Jair Navarro Gomez	Salida	2025-10-27	11:59:10	administrativo
+1498	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-27	12:09:56	revicion programas sd402 equipos 1-4
+1499	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-27	13:00:17	
+1500	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-27	13:47:29	
+1501	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-27	13:54:11	
+1502	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-27	13:56:41	
+1503	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-27	13:59:27	
+1504	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-27	14:01:49	
+1505	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-27	14:02:08	
+1506	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-27	14:07:59	
+1507	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-27	14:08:52	Mantenimiento equipos SD
+1508	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-27	14:23:29	adm
+1509	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-27	14:23:52	
+1510	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-27	16:02:45	Actulizacion de programas y desfragmentado sc401
+1511	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-27	16:13:40	Entrega y ida a dependencias con el auxiliar Pedro
+1512	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-27	17:00:11	Actualizacion de programas de SC 401
+1513	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-27	17:53:12	Asesorias amigo academico.
+1514	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-27	17:54:01	Administrativo
+1515	07382	Gerson Jair Navarro Gomez	Salida	2025-10-27	17:58:32	administrativo
+1516	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-27	17:59:44	asesoria de amio academico
+1517	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-27	18:00:24	Archivado de microcurriculos
+1518	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-28	06:37:27	
+1519	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-28	07:52:35	
+1520	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-28	07:55:15	
+1521	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-28	07:56:24	
+1522	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-28	07:59:36	
+1523	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-28	07:59:53	
+1524	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-28	08:01:58	
+1525	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-28	08:16:18	
+1526	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-28	08:16:39	
+1527	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-28	09:01:30	
+1528	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-28	09:54:10	
+1529	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-28	09:54:44	Mnatenimiento de programas sf402
+1530	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-28	09:58:47	
+1531	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-28	10:03:45	Revisión de equipos SF402
+1532	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-28	10:09:11	
+1533	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-28	11:01:43	
+1534	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-28	11:49:38	NUevas indicaciones por parte de la ingeniera
+1535	1152188	Clara Ines Porras Mancilla	Salida	2025-10-28	11:59:23	Asistencia en oficina
+1536	07382	Gerson Jair Navarro Gomez	Salida	2025-10-28	12:00:25	administrativo
+1537	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-28	12:01:04	Actualizacion de software SF402
+1538	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-28	12:01:37	administrativo
+1539	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-28	12:04:37	oficina mantenimiento
+1540	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-28	12:06:02	Actualizacion equipos SF402
+1541	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-28	12:06:27	Actualizacion de programas sf402
+1542	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-28	13:19:47	
+1543	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-28	13:49:20	
+1544	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-28	13:52:15	
+1545	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-28	13:54:03	
+1546	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-28	13:54:26	
+1547	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-28	13:55:00	
+1548	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-28	14:00:04	
+1549	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-28	14:00:28	
+1550	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-28	14:01:17	
+1551	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-28	14:03:05	
+1552	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-28	14:04:26	adm
+1553	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-28	14:04:50	
+1554	1152430	Juan David Kher Sanchez	Ingreso	2025-10-28	14:05:11	
+1555	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-28	14:08:43	
+1556	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-28	15:53:26	Se actualizo programas de SA402
+1557	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-28	15:56:05	
+1558	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-28	16:00:26	Actualizacion programas sa402
+1559	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-28	16:01:16	Actualización de software SA402 equipos 01 y 07
+1560	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-28	16:04:15	Sb 402 y 401
+1561	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-28	16:06:52	Revision de sala SA402
+1562	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-28	16:07:14	ACTUALIZACION DE PROGRAMAS
+1563	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-28	17:42:48	ADMIN
+1564	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-28	17:47:17	Revision sala SA403
+1565	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-28	17:51:27	Archivado de microcurriculos
+1566	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-28	17:54:06	Asesorias amigo academico.
+1567	07382	Gerson Jair Navarro Gomez	Salida	2025-10-28	17:55:41	administrativo
+1568	1152393	Juan Camilo Guarin Solano	Salida	2025-10-28	17:56:15	actualizacion en sc 402
+1569	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-28	17:57:27	asesoria amigos academicos
+1570	1152430	Juan David Kher Sanchez	Salida	2025-10-28	18:01:59	revision pc y acompañamiento para mantenimiento y entrega de aparatos
+1571	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-10-28	18:26:22	administrativo
+1572	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-29	07:01:55	
+1573	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-29	07:18:38	
+1574	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-29	07:30:10	
+1575	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-29	07:54:43	
+1576	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-29	08:01:10	
+1577	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-29	08:01:28	
+1578	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-29	08:06:40	
+1579	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-29	08:07:08	
+1580	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-29	08:12:37	
+1581	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-29	09:51:53	Archivado de microcurriculos
+1582	1152393	Juan Camilo Guarin Solano	Salida	2025-10-29	09:54:35	mantenimiento
+1583	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-29	09:55:00	
+1584	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-29	09:58:38	
+1585	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-29	10:02:20	Actualizacion programas sf404
+1586	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-29	11:55:05	Se actualizaron programas de SF404 y SA403
+1587	1152349	Santiago Corredor Jaramillo	Salida	2025-10-29	11:56:22	Actualizacion equipos PCs 1, 2 y 4 en SF404 y SA403
+1588	07382	Gerson Jair Navarro Gomez	Salida	2025-10-29	12:00:27	administrativo
+1589	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-29	12:02:35	actualizacion de programas
+1590	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-29	12:19:02	Revision de programas sa403
+1591	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-29	13:00:29	
+1592	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-29	13:57:41	
+1593	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-29	13:58:43	
+1594	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-29	14:00:01	
+1595	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-29	14:00:49	
+1596	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-29	14:01:58	
+1597	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-29	14:04:36	
+1598	1152430	Juan David Kher Sanchez	Ingreso	2025-10-29	14:10:37	
+1599	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-29	14:12:40	
+1600	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-29	14:16:15	
+1601	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-29	14:24:34	adm
+1602	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-29	14:24:47	
+1603	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-29	15:49:35	
+1604	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-29	16:03:45	Revision sala SF401
+1605	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-29	16:06:07	Revision de programas sf401
+1606	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-29	16:55:31	sa403
+1607	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-29	17:45:01	asesoria amigo academico
+1608	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-29	17:46:38	Asesorias amigo academico.
+1609	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-29	17:48:07	Mantenimiento y revision SA401
+1610	07382	Gerson Jair Navarro Gomez	Salida	2025-10-29	17:51:59	administrativo
+1611	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-29	17:53:59	Archivado de microcurriculos
+1612	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-29	17:55:01	Administrativo
+1613	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-30	07:48:32	
+1614	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-30	07:52:51	
+1615	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-30	08:00:05	
+1616	1152349	Santiago Corredor Jaramillo	Ingreso	2025-10-30	08:01:16	
+1617	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-30	08:08:12	
+1618	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-30	08:09:38	
+1619	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-30	08:09:58	
+1620	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-30	08:58:19	
+1621	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-10-30	09:48:30	
+1622	1152349	Santiago Corredor Jaramillo	Salida	2025-10-30	09:50:32	Actualizaciopn de programas y limpieza de archivos PCs 4 y 5 SF404
+1623	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-30	09:54:41	
+1624	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-30	09:59:28	
+1625	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-30	09:59:52	
+1626	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-10-30	10:01:32	
+1627	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-30	11:56:31	actualizacion de programas
+1628	1152393	Juan Camilo Guarin Solano	Salida	2025-10-30	11:57:22	actualizacion en sd 403
+1629	1152329	Camilo Andres Sanchez Martinez	Salida	2025-10-30	11:58:13	Se actualizaron programas de SD403
+1630	1152307	Nefer Sneyder Rojas Porras	Salida	2025-10-30	11:59:08	Busqueda de informacion para anexar a las tablas
+1631	07382	Gerson Jair Navarro Gomez	Salida	2025-10-30	12:00:41	administrativo
+1632	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-30	12:01:51	Curso de Mantenimiento y Revision SA401
+1633	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-30	12:20:57	revicion sd403
+1634	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-30	12:21:30	Actualizacion equipos SF402
+1635	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-30	13:53:23	
+1636	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-30	13:55:56	
+1637	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-30	13:59:07	
+1638	1152208	Erika Alejandra Sanchez Soto	Ingreso	2025-10-30	14:00:18	
+1639	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-30	14:00:47	
+1640	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-10-30	14:01:07	
+1641	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-30	14:01:37	
+1642	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-10-30	14:02:00	
+1643	1152430	Juan David Kher Sanchez	Ingreso	2025-10-30	14:03:21	
+1644	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-10-30	14:17:29	
+1645	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-30	14:19:12	
+1646	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-10-30	14:26:39	adm
+1647	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-30	14:26:55	
+1648	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-30	14:40:35	
+1649	1152208	Erika Alejandra Sanchez Soto	Salida	2025-10-30	16:00:31	Archivado de microcurriculos
+1650	1152200	Javier Sneider Rincon Moreno	Salida	2025-10-30	16:23:49	Revicion en sa
+1651	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-30	16:24:17	Actualizacion programas sa402
+1652	1152430	Juan David Kher Sanchez	Salida	2025-10-30	16:24:47	actualizacion programas
+1653	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-30	16:25:15	Actualizacion de programas sa411
+1654	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-30	17:21:06	Asesorias amigo academico.
+1655	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-10-30	17:41:21	vivelab
+1656	07382	Gerson Jair Navarro Gomez	Salida	2025-10-30	17:51:50	administrativo
+1657	1152590	Juan Fernando Vanegas Camacho	Salida	2025-10-30	17:54:08	Revision de programas sa402, sa411
+1658	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-10-30	17:55:59	Actualización de software SA402 y SA411
+1659	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-30	17:58:39	admin
+1660	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-30	18:03:04	Asesorias de POO1 chichos de segundo semestre
+1661	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-10-30	18:05:46	Administrativo
+1662	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-10-31	06:38:16	
+1663	07382	Gerson Jair Navarro Gomez	Ingreso	2025-10-31	08:11:10	
+1664	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-10-31	08:17:49	
+1665	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-10-31	09:25:09	
+1666	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-10-31	09:50:38	
+1667	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-10-31	09:55:09	
+1668	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-10-31	09:55:42	
+1669	1152188	Clara Ines Porras Mancilla	Ingreso	2025-10-31	09:57:43	
+1670	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-10-31	09:58:46	
+1671	1152393	Juan Camilo Guarin Solano	Ingreso	2025-10-31	09:59:31	
+1672	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-10-31	09:59:50	
+1673	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-10-31	11:05:35	Oficina mantenimiento
+1674	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-10-31	11:55:32	
+1675	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-10-31	11:58:41	actualizacion de programas
+1676	1152393	Juan Camilo Guarin Solano	Salida	2025-10-31	11:59:10	mantenimiento
+1677	07382	Gerson Jair Navarro Gomez	Salida	2025-10-31	12:00:09	administrativo
+1678	1152188	Clara Ines Porras Mancilla	Salida	2025-10-31	12:00:51	Descarga archivo digital DATARSOFT
+1679	1152225	Andres Felipe Camacho Ramirez	Salida	2025-10-31	12:01:23	Actualizacion p`rogramas sa401
+1680	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-10-31	12:34:50	Revision SC
+1681	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-10-31	12:52:19	
+1682	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-10-31	13:58:14	
+1683	04813	Luis Antonio Caicedo Guerrero	Salida	2025-10-31	14:03:53	ADMIN
+1684	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-10-31	14:04:46	Mantenimiento equipos SD
+1685	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-10-31	14:15:28	
+1686	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-10-31	14:26:05	
+1687	1152240	Henry Alexander Blanco Rolon	Salida	2025-10-31	16:51:11	asesoria amigo academico
+1688	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-10-31	16:51:57	Asesorias amigo academico.
+1689	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-10-31	17:33:24	asesorias POO primer semestre
+1690	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-11-04	06:32:09	
+1691	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-11-04	07:34:46	
+1692	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-11-04	07:38:55	
+1693	1152188	Clara Ines Porras Mancilla	Ingreso	2025-11-04	07:54:00	
+1694	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-11-04	07:55:09	
+1695	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-11-04	07:55:40	
+1696	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-11-04	07:59:23	
+1697	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-11-04	08:06:44	
+1698	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-11-04	08:07:00	
+1699	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-04	08:07:20	
+1700	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-04	08:17:09	
+1701	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-11-04	09:21:32	
+1702	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-11-04	09:33:03	
+1703	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-11-04	09:51:35	
+1704	1152590	Juan Fernando Vanegas Camacho	Salida	2025-11-04	09:54:11	Mantenimiento de programas
+1705	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-04	10:02:10	
+1706	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-11-04	10:20:35	actualizacion de programas
+1707	1152349	Santiago Corredor Jaramillo	Ingreso	2025-11-04	10:49:33	
+1708	1152307	Nefer Sneyder Rojas Porras	Salida	2025-11-04	11:39:39	anexo de mas datos a la tabla de excel
+1709	1152329	Camilo Andres Sanchez Martinez	Salida	2025-11-04	11:58:38	Mantenimiento en oficina y actualizando programas de SF402
+1710	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-11-04	12:00:07	Actualizacion de software SF402
+1711	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-11-04	12:01:04	Sala SC402 QUGIS
+1712	1152200	Javier Sneider Rincon Moreno	Salida	2025-11-04	12:01:32	sala sc402 y oficina mantenimiento
+1713	1152188	Clara Ines Porras Mancilla	Salida	2025-11-04	12:01:53	Asistencia a oficina
+1714	07382	Gerson Jair Navarro Gomez	Salida	2025-11-04	12:03:11	administrativo
+1715	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-11-04	12:04:25	
+1716	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-11-04	12:05:41	Actualizacion de programas SF 402
+1717	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-11-04	12:06:11	Actualizacion equipos SF402
+1718	1152349	Santiago Corredor Jaramillo	Salida	2025-11-04	12:18:42	Mantenimineto de equipos en oficina
+1719	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-04	13:53:53	
+1720	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-11-04	13:54:31	
+1721	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-11-04	14:00:41	
+1722	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-11-04	14:01:52	
+1723	1152188	Clara Ines Porras Mancilla	Ingreso	2025-11-04	14:02:09	
+1724	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-11-04	14:02:29	
+1725	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-04	14:03:04	
+1726	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-04	14:05:50	
+1727	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-11-04	14:03:14	
+1728	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-04	16:00:22	Actualizacion programas sf403
+1729	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-11-04	16:01:15	actualizacion de programas sf403
+1730	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-11-04	16:02:00	Actualizacion de software SF403
+1731	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-11-04	16:02:21	
+1732	1152393	Juan Camilo Guarin Solano	Ingreso	2025-11-04	16:03:26	
+1733	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-11-04	17:46:33	Instalacion de windows y software en el vivelab
+1734	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-11-04	17:48:49	vivelab
+1735	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-11-04	17:53:07	Asesorias amigo academico.
+1736	07382	Gerson Jair Navarro Gomez	Salida	2025-11-04	17:55:14	administrativo
+1737	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-11-04	17:57:22	Administrativo
+1738	1152240	Henry Alexander Blanco Rolon	Salida	2025-11-04	17:58:44	asesoria amigo academico
+1739	04813	Luis Antonio Caicedo Guerrero	Salida	2025-11-04	18:03:54	admin
+1740	1152393	Juan Camilo Guarin Solano	Salida	2025-11-04	18:09:19	actualizacion en sc 403
+1741	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-11-04	18:09:47	actualizacion de programas
+1742	07477	Pedro Yesid Hernandez Jimenez	Salida	2025-11-04	21:14:41	administrativo
+1743	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-11-05	06:40:51	
+1744	1152393	Juan Camilo Guarin Solano	Ingreso	2025-11-05	06:59:27	
+1745	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-11-05	08:01:40	
+1746	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-05	08:02:24	
+1747	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-11-05	08:04:25	
+1748	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-05	08:04:55	
+1749	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-05	08:07:03	
+1750	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-11-05	08:09:40	
+1751	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-11-05	08:10:27	
+1752	1152349	Santiago Corredor Jaramillo	Ingreso	2025-11-05	08:10:45	
+1753	1152188	Clara Ines Porras Mancilla	Ingreso	2025-11-05	08:18:56	
+1754	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-05	08:19:17	
+1755	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-11-05	09:29:47	
+1756	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-11-05	09:50:23	
+1757	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-11-05	09:53:51	
+1758	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-11-05	09:57:36	
+1759	1152430	Juan David Kher Sanchez	Ingreso	2025-11-05	10:00:20	
+1760	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-11-05	10:00:54	Actualizacion de programas sf 404
+1761	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-05	10:02:30	Actuliazacion programas sf404
+1762	1193508	Etni Salen Mendoza Garcia	Salida	2025-11-05	10:04:48	archivo y cartas
+1763	1152307	Nefer Sneyder Rojas Porras	Salida	2025-11-05	11:32:48	anexo de informacion
+1764	1152349	Santiago Corredor Jaramillo	Salida	2025-11-05	11:53:20	Oficina
+1765	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-11-05	11:57:08	
+1766	1152590	Juan Fernando Vanegas Camacho	Salida	2025-11-05	11:58:09	Mantenimeinto de equipos sf401
+1767	07382	Gerson Jair Navarro Gomez	Salida	2025-11-05	11:58:57	administrativo
+1768	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-11-05	12:04:10	Actualizacion de software SF401 equipos 24, 23, 19
+1769	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-11-05	12:05:07	Actualizacion de programas
+1770	1152188	Clara Ines Porras Mancilla	Salida	2025-11-05	12:16:48	Asistencia a oficina
+1771	1152430	Juan David Kher Sanchez	Salida	2025-11-05	12:32:57	mantenimiento sf401
+1772	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-11-05	13:51:22	
+1773	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-11-05	13:54:59	
+1774	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-11-05	13:59:43	
+1775	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-11-05	14:00:45	
+1776	1152430	Juan David Kher Sanchez	Ingreso	2025-11-05	14:06:21	
+1777	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-11-05	14:09:19	
+1778	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-05	14:13:36	
+1779	1152590	Juan Fernando Vanegas Camacho	Salida	2025-11-05	16:02:26	Mantenimiento de programas sc401
+1780	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-11-05	16:02:44	
+1781	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-11-05	16:06:28	Revision de salas SA411 y SC402
+1782	1152430	Juan David Kher Sanchez	Salida	2025-11-05	16:14:21	MANTENIMIENTO SALAS SA411 Y SC402
+1783	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-11-05	17:17:24	Asesorias amigo academico.
+1784	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-11-05	17:41:55	salida
+1785	04813	Luis Antonio Caicedo Guerrero	Salida	2025-11-05	17:50:28	admin
+1786	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-11-05	18:00:12	Instalacion de software en Vivelab
+1787	07382	Gerson Jair Navarro Gomez	Salida	2025-11-05	18:01:40	administrativo
+1788	1152200	Javier Sneider Rincon Moreno	Salida	2025-11-05	18:15:25	Intento de safe browser con Nplad
+1789	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-11-05	18:22:33	Administrativo
+1790	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-05	18:26:33	adm
+1791	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-05	18:26:45	
+1792	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-05	18:27:02	adm
+1793	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-11-06	06:26:49	
+1794	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-11-06	07:59:19	
+1795	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-06	08:07:38	
+1796	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-06	08:34:45	
+1797	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-11-06	09:01:42	
+1798	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-11-06	09:40:31	
+1799	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-11-06	09:52:26	
+1800	07382	Gerson Jair Navarro Gomez	Salida	2025-11-06	12:02:53	administrativo
+1801	1152252	Juan Sebastian Guerrero Bautista	Salida	2025-11-06	12:04:01	Revision SG401
+1802	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-06	12:09:56	adm
+1803	1152200	Javier Sneider Rincon Moreno	Salida	2025-11-06	12:21:05	verificacion de los codigos para colocar en los equipo
+1804	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-11-06	12:38:10	
+1805	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-11-06	13:38:32	
+1806	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-06	13:54:52	
+1807	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-11-06	13:55:10	
+1808	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-11-06	13:57:52	
+1809	1152307	Nefer Sneyder Rojas Porras	Salida	2025-11-06	13:58:23	Nuevcas indicaciones de la in
+1810	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-11-06	13:58:54	
+1811	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-06	14:09:19	
+1812	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-11-06	14:09:34	
+1813	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-06	14:17:46	
+1814	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-11-06	17:16:57	sc 401-402
+1815	04813	Luis Antonio Caicedo Guerrero	Salida	2025-11-06	17:40:54	admin
+1816	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-11-06	17:45:18	Asesorias amigo academico.
+1817	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-11-06	17:53:05	Administrativo
+1818	07382	Gerson Jair Navarro Gomez	Salida	2025-11-06	17:54:47	administrativo
+1819	1152590	Juan Fernando Vanegas Camacho	Salida	2025-11-06	18:00:13	Mantenimiento de equipos sc402
+1820	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-06	18:00:52	actualizacion programas sc402
+1821	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-11-06	18:01:40	Actualizacion de software SC402
+1822	1152200	Javier Sneider Rincon Moreno	Salida	2025-11-06	18:06:52	limpieza equipos sc
+1823	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-06	18:11:52	adm
+1824	1152240	Henry Alexander Blanco Rolon	Salida	2025-11-06	18:45:06	asesoria amigo academico
+1857	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-11-07	06:36:16	
+1858	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-11-07	07:39:12	
+1859	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-07	08:11:30	
+1860	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-07	09:03:44	
+1861	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-07	09:19:23	
+1862	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-07	09:54:36	
+1863	1152393	Juan Camilo Guarin Solano	Ingreso	2025-11-07	09:58:34	
+1864	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-11-07	10:05:16	
+1865	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-11-07	11:03:56	Llevar adornos de navidad
+1866	1152393	Juan Camilo Guarin Solano	Salida	2025-11-07	11:56:45	mantenimiento de pantallas
+1867	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-11-07	11:58:21	
+1868	07382	Gerson Jair Navarro Gomez	Salida	2025-11-07	11:58:57	administrativo
+1869	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-07	12:00:56	Mantenimiento equipo oficina
+1870	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-07	12:02:08	adm
+1871	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-11-07	12:03:24	
+1872	1152393	Juan Camilo Guarin Solano	Ingreso	2025-11-07	13:55:05	
+1873	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-07	13:56:34	
+1874	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-07	14:00:58	
+1875	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-11-07	14:01:37	
+1876	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-07	14:02:00	
+1877	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-11-07	14:03:10	
+1878	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-11-07	14:04:36	Actualizacion equipos SC402
+1879	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-11-07	14:05:05	Material de navidad y sala SC402
+1880	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-11-07	14:05:27	
+1881	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-11-07	14:07:10	
+1882	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-11-07	14:07:26	
+1883	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-07	15:03:37	actualizacion programas sc 402
+1884	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-11-07	16:00:47	Actualizacion de programas sc 402
+1885	1152393	Juan Camilo Guarin Solano	Salida	2025-11-07	16:01:20	actualizacion en sc
+1886	1193508	Etni Salen Mendoza Garcia	Salida	2025-11-07	16:01:58	archivo y pedido
+1887	1152197	Daniel Eduardo Toloza Anaya	Salida	2025-11-07	17:40:28	vivelab
+1888	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-07	17:43:05	
+1889	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-11-07	17:44:34	Asesorias amigo academico.
+1890	1152240	Henry Alexander Blanco Rolon	Salida	2025-11-07	17:46:37	asesoria amigo academico
+1891	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-11-07	17:57:22	actualizacion de programas
+1892	07382	Gerson Jair Navarro Gomez	Salida	2025-11-07	17:58:20	administrativo
+1893	04813	Luis Antonio Caicedo Guerrero	Salida	2025-11-07	18:15:34	admin
+1894	1152371	Samuel Alexander Garcia Sandoval	Ingreso	2025-11-10	07:57:35	
+1895	1152393	Juan Camilo Guarin Solano	Ingreso	2025-11-10	07:58:03	
+1896	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-11-10	08:01:38	
+1897	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-11-10	08:02:26	
+1898	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-11-10	08:04:06	
+1899	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-10	08:08:40	
+1900	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-10	08:10:30	
+1901	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-11-10	08:10:56	
+1902	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-11-10	08:11:18	
+1903	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-11-10	08:58:34	
+1904	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-11-10	09:24:41	
+1905	1152307	Nefer Sneyder Rojas Porras	Salida	2025-11-10	09:53:11	Nuevas indicaciones con la ingeniera
+1906	1152188	Clara Ines Porras Mancilla	Ingreso	2025-11-10	09:53:30	
+1907	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-11-10	09:59:57	Revision equipos SF404
+1908	1152393	Juan Camilo Guarin Solano	Salida	2025-11-10	10:00:25	actualizacion en sf
+1909	1152371	Samuel Alexander Garcia Sandoval	Salida	2025-11-10	10:00:51	actualizacion de programas
+1910	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-10	10:57:37	
+1911	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-10	12:00:20	Mantenimiento equipos oficina
+1912	07382	Gerson Jair Navarro Gomez	Salida	2025-11-10	12:00:48	administrativo
+1913	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-10	12:06:47	adm
+1914	1152200	Javier Sneider Rincon Moreno	Salida	2025-11-10	12:24:27	salon sf 404 y oficina mantenimiento
+1915	1152188	Clara Ines Porras Mancilla	Salida	2025-11-10	13:50:17	Descarga de archivo digital DATARSOFT
+1916	1152188	Clara Ines Porras Mancilla	Ingreso	2025-11-10	13:50:30	
+1917	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-10	13:53:34	
+1918	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-11-10	13:56:03	
+1919	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-10	13:59:24	
+1920	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-11-10	14:01:09	
+1921	07477	Pedro Yesid Hernandez Jimenez	Ingreso	2025-11-10	14:03:10	
+1922	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-10	14:07:03	
+1923	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-11-10	14:11:40	Actualizacion equipos SF404
+1924	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-10	14:19:05	
+1925	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-11-10	14:23:03	
+1926	1152200	Javier Sneider Rincon Moreno	Salida	2025-11-10	15:02:53	sf404 inofstay posgrest
+1927	1152200	Javier Sneider Rincon Moreno	Ingreso	2025-11-10	15:50:39	
+1928	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-10	16:00:22	Actualizacion equipos sf404
+1929	1152188	Clara Ines Porras Mancilla	Salida	2025-11-10	16:13:50	Descarga archivo digital DATARSOFT
+1930	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-11-10	17:03:18	Actualizacion de programas sf404
+1931	03947	Eusen Enrique Penaranda Carrillo	Salida	2025-11-10	17:41:58	Administrativo
+1932	1152251	Cesar Camilo Izquierdo Gallardo	Salida	2025-11-10	17:53:52	Asesorias amigo academico.
+1933	1152240	Henry Alexander Blanco Rolon	Salida	2025-11-10	17:56:34	curso python sobre tuplas
+1934	07382	Gerson Jair Navarro Gomez	Salida	2025-11-10	17:59:38	administrativo
+1935	1152200	Javier Sneider Rincon Moreno	Salida	2025-11-10	18:25:12	oficina mantenimiento
+1936	04813	Luis Antonio Caicedo Guerrero	Salida	2025-11-10	18:27:01	admin
+1937	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-10	18:28:16	adm
+1938	04813	Luis Antonio Caicedo Guerrero	Ingreso	2025-11-11	07:14:57	
+1939	1152590	Juan Fernando Vanegas Camacho	Ingreso	2025-11-11	07:52:50	
+1940	1152552	Alejandro Javier Falo Gonzalez	Ingreso	2025-11-11	07:57:06	
+1941	1152219	Andres Felipe Jimenez Ramirez	Ingreso	2025-11-11	08:00:29	
+1942	1152281	Brayan Sebastian Gonzalez Gonzalez	Ingreso	2025-11-11	08:01:03	
+1943	03947	Eusen Enrique Penaranda Carrillo	Ingreso	2025-11-11	08:01:29	
+1944	1152188	Clara Ines Porras Mancilla	Ingreso	2025-11-11	08:06:17	
+1945	1152329	Camilo Andres Sanchez Martinez	Ingreso	2025-11-11	08:06:47	
+1946	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-11	08:07:49	
+1947	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-11	08:17:30	
+1948	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-11	09:56:13	
+1949	1152590	Juan Fernando Vanegas Camacho	Salida	2025-11-11	09:57:13	Mantenimiento de programas SF404
+1950	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-11	09:59:29	
+1951	1152307	Nefer Sneyder Rojas Porras	Ingreso	2025-11-11	10:01:13	
+1952	1152197	Daniel Eduardo Toloza Anaya	Ingreso	2025-11-11	10:37:58	
+1953	1152188	Clara Ines Porras Mancilla	Salida	2025-11-11	11:58:46	Asistencia a oficina
+1954	1152552	Alejandro Javier Falo Gonzalez	Salida	2025-11-11	12:00:01	Revision de equipos SF404
+1955	1152281	Brayan Sebastian Gonzalez Gonzalez	Salida	2025-11-11	12:01:34	Actualizacion equipos SF404
+1956	1152225	Andres Felipe Camacho Ramirez	Salida	2025-11-11	12:02:07	Actualizacion programas sf404
+1957	1152284	Diego Alejandro Jaimes Torrado	Salida	2025-11-11	12:02:54	actualizacion de prorgramas sf 404
+1958	1152219	Andres Felipe Jimenez Ramirez	Salida	2025-11-11	12:03:22	Revision SF403 Y SF404
+1959	1152329	Camilo Andres Sanchez Martinez	Salida	2025-11-11	12:04:01	Mantenimiento en oficina y SF403
+1960	07382	Gerson Jair Navarro Gomez	Salida	2025-11-11	12:04:41	administrativo
+1961	1152307	Nefer Sneyder Rojas Porras	Salida	2025-11-11	12:42:09	Arreglo documento diannis
+1962	1193508	Etni Salen Mendoza Garcia	Ingreso	2025-11-11	13:44:06	
+1963	1152225	Andres Felipe Camacho Ramirez	Ingreso	2025-11-11	13:54:19	
+1964	1152240	Henry Alexander Blanco Rolon	Ingreso	2025-11-11	13:58:09	
+1965	1152252	Juan Sebastian Guerrero Bautista	Ingreso	2025-11-11	14:02:29	
+1966	1152284	Diego Alejandro Jaimes Torrado	Ingreso	2025-11-11	14:02:48	
+1967	1152251	Cesar Camilo Izquierdo Gallardo	Ingreso	2025-11-11	14:06:20	
+1968	07382	Gerson Jair Navarro Gomez	Ingreso	2025-11-11	14:14:07	
+1969	5544	DIANE MILENA ROJAS VERGEL	Salida	2025-11-11	14:44:56	adm
+1970	5544	DIANE MILENA ROJAS VERGEL	Ingreso	2025-11-11	14:45:09	
+\.
+
+
+--
+-- TOC entry 3731 (class 0 OID 16564)
+-- Dependencies: 221
+-- Data for Name: usuarios; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.usuarios (id, codigo, nombre) FROM stdin;
+1	1152281	Brayan Sebastian Gonzalez Gonzalez
+2	1152430	Juan David Kher Sanchez
+3	1152200	Javier Sneider Rincon Moreno
+4	1152590	Juan Fernando Vanegas Camacho
+5	1152197	Daniel Eduardo Toloza Anaya
+6	1152284	Diego Alejandro Jaimes Torrado
+7	1152252	Juan Sebastian Guerrero Bautista
+8	1152225	Andres Felipe Camacho Ramirez
+9	1152329	Camilo Andres Sanchez Martinez
+10	1152307	Nefer Sneyder Rojas Porras
+11	1152240	Henry Alexander Blanco Rolon
+12	1152208	Erika Alejandra Sanchez Soto
+13	1193508	Etni Salen Mendoza Garcia
+14	07382	Gerson Jair Navarro Gomez
+15	04813	Luis Antonio Caicedo Guerrero
+16	1152251	Cesar Camilo Izquierdo Gallardo
+17	1152349	Santiago Corredor Jaramillo
+18	5544	DIANE MILENA ROJAS VERGEL
+19	1152219	Andres Felipe Jimenez Ramirez
+20	1152552	Alejandro Javier Falo Gonzalez
+21	1152371	Samuel Alexander Garcia Sandoval
+22	1152393	Juan Camilo Guarin Solano
+23	07477	Pedro Yesid Hernandez Jimenez
+24	1151860	Luis Eduardo Soto Garcia
+25	1152337	Alex Felipe Sanchez Castano
+26	03947	Eusen Enrique Penaranda Carrillo
+27	1152188	Clara Ines Porras Mancilla
+\.
+
+
+--
+-- TOC entry 3743 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: admin_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.admin_id_seq', 195, true);
+
+
+--
+-- TOC entry 3744 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: estado_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.estado_id_seq', 1005, true);
+
+
+--
+-- TOC entry 3745 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: registros_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.registros_id_seq', 1970, true);
+
+
+--
+-- TOC entry 3746 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: usuarios_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.usuarios_id_seq', 30, true);
+
+
+--
+-- TOC entry 3570 (class 2606 OID 16575)
+-- Name: admin admin_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.admin
+    ADD CONSTRAINT admin_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3572 (class 2606 OID 16577)
+-- Name: admin admin_usuario_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.admin
+    ADD CONSTRAINT admin_usuario_key UNIQUE (usuario);
+
+
+--
+-- TOC entry 3574 (class 2606 OID 16579)
+-- Name: estado estado_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.estado
+    ADD CONSTRAINT estado_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3577 (class 2606 OID 16581)
+-- Name: registros registros_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.registros
+    ADD CONSTRAINT registros_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3579 (class 2606 OID 16583)
+-- Name: usuarios usuarios_codigo_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_codigo_key UNIQUE (codigo);
+
+
+--
+-- TOC entry 3581 (class 2606 OID 16585)
+-- Name: usuarios usuarios_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3575 (class 1259 OID 16586)
+-- Name: idx_estado_codigo_estado; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_estado_codigo_estado ON public.estado USING btree (codigo, estado);
+
+
+-- Completed on 2025-11-12 07:55:43 -05
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict p5DAbgxQWaLpweCwGqBsLdpiyfb1ShpZCsEkanG2hS3v5YeGtJa8Ie8jDHJO668
+

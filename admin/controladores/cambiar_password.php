@@ -62,12 +62,6 @@ try {
 
     $arregloUsuario = $_SESSION['datos_login'];
     $usuarioActual = $arregloUsuario['nombre'];
-    $nivelActual = $arregloUsuario['nivel'];
-
-    // Solo admins pueden cambiar contraseñas
-    if ($nivelActual != 'admin') {
-        handleError("No tienes permisos para realizar esta acción");
-    }
 
     $action = $_POST['action'] ?? '';
 
@@ -85,28 +79,24 @@ try {
         }
 
         // Verificar contraseña actual
-        $stmt = $conexion->prepare("SELECT password FROM becarios_admin WHERE usuario = ? AND nivel = 'admin'");
-        $stmt->bind_param("s", $usuarioActual);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
+        $stmt = $conexion_pdo->prepare("SELECT clave FROM admin WHERE usuario = ?");
+        $stmt->execute([$usuarioActual]);
+        $datos = $stmt->fetch();
 
-        if ($resultado->num_rows == 0) {
+        if (!$datos) {
             handleError("Usuario no encontrado");
         }
 
-        $resultado->reset();
-        $datos = $resultado->fetch_assoc();
-        
-        if (!password_verify($passwordActual, $datos['password'])) {
+        // Comparar directamente los strings de las contraseñas (sin hash)
+        if ($passwordActual !== $datos['clave']) {
             handleError("La contraseña actual es incorrecta");
         }
 
         // Actualizar contraseña
         $passwordHasheada = password_hash($passwordNueva, PASSWORD_DEFAULT);
-        $stmtUpdate = $conexion->prepare("UPDATE becarios_admin SET password = ? WHERE usuario = ? AND nivel = 'admin'");
-        $stmtUpdate->bind_param("ss", $passwordHasheada, $usuarioActual);
-        
-        if ($stmtUpdate->execute()) {
+        $stmtUpdate = $conexion_pdo->prepare("UPDATE admin SET clave = ? WHERE usuario = ?");
+
+        if ($stmtUpdate->execute([$passwordHasheada, $usuarioActual])) {
             handleSuccess("Contraseña de administrador cambiada exitosamente");
         } else {
             handleError("Error al actualizar la contraseña");
@@ -124,13 +114,23 @@ try {
             handleError("La nueva contraseña debe tener al menos 6 caracteres, incluyendo mayúsculas, minúsculas y números");
         }
 
+        // Buscar el usuario de entrada (puede ser un usuario específico o el primero que no sea admin)
+        // Opción 1: Si tienes un usuario específico llamado "entrada"
+        $usuarioEntrada = 'admin'; // Ajusta este valor según tu necesidad
+
+        $stmt = $conexion_pdo->prepare("SELECT id FROM admin WHERE usuario = ?");
+        $stmt->execute([$usuarioEntrada]);
+
+        if (!$stmt->fetch()) {
+            handleError("Usuario de entrada no encontrado");
+        }
+
         // Actualizar contraseña del usuario de entrada
         $passwordHasheada = password_hash($passwordNueva, PASSWORD_DEFAULT);
-        $stmtUpdate = $conexion->prepare("UPDATE becarios_admin SET password = ? WHERE nivel = 'entrada'");
-        $stmtUpdate->bind_param("s", $passwordHasheada);
-        
-        if ($stmtUpdate->execute()) {
-            if ($stmtUpdate->affected_rows > 0) {
+        $stmtUpdate = $conexion_pdo->prepare("UPDATE admin SET clave = ? WHERE usuario = ?");
+
+        if ($stmtUpdate->execute([$passwordHasheada, $usuarioEntrada])) {
+            if ($stmtUpdate->rowCount() > 0) {
                 handleSuccess("Contraseña del usuario de entrada cambiada exitosamente");
             } else {
                 handleError("No se encontró el usuario de entrada o no se realizaron cambios");
@@ -146,4 +146,3 @@ try {
 } catch (Exception $e) {
     handleError("Error inesperado: " . $e->getMessage());
 }
-?>
