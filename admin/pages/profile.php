@@ -2,39 +2,13 @@
 session_start();
 include "../controladores/seguridad.php";
 include "../controladores/perfil.php";
-// Obtener el cardnumber del funcionario desde la URL
-$cardnumber = $_GET['cardnumber'];
+// Obtener el código del becario desde la URL
+$codigo = $_GET['codigo'];
 
 include "../controladores/calendario.php";
-// Consulta para obtener la foto del funcionario
-$queryFoto = "SELECT foto FROM becl_funcionario WHERE codigo = ?";
-$stmtFoto = $conexion->prepare($queryFoto);
-$stmtFoto->bind_param("s", $cardnumber);
-$stmtFoto->execute();
-$resultadoFoto = $stmtFoto->get_result();
 
-if ($resultadoFoto->num_rows > 0) {
-    // Si existe, obtener la foto
-    $fotoFuncionario = $resultadoFoto->fetch_assoc();
-    $urlFoto = $fotoFuncionario['foto']; // URL de la foto del funcionario
-} else {
-    // Si no existe, usar una imagen por defecto
-    $urlFoto = "https://img.freepik.com/vector-gratis/gradiente-azul-usuario_78370-4692.jpg?semt=ais_hybrid";
-}
-
-
-
-
-// Consulta para obtener TODOS los registros (sin filtrar por mes)
-$queryRegistros = "SELECT entrada, salida 
-                   FROM becarios_registro 
-                   WHERE codigo = ? 
-                   ORDER BY entrada ASC";
-
-$stmtRegistros = $conexion->prepare($queryRegistros);
-$stmtRegistros->bind_param("s", $cardnumber); // Solo un parámetro ahora
-$stmtRegistros->execute();
-$resultadoRegistros = $stmtRegistros->get_result();
+// Usar imagen por defecto (ya no tenemos fotos en la BD)
+$urlFoto = "https://img.freepik.com/vector-gratis/gradiente-azul-usuario_78370-4692.jpg?semt=ais_hybrid";
 
 
 ?>
@@ -164,25 +138,14 @@ $resultadoRegistros = $stmtRegistros->get_result();
           <div class="col-auto my-auto">
             <div class="h-100">
               <h5 class="mb-1">
-                <?php echo ucwords(strtolower($empleado['firstname'])) . " " . ucwords(strtolower($empleado['surname'])); ?>
+                <?php echo ucwords(strtolower($empleado['nombre'])); ?>
               </h5>
               <p class="mb-0 font-weight-normal text-sm">
-                Administrativo
+                Becario - Ingeniería de Sistemas
               </p>
             </div>
           </div>
-          <!-- Botón de configuración -->
-          <div class="col-lg-1 col-md-2 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
-            <div class="nav-wrapper position-relative end-0">
-              <ul class="nav nav-pills nav-fill p-1" role="tablist">
-                <li class="nav-item">
-                  <a class="btn btn-secondary mb-0 px-4 py-1" data-bs-toggle="modal" data-bs-target="#configModal" role="tab" aria-selected="false">
-                    <i class="material-icons py-2">settings</i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <!-- Botón de configuración deshabilitado (no hay gestión de fotos en BD externa) -->
 
           <!-- Modal para la configuración -->
           <div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
@@ -272,8 +235,8 @@ $resultadoRegistros = $stmtRegistros->get_result();
                   <h5 class="mb-0">Información</h5>
                   <br>
                   <ul class="list-group">
-                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Codigo:</strong> &nbsp; <?php echo $empleado['cardnumber'] ; ?></li>
-                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Correo:</strong> &nbsp; <?php echo $empleado['email'] ; ?></li>
+                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Código:</strong> &nbsp; <?php echo $empleado['codigo']; ?></li>
+                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Nombre:</strong> &nbsp; <?php echo ucwords(strtolower($empleado['nombre'])); ?></li>
                     <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Programa:</strong> &nbsp; INGENIERÍA DE SISTEMAS</li>
                   </ul>
                 </div>

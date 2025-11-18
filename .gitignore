@@ -1,12 +1,31 @@
 # Archivos de configuración sensibles
 *.sql
 
-# Variables de entorno
+# Variables de entorno (NO subir credenciales reales)
 .env
+deployment/config/app.env.local
 
 # Archivos de Docker/Podman
 *.log
 
 # Archivos específicos
-usuario_entrada.sql 
+usuario_entrada.sql
 becarios.sql
+
+# Backups
+backup_*/
+
+# Logs
+logs/*.txt
+!logs/.gitkeep
+
+# Archivos temporales y uploads
+admin/assets/fotos_becarios/*
+!admin/assets/fotos_becarios/.gitkeep
+
+# Vendor (dependencias de Composer)
+vendor/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

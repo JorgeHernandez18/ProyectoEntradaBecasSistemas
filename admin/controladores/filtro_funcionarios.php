@@ -3,34 +3,14 @@ include "../controladores/seguridad.php";
 include "../../modelo/conexion.php";
 
 // Inicializa la consulta base para becarios
-$baseQuery = "FROM becarios_info WHERE 1=1";
+$baseQuery = "FROM usuarios WHERE 1=1";
 $params = array();
-
-// Maneja el filtrado por estado
-if(isset($_GET['estado']) && !empty($_GET['estado'])) {
-    $estado = $_GET['estado'];
-    $baseQuery .= " AND estado = ?";
-    $params[] = $estado;
-}
-
-// Maneja el filtrado por fecha de inicio
-if(isset($_GET['from_date']) && isset($_GET['to_date']) && !empty($_GET['from_date']) && !empty($_GET['to_date']))
-{
-    $from_date = $_GET['from_date'];
-    $to_date = $_GET['to_date'];
-
-    $baseQuery .= " AND fecha_inicio >= ? AND fecha_inicio <= ?";
-    $params[] = $from_date;
-    $params[] = $to_date;
-}
 
 // Maneja la búsqueda por término
 $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
 if (!empty($busqueda)) {
-    $baseQuery .= " AND (nombre_completo LIKE ? OR 
-                         codigo LIKE ? OR 
-                         correo LIKE ?)";
-    $params = array_merge($params, array_fill(0, 3, "%$busqueda%"));
+    $baseQuery .= " AND (nombre LIKE ? OR codigo LIKE ?)";
+    $params = array_merge($params, array_fill(0, 2, "%$busqueda%"));
 }
 
 // Número de registros por página
@@ -67,11 +47,11 @@ $orden = isset($_GET['orden']) ? $_GET['orden'] : 'nombre';
 if ($orden === 'codigo') {
     $orderBy = "codigo DESC"; // Ordenar por código
 } else {
-    $orderBy = "nombre_completo ASC"; // Ordenar por nombre (por defecto)
+    $orderBy = "nombre ASC"; // Ordenar por nombre (por defecto)
 }
 
 // Consulta para obtener los registros de la página actual
-$stmt = $conexion->prepare("SELECT * " . $baseQuery . " ORDER BY " . $orderBy . " LIMIT ?, ?");
+$stmt = $conexion->prepare("SELECT * " . $baseQuery . " ORDER BY " . $orderBy . " LIMIT ? OFFSET ?");
 if (!empty($params)) {
     $types = str_repeat('s', count($params)) . 'ii';
     $stmt->bind_param($types, ...[...$params, $registrosPorPagina, $inicio]);
@@ -83,7 +63,6 @@ $resultado = $stmt->get_result();
 
 // Si es una solicitud AJAX, devuelve solo los datos de la tabla
 if(isset($_GET['ajax'])) {
-
     while($f = $resultado->fetch_assoc()){
     }
     echo json_encode([

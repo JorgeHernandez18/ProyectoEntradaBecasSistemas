@@ -67,22 +67,6 @@ include "../controladores/filtro_paginacion.php";
               <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="../pages/horarios.php">
-              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">schedule</i>
-              </div>
-              <span class="nav-link-text ms-1">Gestión de Horarios</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="../pages/auto_salidas.php">
-              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">timer</i>
-              </div>
-              <span class="nav-link-text ms-1">Auto Salidas</span>
-            </a>
-          </li>
           <li class="nav-item mt-3">
             <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Cuenta</h6>
           </li>
@@ -188,7 +172,6 @@ include "../controladores/filtro_paginacion.php";
                           </div>
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm"><?php echo $f['nombre']; ?></h6>
-                            <p class="text-xs text-secondary mb-0"><?php echo $f['correo']; ?></p>
                           </div>
                         </div>
                       </td>
@@ -196,13 +179,15 @@ include "../controladores/filtro_paginacion.php";
                         <p class="text-xs font-weight-bold mb-0"><?php echo $f['codigo']; ?></p>
                       </td>
                       <td>
-                        <p class="text-xs font-weight-bold mb-0"><?php echo date('Y-m-d H:i', strtotime($f['entrada'])); ?></p>
+                      <p class="text-xs font-weight-bold mb-0">
+                        <?php echo !empty($f['entrada']) ? date('Y-m-d H:i', strtotime($f['entrada'])) : "—"; ?>
+                      </p>
                       </td>
                       <td>
                         <p class="text-xs font-weight-bold mb-0">
                           <?php 
-                          if ($f['salida']) {
-                            echo date('Y-m-d H:i', strtotime($f['salida']));
+                          if ($f['hora_salida']) {
+                            echo !empty($f['hora_salida']) ? date('Y-m-d H:i', strtotime($f['hora_salida'])) : "—";
                             if (isset($f['salida_automatica']) && $f['salida_automatica']) {
                               echo ' <span class="badge badge-sm bg-gradient-warning">AUTO</span>';
                             }

@@ -4,12 +4,15 @@
  * En Docker se reemplaza por enlace simbólico a conexion_docker.php
  */
 
-// Configuración para desarrollo local
-$host = 'localhost';
-$port = '5432';
-$dbname = 'becarios_sistemas';
-$user = 'postgres';
-$password = '1804';
+// Configuración para base de datos externa PostgreSQL
+$config = parse_ini_file( __DIR__ . '/../.env');
+
+$host = $config['DB_HOST'];
+$port = $config['DB_PORT'];
+$dbname = $config['DB_NAME'];
+$user = $config['DB_USER'];
+$password = $config['DB_PASS'];
+
 try {
     // Crear conexión PDO para PostgreSQL
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";

@@ -1,17 +1,20 @@
 <?php
     // Consulta para el total de registros
-    $stmtTotal = $conexion->prepare("SELECT COUNT(*) as total FROM becarios_registro");
+    $stmtTotal = $conexion->prepare("SELECT COUNT(*) as total FROM registros");
     $stmtTotal->execute();
     $resultTotal = $stmtTotal->get_result();
     $rowTotal = $resultTotal->fetch_assoc();
     $totalRegistros = $rowTotal['total'] ?? 0;
 
-    // Consulta para los registros del día (usar CURRENT_DATE en lugar de CURDATE)
-    $stmtDia = $conexion->prepare("SELECT COUNT(*) as totalDia FROM becarios_registro WHERE DATE(entrada) = CURRENT_DATE");
+    // Consulta para los registros del día (contar solo ingresos para evitar duplicados)
+    // Usar la fecha actual del sistema
+    $fechaActual = date('Y-m-d');
+    $stmtDia = $conexion->prepare("SELECT COUNT(*) as totaldia FROM registros WHERE fecha = ? AND tipo = 'Ingreso'");
+    $stmtDia->bind_param("s", $fechaActual);
     $stmtDia->execute();
     $resultDia = $stmtDia->get_result();
     $rowDia = $resultDia->fetch_assoc();
-    $registrosDia = $rowDia['totalDia'] ?? 0;
+    $registrosDia = $rowDia['totaldia'] ?? 0;
 
     // Determinar el semestre actual
     $mesActual = date('n');
@@ -27,29 +30,44 @@
         $meses = ['Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     }
 
-    // Consulta para contar los registros del semestre actual
-    $stmtSemestre = $conexion->prepare("SELECT COUNT(*) as totalSemestre FROM becarios_registro WHERE entrada BETWEEN ? AND ?");
+    // Consulta para contar los registros del semestre actual (solo ingresos)
+  
+    $stmtSemestre = $conexion->prepare("SELECT COUNT(*) as totalsemestre FROM registros WHERE fecha BETWEEN ? AND ? AND tipo = 'Ingreso'");
     $stmtSemestre->bind_param("ss", $inicioSemestre, $finSemestre);
     $stmtSemestre->execute();
     $resultSemestre = $stmtSemestre->get_result();
     $rowSemestre = $resultSemestre->fetch_assoc();
-    $registrosSemestre = $rowSemestre['totalSemestre'] ?? 0;
+    $registrosSemestre = $rowSemestre['totalsemestre'] ?? 0;
 
-    // Consulta para total de horas trabajadas en el semestre
-    $stmtHorasSemestre = $conexion->prepare("SELECT SUM(horas_trabajadas) as totalHoras FROM becarios_registro WHERE entrada BETWEEN ? AND ? AND horas_trabajadas IS NOT NULL");
+    // Consulta para calcular horas trabajadas del semestre
+    // Emparejamos registros de Ingreso y Salida del mismo día y calculamos la diferencia
+    $stmtHorasSemestre = $conexion->prepare("
+        SELECT SUM(EXTRACT(EPOCH FROM (
+            (salida.fecha || ' ' || salida.hora)::timestamp -
+            (ingreso.fecha || ' ' || ingreso.hora)::timestamp
+        )) / 3600) as totalhoras
+        FROM registros ingreso
+        INNER JOIN registros salida
+            ON ingreso.codigo = salida.codigo
+            AND ingreso.fecha = salida.fecha
+            AND ingreso.tipo = 'Ingreso'
+            AND salida.tipo = 'Salida'
+            AND salida.id > ingreso.id
+        WHERE ingreso.fecha BETWEEN ? AND ?
+    ");
     $stmtHorasSemestre->bind_param("ss", $inicioSemestre, $finSemestre);
     $stmtHorasSemestre->execute();
     $resultHorasSemestre = $stmtHorasSemestre->get_result();
     $rowHoras = $resultHorasSemestre->fetch_assoc();
-    $horasSemestre = $rowHoras['totalHoras'] ?? 0;
+    $horasSemestre = $rowHoras['totalhoras'] ?? 0;
 
 
 ///////---------------------CONSULTAS GRAFICA DE REGISTROS POR BECARIO MAS ACTIVO ----------------/////////
-// Consulta para obtener los 7 becarios más activos en el semestre actual
+// Consulta para obtener los 7 becarios más activos en el semestre actual (contando ingresos)
 $stmtProgramas = $conexion->prepare("
     SELECT nombre, COUNT(*) as total
-    FROM becarios_registro
-    WHERE entrada BETWEEN ? AND ?
+    FROM registros
+    WHERE fecha BETWEEN ? AND ? AND tipo = 'Ingreso'
     GROUP BY codigo, nombre
     ORDER BY total DESC
     LIMIT 7
@@ -83,11 +101,22 @@ $totalesJSON = json_encode($totales);
 
     // Consulta para sumar horas trabajadas por mes en el semestre actual
     $stmtMensual = $conexion->prepare("
-    SELECT EXTRACT(MONTH FROM entrada) as mes, SUM(horas_trabajadas) as total
-    FROM becarios_registro
-    WHERE entrada BETWEEN ? AND ? AND horas_trabajadas IS NOT NULL
-    GROUP BY EXTRACT(MONTH FROM entrada)
-    ORDER BY EXTRACT(MONTH FROM entrada)
+    SELECT
+        EXTRACT(MONTH FROM ingreso.fecha::date) as mes,
+        SUM(EXTRACT(EPOCH FROM (
+            (salida.fecha || ' ' || salida.hora)::timestamp -
+            (ingreso.fecha || ' ' || ingreso.hora)::timestamp
+        )) / 3600) as total
+    FROM registros ingreso
+    INNER JOIN registros salida
+        ON ingreso.codigo = salida.codigo
+        AND ingreso.fecha = salida.fecha
+        AND ingreso.tipo = 'Ingreso'
+        AND salida.tipo = 'Salida'
+        AND salida.id > ingreso.id
+    WHERE ingreso.fecha BETWEEN ? AND ?
+    GROUP BY EXTRACT(MONTH FROM ingreso.fecha::date)
+    ORDER BY EXTRACT(MONTH FROM ingreso.fecha::date)
     ");
     $stmtMensual->bind_param("ss", $inicioSemestre, $finSemestre);
     $stmtMensual->execute();
@@ -100,11 +129,13 @@ $totalesJSON = json_encode($totales);
 
     while ($row = $resultMensual->fetch_assoc()) {
         $mesIndex = $row['mes'] - ($mesActual <= 6 ? 1 : 7); // Ajustar índice según el semestre
-        $datosMensuales[$mesIndex] = $row['total'];
-        $totalVisitasSemestre += $row['total'];
-        if ($row['total'] > $maxVisitas) {
-            $maxVisitas = $row['total'];
-            $mesMasFrecuente = $meses[$mesIndex];
+        if ($mesIndex >= 0 && $mesIndex < 6) {
+            $datosMensuales[$mesIndex] = round($row['total'], 2);
+            $totalVisitasSemestre += $row['total'];
+            if ($row['total'] > $maxVisitas) {
+                $maxVisitas = $row['total'];
+                $mesMasFrecuente = $meses[$mesIndex];
+            }
         }
     }
 
@@ -123,16 +154,25 @@ $totalesJSON = json_encode($totales);
     $inicioSemana = date('Y-m-d', strtotime('monday this week'));
     $hoy = date('Y-m-d');
 
-    // Consulta para obtener las horas trabajadas por día de la semana actual, incluyendo hoy
+    // Consulta para obtener las horas trabajadas por día de la semana actual
     $stmtSemanal = $conexion->prepare("
-        SELECT 
-            DATE(entrada) as fecha,
-            EXTRACT(DOW FROM entrada) as dia_semana, 
-            SUM(horas_trabajadas) as total
-        FROM becarios_registro
-        WHERE DATE(entrada) BETWEEN ? AND ? AND horas_trabajadas IS NOT NULL
-        GROUP BY DATE(entrada), EXTRACT(DOW FROM entrada)
-        ORDER BY fecha ASC
+        SELECT
+            ingreso.fecha,
+            EXTRACT(DOW FROM ingreso.fecha::date) as dia_semana,
+            SUM(EXTRACT(EPOCH FROM (
+                (salida.fecha || ' ' || salida.hora)::timestamp -
+                (ingreso.fecha || ' ' || ingreso.hora)::timestamp
+            )) / 3600) as total
+        FROM registros ingreso
+        INNER JOIN registros salida
+            ON ingreso.codigo = salida.codigo
+            AND ingreso.fecha = salida.fecha
+            AND ingreso.tipo = 'Ingreso'
+            AND salida.tipo = 'Salida'
+            AND salida.id > ingreso.id
+        WHERE ingreso.fecha BETWEEN ? AND ?
+        GROUP BY ingreso.fecha, EXTRACT(DOW FROM ingreso.fecha::date)
+        ORDER BY ingreso.fecha ASC
     ");
     $stmtSemanal->bind_param("ss", $inicioSemana, $hoy);
     $stmtSemanal->execute();
@@ -148,7 +188,7 @@ $totalesJSON = json_encode($totales);
         // Convertir a: 0=lunes, 1=martes, ... 6=domingo
         $dia_pg = $row['dia_semana']; // 0=domingo, 1=lunes, ... 6=sábado
         $index = ($dia_pg == 0) ? 6 : ($dia_pg - 1); // 0=lunes, 6=domingo
-        $totalesSemana[$index] += $row['total']; // Sumar en lugar de sobrescribir
+        $totalesSemana[$index] += round($row['total'], 2); // Sumar en lugar de sobrescribir
         error_log("Fecha: " . $row['fecha'] . ", Total: " . $row['total'] . ", Índice: " . $index);
     }
 

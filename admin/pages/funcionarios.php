@@ -66,22 +66,6 @@ include "../controladores/filtro_funcionarios.php";
               <span class="nav-link-text ms-1">Gestión de Becarios</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="../pages/horarios.php">
-              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">schedule</i>
-              </div>
-              <span class="nav-link-text ms-1">Gestión de Horarios</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="../pages/auto_salidas.php">
-              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">timer</i>
-              </div>
-              <span class="nav-link-text ms-1">Auto Salidas</span>
-            </a>
-          </li>
           <li class="nav-item mt-3">
             <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Cuenta</h6>
           </li>
@@ -165,17 +149,9 @@ include "../controladores/filtro_funcionarios.php";
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
                 <div class="d-flex justify-content-between align-items-center px-3">
-                  <h6 class="text-white text-capitalize mb-0">GESTIÓN DE BECARIOS</h6>
+                  <h6 class="text-white text-capitalize mb-0">LISTADO DE BECARIOS</h6>
                   <div class="d-flex align-items-center">
                     <h6 class="text-white text-capitalize mb-0 me-3">TOTAL: <span id="totalRegistros" class="text-white"><?php echo $_SESSION['totalRegistros']; ?></span></h6>
-                    <!-- Botón para agregar nuevo becario -->
-                    <button class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#modalAgregarBecario">
-                      <i class="material-icons">add</i> Nuevo Becario
-                    </button>
-                    <!-- Botón para cargar Excel -->
-                    <button class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#modalCargarExcel">
-                      <i class="material-icons">upload_file</i> Cargar Excel
-                    </button>
                     <!-- Botón para cambiar el orden -->
                     <button id="ordenarBtn" class="btn btn-success">
                       <i class="material-icons">arrow_downward</i> Ordenar por Código
@@ -186,14 +162,10 @@ include "../controladores/filtro_funcionarios.php";
             </div>
             <div class="col-12 mt-4">
             <div class="row">
-                <?php  
+                <?php
                 while ($f = $resultado->fetch_assoc()) {
-                    // Obtener la foto del becario o usar imagen por defecto
-                    if (!empty($f['foto']) && file_exists('../assets/fotos_becarios/' . $f['foto'])) {
-                        $urlFoto = '../assets/fotos_becarios/' . $f['foto'];
-                    } else {
-                        $urlFoto = "https://img.freepik.com/vector-gratis/gradiente-azul-usuario_78370-4692.jpg?semt=ais_hybrid";
-                    }
+                    // Usar imagen por defecto (ya no tenemos fotos en la BD)
+                    $urlFoto = "https://img.freepik.com/vector-gratis/gradiente-azul-usuario_78370-4692.jpg?semt=ais_hybrid";
                 ?>
                     <div class="col-xl-2 col-md-2 mb-xl-2 mb-2">
                         <div class="card card-blog card-plain">
@@ -201,8 +173,8 @@ include "../controladores/filtro_funcionarios.php";
                                 <!-- Enlace alrededor de la foto -->
                                 <a href="profile.php?codigo=<?php echo $f['codigo']; ?>" class="d-block shadow-xl border-radius-xl">
                                     <!-- Foto con efecto hover -->
-                                    <img src="<?php echo $urlFoto; ?>" 
-                                        alt="Foto de <?php echo $f['nombre_completo']; ?>" 
+                                    <img src="<?php echo $urlFoto; ?>"
+                                        alt="Foto de <?php echo $f['nombre']; ?>"
                                         style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; transition: transform 0.3s ease;">
                                 </a>
                             </div>
@@ -210,35 +182,21 @@ include "../controladores/filtro_funcionarios.php";
                                 <p class="mb-0 text-sm">Becario - Ingeniería de Sistemas</p>
                                 <!-- Enlace alrededor del nombre -->
                                 <a href="profile.php?codigo=<?php echo $f['codigo']; ?>" style="text-decoration: none; color: inherit;">
-                                    <h5><?php echo ucwords(strtolower($f['nombre_completo'])); ?></h5>
+                                    <h5><?php echo ucwords(strtolower($f['nombre'])); ?></h5>
                                 </a>
                                 <p class="mb-2 text-sm">
                                     Código: <?php echo $f['codigo']; ?>
                                 </p>
-                                <p class="mb-2 text-sm">
-                                    Estado: <span class="badge bg-<?php echo $f['estado'] == 'activo' ? 'success' : 'secondary'; ?>"><?php echo ucfirst($f['estado']); ?></span>
-                                </p>
-                                <!-- Botones para editar, ver horarios y eliminar becario -->
+                                <!-- Botones de acciones -->
                                 <div class="d-flex gap-1 mb-2">
-                                    <button class="btn btn-warning btn-sm flex-fill" onclick="editarBecario('<?php echo $f['codigo']; ?>')">
-                                        <i class="material-icons">edit</i> Editar
-                                    </button>
-                                    <button class="btn btn-info btn-sm flex-fill" onclick="verHorarios('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
-                                        <i class="material-icons">schedule</i> Horarios
-                                    </button>
-                                </div>
-                                <div class="d-flex gap-1 mb-2">
-                                    <button class="btn btn-success btn-sm flex-fill" onclick="exportarRegistrosBecario('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
+                                    <button class="btn btn-success btn-sm flex-fill" onclick="exportarRegistrosBecario('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre']); ?>')">
                                         <i class="material-icons">download</i> Excel
                                     </button>
                                 </div>
-                                <button class="btn btn-danger btn-sm w-100" onclick="eliminarBecario('<?php echo $f['codigo']; ?>', '<?php echo addslashes($f['nombre_completo']); ?>')">
-                                    <i class="material-icons">delete</i> Eliminar
-                                </button>
                             </div>
                         </div>
                     </div>
-                <?php  
+                <?php
                 }
                 ?>
             </div>

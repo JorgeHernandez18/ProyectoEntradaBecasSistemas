@@ -6,29 +6,39 @@ include_once "../modelo/conexion.php"; // Incluye el archivo de conexión a la b
 if (isset($_POST['usuario']) && isset($_POST['password'])) {
     // Verifica que se hayan enviado los campos 'usuario' y 'password' a través de POST.
 
-    // Prepara la consulta SQL para obtener el usuario
-    $stmt = $conexion->prepare("SELECT * FROM becarios_admin WHERE usuario = ?");
-    
+    // Prepara la consulta SQL para obtener el usuario de la tabla admin
+    $stmt = $conexion->prepare("SELECT * FROM admin WHERE usuario = ?");
+
     // Vincula el parámetro del usuario
     $stmt->bind_param("s", $_POST['usuario']);
-    
+
     // Ejecuta la consulta
     $stmt->execute();
-    
+
     // Obtiene el resultado
     $resultado = $stmt->get_result();
-    
+
     // Verifica si el usuario existe y la contraseña es correcta
     if ($resultado->num_rows > 0) {
         $resultado->reset(); // Resetear el índice para PostgreSQL adapter
         $datos_usuario = $resultado->fetch_assoc();
-        
-        // Verifica la contraseña usando password_verify para bcrypt
-        if (password_verify($_POST['password'], $datos_usuario['password'])) {
+
+        // Verifica la contraseña (soporta tanto bcrypt como texto plano para compatibilidad)
+        $password_valida = false;
+        if (password_verify($_POST['password'], $datos_usuario['clave'])) {
+            // Contraseña con bcrypt
+            $password_valida = true;
+        } elseif ($_POST['password'] === $datos_usuario['clave']) {
+            // Contraseña en texto plano (para compatibilidad temporal)
+            $password_valida = true;
+        }
+
+        if ($password_valida) {
             // Si la contraseña es correcta, obtiene los datos del usuario
             $nombre = $datos_usuario['usuario'];
             $id_usuario = $datos_usuario['id'];
-            $nivel = $datos_usuario['nivel'];
+            // Todos los usuarios de la tabla admin son administradores
+            $nivel = 'admin';
 
             // Guarda la información del usuario en la sesión.
             $_SESSION['datos_login'] = array(
@@ -37,8 +47,8 @@ if (isset($_POST['usuario']) && isset($_POST['password'])) {
                 'nivel' => $nivel
             );
 
-            // Redirige al usuario a la página de registro.
-            header("location: ../vistas/formularios/registro.php");
+            // Redirige al dashboard del admin
+            header("location: ../admin/pages/dashboard.php");
         } else {
             // Si la contraseña es incorrecta
             header("location: ../vistas/formularios/index.php?error=Credenciales incorrectas");
