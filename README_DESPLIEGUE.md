@@ -2,13 +2,14 @@
 
 ## 📋 Resumen
 
-Sistema completo de gestión de becarios para Ingeniería de Sistemas UFPS, desplegado con Podman Compose y PostgreSQL.
+Sistema completo de gestión de becarios para Ingeniería de Sistemas UFPS, desplegado con Podman Compose y conexión a PostgreSQL externo.
 
 ### 🛠 Tecnologías
-- **Frontend**: PHP 8.2 + Apache + Material Dashboard
-- **Backend**: PHP con adapter PostgreSQL  
-- **Base de datos**: PostgreSQL 15
+- **Frontend**: PHP 8.2 + Nginx + Material Dashboard
+- **Backend**: PHP con PDO PostgreSQL
+- **Base de datos**: PostgreSQL externo (ya existente en tu servidor)
 - **Contenedores**: Podman Compose
+- **Proxy**: Configurado mediante Ansible
 - **Características**: Auto-salidas, gestión de horarios, Excel export
 
 ---
@@ -28,17 +29,13 @@ podman-compose --version
 ```
 
 ### Base de Datos PostgreSQL (Prerequisito)
-El sistema se conecta a tu PostgreSQL existente con estas credenciales:
-- **Host**: `host.containers.internal` (desde el contenedor)
-- **Base de datos**: `becarios_sistemas`
-- **Usuario**: `becario`
-- **Contraseña**: `becarios`
-- **Puerto**: `5432`
+El sistema se conecta a tu servidor PostgreSQL existente. Deberás configurar las credenciales en las variables de entorno.
 
 ### Puertos Requeridos
-El sistema utiliza solo **2 puertos** con la nomenclatura requerida:
-- **${PORT_0}**: Aplicación web principal (puerto 80 interno)
-- **${PORT_1}**: pgAdmin (opcional, solo desarrollo)
+El sistema utiliza **1 puerto** con la nomenclatura automática:
+- **${PORT_0}**: Aplicación web (puerto 80 interno del contenedor)
+
+**Nota**: La variable `PORT_0` es asignada automáticamente por el sistema. El dominio y puerto público se configuran mediante Ansible.
 
 ---
 
@@ -47,22 +44,14 @@ El sistema utiliza solo **2 puertos** con la nomenclatura requerida:
 ```
 ProyectoEntradaBecasSistemas/
 ├── 📄 docker-compose.yml           # Configuración principal Podman
-├── 📄 Dockerfile                   # Imagen de la aplicación PHP
-├── 📁 deployment/                  # Archivos de despliegue
-│   ├── 📁 config/                  # Configuraciones
-│   │   ├── app.env                 # Variables de entorno de la app
-│   │   ├── database.env            # Variables de PostgreSQL
-│   │   ├── conexion_docker.php     # Conexión PostgreSQL
-│   │   ├── php.ini                 # Configuración PHP
-│   │   ├── apache.conf             # Configuración Apache
-│   │   └── postgresql.conf         # Configuración PostgreSQL
-│   ├── 📁 database/                # Base de datos
-│   │   └── init_postgresql.sql     # Estructura completa PostgreSQL
-│   └── 📁 scripts/                 # Scripts de instalación
-│       ├── entrypoint.sh           # Script de inicialización
-│       └── backup_db.sh            # Script de respaldo
+├── 📄 Dockerfile                   # Imagen PHP-FPM + Nginx
+├── 📄 nginx.conf                   # Configuración Nginx
+├── 📄 .env.example                 # Ejemplo de variables de entorno
+├── 📁 modelo/
+│   └── conexion.php                # Conexión PostgreSQL con PDO
 ├── 📁 admin/                       # Panel de administración
 ├── 📁 vistas/                      # Frontend público
+├── 📁 controladores/               # Lógica de negocio
 └── 📄 README_DESPLIEGUE.md         # Esta guía
 ```
 
@@ -70,125 +59,119 @@ ProyectoEntradaBecasSistemas/
 
 ## 🚀 Proceso de Despliegue
 
-### Paso 1: Preparar el Entorno
+### Paso 1: Clonar el Repositorio
 
 ```bash
-# 1. Clonar/subir el proyecto al servidor
-cd /opt/
-git clone <tu-repositorio> becarios-ufps
-# O subir manualmente los archivos
-
-cd becarios-ufps/
+# En tu servidor, clona el proyecto
+git clone <tu-repositorio-github> becarios-sistemas
+cd becarios-sistemas/
 ```
 
 ### Paso 2: Configurar Variables de Entorno
 
-Crear archivo `.env` con los puertos asignados:
+**IMPORTANTE**: Antes de desplegar, configura las credenciales de PostgreSQL.
+
+1. Crea el archivo `.env` (la variable PORT_0 es asignada automáticamente):
 ```bash
-# Archivo: .env
-PORT_0=8080    # Puerto de la aplicación web
-PORT_1=8081    # Puerto de pgAdmin (opcional)
+# Este archivo puede estar vacío o contener:
+# PORT_0 se asigna automáticamente por el sistema
 ```
 
-### Paso 3: Verificar Configuración de Base de Datos
-
-La configuración ya está lista para tu PostgreSQL:
-```bash
-# Ya configurado en: deployment/config/database.env
-POSTGRES_DB=becarios_sistemas
-POSTGRES_USER=becario
-POSTGRES_PASSWORD=becarios
-
-# Ya configurado en: deployment/config/app.env  
-DB_HOST=host.containers.internal
-DB_NAME=becarios_sistemas
-DB_USER=becario
-DB_PASSWORD=becarios
+2. Edita las variables de entorno en `docker-compose.yml`:
+```yaml
+environment:
+  DB_HOST: tu_host_postgresql       # IP o hostname de tu PostgreSQL
+  DB_PORT: 5432
+  DB_NAME: tu_base_de_datos
+  DB_USER: tu_usuario
+  DB_PASS: tu_password
+  TZ: America/Bogota
 ```
 
-**✅ No necesitas cambiar nada**, las credenciales ya están configuradas.
+**O** usa un archivo `.env` local para sobreescribir:
+```bash
+# Crea .env con:
+DB_HOST=ip_de_tu_postgres
+DB_NAME=nombre_bd
+DB_USER=usuario
+DB_PASS=password
+```
 
-### Paso 4: Desplegar con Podman Compose
+### Paso 3: Construir y Desplegar
 
 ```bash
-# Construir e iniciar contenedor (solo aplicación web)
+# Construir la imagen
+podman-compose build
+
+# Iniciar el contenedor
 podman-compose up -d
 
 # Verificar estado
 podman-compose ps
-
-# Ver logs de la aplicación
-podman-compose logs -f becarios_app
 ```
 
-### Paso 5: Verificar Despliegue
+### Paso 4: Verificar Despliegue
 
 ```bash
-# Verificar aplicación web
-curl -I http://localhost:${PORT_0}
+# Ver logs del contenedor
+podman-compose logs -f
 
-# Verificar conexión a tu PostgreSQL existente
-podman exec becarios_app pg_isready -h host.containers.internal -U becario -d becarios_sistemas
+# Verificar que el contenedor está corriendo
+podman ps
 
-# Verificar logs de inicialización
-podman-compose logs becarios_app | grep "Sistema de Becarios UFPS listo"
+# Probar la aplicación
+curl http://localhost:${PORT_0}
 ```
+
+### Paso 5: Configurar Dominio con Ansible
+
+El dominio y puerto público se configuran mediante Ansible. Consulta con tu equipo de DevOps para:
+- Asignar un dominio
+- Configurar el proxy reverso
+- Configurar certificado SSL si es necesario
 
 ---
 
 ## 🔐 Acceso al Sistema
 
 ### URLs de Acceso
+Las URLs dependerán del dominio configurado por Ansible. Ejemplos:
+
 ```
 # Aplicación principal
-http://tu-servidor:${PORT_0}
+https://tu-dominio.com
 
-# Panel de administración  
-http://tu-servidor:${PORT_0}/admin
+# Panel de administración
+https://tu-dominio.com/admin
 
-# Registro de entrada (público)
-http://tu-servidor:${PORT_0}/vistas/formularios/registro.php
+# Registro de entrada/salida (público)
+https://tu-dominio.com/vistas/formularios/registro.php
 ```
 
 ### Usuarios por Defecto
-```
-# Usuario Administrador
-Usuario: admin
-Contraseña: Admin123
+Consulta con tu equipo las credenciales de acceso inicial.
 
-# Usuario de Entrada (registro becarios)
-Usuario: entrada  
-Contraseña: Entrada123
-```
-
-**⚠️ IMPORTANTE**: Cambiar estas contraseñas inmediatamente después del primer acceso.
+**⚠️ IMPORTANTE**: Cambiar las contraseñas inmediatamente después del primer acceso.
 
 ---
 
 ## 🗄️ Base de Datos
 
-### Información de Conexión (Tu PostgreSQL existente)
-```
-Host: host.containers.internal (desde contenedor) o localhost (externo)
-Puerto: 5432
-Base de datos: becarios_sistemas
-Usuario: becario
-Contraseña: becarios
-```
+### Conexión a PostgreSQL Externo
+La aplicación se conecta a tu servidor PostgreSQL existente usando las credenciales configuradas en las variables de entorno.
 
 ### Estructura Principal
 - **becarios_admin**: Usuarios del sistema
-- **becarios_info**: Información de becarios  
+- **becarios_info**: Información de becarios
 - **becarios_registro**: Registros entrada/salida
 - **becarios_horarios**: Horarios programados
 - **becarios_config_horas**: Configuración de horas
 
-### Datos de Ejemplo
-El sistema incluye datos de prueba:
-- 3 becarios ejemplo
-- Horarios programados
-- Registros de ejemplo
-- Usuarios administrador configurados
+### Verificar Conexión
+```bash
+# Desde dentro del contenedor
+podman exec -it becarios-app php -r "require 'modelo/conexion.php'; echo 'Conexión exitosa';"
+```
 
 ---
 
@@ -196,27 +179,20 @@ El sistema incluye datos de prueba:
 
 ### 1. Cambiar Contraseñas
 ```bash
-# Acceder al panel admin
-http://tu-servidor:${PORT_0}/admin
+# Acceder al panel admin a través del dominio configurado
+https://tu-dominio.com/admin
 
-# Ir a: Configuración > Cambiar Contraseñas
-# Cambiar tanto la del admin como la del usuario entrada
+# Ir a: Perfil > Cambiar Contraseña
 ```
 
-### 2. Configurar Auto-Salidas
-El sistema está configurado para marcar salidas automáticas:
-- Se ejecuta cada 10 minutos automáticamente
-- Marca salida 30 minutos después del horario programado
-- Panel de control en: Admin > Auto Salidas
+### 2. Verificar Funcionalidades
+- Probar registro de entrada/salida de becarios
+- Verificar generación de reportes
+- Comprobar exportación a Excel
+- Revisar cálculo de horas trabajadas
 
-### 3. Configurar Respaldos (Opcional)
-```bash
-# Script de respaldo incluido
-podman exec becarios_app /app/deployment/scripts/backup_db.sh
-
-# Configurar cron en el host (recomendado)
-0 2 * * * podman exec becarios_app /app/deployment/scripts/backup_db.sh
-```
+### 3. Configurar Respaldos (Recomendado)
+Coordina con tu equipo de DevOps para configurar respaldos automáticos de la base de datos PostgreSQL.
 
 ---
 
@@ -224,47 +200,48 @@ podman exec becarios_app /app/deployment/scripts/backup_db.sh
 
 ### Error: No se puede conectar a PostgreSQL
 ```bash
-# Verificar contenedor PostgreSQL
-podman logs postgres
+# Verificar variables de entorno del contenedor
+podman exec becarios-app env | grep DB_
 
-# Verificar configuración de red
-podman network ls
-podman network inspect becarios_network
+# Probar conexión desde el contenedor
+podman exec -it becarios-app psql -h $DB_HOST -U $DB_USER -d $DB_NAME
 
-# Verificar variables de entorno
-podman exec becarios_app env | grep DB_
+# Verificar logs del contenedor
+podman-compose logs -f
 ```
 
 ### Error: Aplicación muestra página en blanco
 ```bash
-# Verificar logs PHP
-podman logs becarios_app
+# Verificar logs de nginx y PHP-FPM
+podman logs becarios-app
 
 # Verificar permisos
-podman exec becarios_app ls -la /app/
-podman exec becarios_app ls -la /app/logs/
+podman exec becarios-app ls -la /var/www/html/
+podman exec becarios-app ls -la /var/www/html/logs/
+
+# Verificar que nginx y php-fpm están corriendo
+podman exec becarios-app ps aux | grep nginx
+podman exec becarios-app ps aux | grep php-fpm
 ```
 
 ### Error: No se pueden subir fotos
 ```bash
-# Verificar permisos de directorio
-podman exec becarios_app ls -la /app/admin/assets/fotos_becarios/
+# Verificar permisos del directorio de fotos
+podman exec becarios-app ls -la /var/www/html/admin/assets/fotos_becarios/
 
 # Corregir permisos si es necesario
-podman exec becarios_app chown -R www-data:www-data /app/admin/assets/fotos_becarios/
+podman exec becarios-app chown -R www-data:www-data /var/www/html/admin/assets/fotos_becarios/
+podman exec becarios-app chmod -R 777 /var/www/html/admin/assets/fotos_becarios/
 ```
 
-### PostgreSQL no inicia
+### Error: Contenedor no inicia
 ```bash
-# Verificar logs
-podman logs postgres
+# Ver logs detallados
+podman-compose logs
 
-# Verificar volumen de datos
-podman volume ls | grep postgres
-
-# Recrear volumen si es necesario (CUIDADO: elimina datos)
-podman-compose down -v
-podman volume rm becarios_postgres_data
+# Reconstruir imagen
+podman-compose down
+podman-compose build --no-cache
 podman-compose up -d
 ```
 
@@ -272,44 +249,58 @@ podman-compose up -d
 
 ## 🔧 Comandos Útiles
 
-### Gestión de Contenedores
+### Gestión del Contenedor
 ```bash
 # Ver estado
 podman-compose ps
+podman ps
 
-# Reiniciar servicios
-podman-compose restart becarios_app
-podman-compose restart postgres
+# Reiniciar aplicación
+podman-compose restart
 
 # Ver logs en tiempo real
 podman-compose logs -f
 
-# Acceder a contenedor
-podman exec -it becarios_app bash
-podman exec -it postgres psql -U becarios_user -d becarios_ufps
+# Acceder al contenedor
+podman exec -it becarios-app bash
 
-# Parar sistema
+# Parar aplicación
 podman-compose down
 
 # Actualizar aplicación
 podman-compose down
 podman-compose build --no-cache
 podman-compose up -d
+
+# Ver uso de recursos
+podman stats becarios-app
 ```
 
-### Base de Datos
+### Verificación de Servicios
 ```bash
-# Respaldo manual
-podman exec becarios_app /app/deployment/scripts/backup_db.sh
+# Ver procesos dentro del contenedor
+podman exec becarios-app ps aux
 
-# Conectar a PostgreSQL
-podman exec -it postgres psql -U becarios_user -d becarios_ufps
+# Verificar nginx
+podman exec becarios-app nginx -t
 
-# Ver tablas
-podman exec postgres psql -U becarios_user -d becarios_ufps -c "\dt"
+# Ver logs de nginx
+podman exec becarios-app tail -f /var/log/nginx/error.log
 
-# Ver usuarios del sistema
-podman exec postgres psql -U becarios_user -d becarios_ufps -c "SELECT * FROM becarios_admin;"
+# Ver logs de PHP
+podman exec becarios-app tail -f /var/www/html/logs/
+```
+
+### Base de Datos (PostgreSQL Externo)
+```bash
+# Conectar a PostgreSQL desde el servidor
+psql -h localhost -U tu_usuario -d tu_base_datos
+
+# Verificar tablas
+psql -h localhost -U tu_usuario -d tu_base_datos -c "\dt"
+
+# Hacer respaldo
+pg_dump -h localhost -U tu_usuario tu_base_datos > backup_$(date +%Y%m%d).sql
 ```
 
 ---
@@ -318,19 +309,20 @@ podman exec postgres psql -U becarios_user -d becarios_ufps -c "SELECT * FROM be
 
 ### Recomendaciones de Producción
 
-1. **Cambiar contraseñas por defecto**
-2. **Configurar firewall para puertos específicos**
-3. **Usar HTTPS con certificado SSL**
-4. **Configurar respaldos automáticos**
-5. **Monitorear logs regularmente**
-6. **Mantener sistema actualizado**
+1. **Cambiar contraseñas por defecto** inmediatamente después del despliegue
+2. **Configurar HTTPS con certificado SSL** (mediante Ansible/proxy)
+3. **Configurar respaldos automáticos** de la base de datos
+4. **Monitorear logs regularmente**
+5. **Mantener el sistema actualizado** (imagen base PHP y dependencias)
+6. **Restringir acceso a archivos sensibles** (ya configurado en nginx.conf)
 
-### Archivos Sensibles
+### Archivos Sensibles (NO subir a GitHub)
 ```bash
-deployment/config/database.env    # Contraseñas DB
-deployment/config/app.env         # Configuración aplicación
-.env                             # Puertos del sistema
+.env                             # Variables de entorno locales
+deployment/config/app.env.local  # Configuración con credenciales reales
 ```
+
+**Nota**: Los archivos con valores de ejemplo están en el repositorio, pero las credenciales reales deben configurarse en el servidor.
 
 ---
 
@@ -338,60 +330,81 @@ deployment/config/app.env         # Configuración aplicación
 
 ### Logs Importantes
 ```bash
-# Logs de aplicación
-podman logs becarios_app
+# Logs del contenedor
+podman logs becarios-app
 
-# Logs de PostgreSQL  
-podman logs postgres
+# Logs de nginx (dentro del contenedor)
+podman exec becarios-app tail -f /var/log/nginx/access.log
+podman exec becarios-app tail -f /var/log/nginx/error.log
 
-# Logs del sistema (dentro del contenedor)
-podman exec becarios_app tail -f /var/log/becarios/app_$(date +%Y-%m-%d).log
+# Logs de la aplicación
+podman exec becarios-app tail -f /var/www/html/logs/
 ```
 
 ### Métricas de Rendimiento
 ```bash
-# Uso de recursos
-podman stats
+# Uso de recursos del contenedor
+podman stats becarios-app
 
 # Espacio en disco
 podman system df
 podman volume ls
 
-# Estado de la base de datos
-podman exec postgres psql -U becarios_user -d becarios_ufps -c "SELECT version();"
+# Estado de volúmenes
+podman volume inspect fotos_becarios
+podman volume inspect logs_app
 ```
 
 ---
 
 ## ✅ Lista de Verificación Post-Despliegue
 
-- [ ] Contenedores iniciados correctamente
-- [ ] Base de datos PostgreSQL funcionando
-- [ ] Aplicación web accesible
-- [ ] Login de administrador funcionando  
+- [ ] Contenedor iniciado correctamente (`podman ps`)
+- [ ] Conexión a PostgreSQL funcionando
+- [ ] Aplicación web accesible a través del dominio configurado
+- [ ] Login de administrador funcionando
 - [ ] Contraseñas por defecto cambiadas
-- [ ] Sistema de auto-salidas activado
+- [ ] Registro de entrada/salida funcionando
 - [ ] Fotos de becarios se pueden subir
-- [ ] Export a Excel funciona
-- [ ] Respaldos configurados
+- [ ] Exportación a Excel funciona
+- [ ] Cálculo de horas trabajadas correcto
+- [ ] Respaldos de base de datos configurados
 - [ ] Logs monitoreándose
-- [ ] Firewall configurado
-- [ ] SSL configurado (producción)
+- [ ] SSL configurado (mediante Ansible/proxy)
 
 ---
 
 ## 📞 Soporte
 
 Para soporte técnico:
-1. Verificar logs según esta guía
-2. Revisar sección de solución de problemas  
+1. Verificar logs según esta guía (`podman logs becarios-app`)
+2. Revisar sección de solución de problemas
 3. Contactar al equipo de desarrollo con:
-   - Versión del sistema
    - Logs específicos del error
+   - Configuración de variables de entorno (sin credenciales)
    - Pasos para reproducir el problema
 
 ---
 
-**Sistema de Becarios UFPS v1.0**  
-**Compatible con:** PostgreSQL 12+, Podman 3.0+  
+## 🔄 Actualización del Sistema
+
+```bash
+# 1. En el servidor, obtener cambios del repositorio
+git pull origin main
+
+# 2. Reconstruir la imagen
+podman-compose down
+podman-compose build --no-cache
+
+# 3. Iniciar con la nueva versión
+podman-compose up -d
+
+# 4. Verificar que todo funciona
+podman-compose logs -f
+```
+
+---
+
+**Sistema de Becarios UFPS v2.0**
+**Compatible con:** PostgreSQL 12+, Podman 3.0+, Nginx
 **Licencia:** Uso interno UFPS
