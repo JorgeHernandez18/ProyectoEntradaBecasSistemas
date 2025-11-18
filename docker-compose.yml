@@ -1,54 +1,28 @@
-# ============================================
-# Podman Compose para Sistema de Becarios UFPS
-# Conecta a PostgreSQL existente en el servidor
-# ============================================
-
 version: '3.8'
 
 services:
-  # Aplicación PHP (conecta a PostgreSQL existente)
   becarios_app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: becarios_app
-    restart: unless-stopped
-    env_file:
-      - deployment/config/app.env
+    image: becarios-sistemas
+    container_name: becarios-app
+    depends_on: []
     environment:
-      - TZ=America/Bogota
+      # Conecta a PostgreSQL externo (configura estos valores en tu servidor)
+      DB_HOST: host_postgresql
+      DB_PORT: 5432
+      DB_NAME: nombre_base_datos
+      DB_USER: usuario_db
+      DB_PASS: password_db
+      # Configuración PHP
+      TZ: America/Bogota
     ports:
       - "${PORT_5}:80"
     volumes:
-      # Fotos de becarios (persistente)
-      - fotos_becarios:/app/admin/assets/fotos_becarios
-      # Logs de la aplicación
-      - logs_becarios:/var/log/becarios
-      - logs_apache:/var/log/apache2
-      # Archivos temporales
-      - temp_uploads:/tmp/uploads
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-# Volúmenes nombrados para persistencia (sin PostgreSQL, usa BD externa)
-volumes:
-  pgadmin_data:
-    name: becarios_pgadmin_data
-    driver: local
-  fotos_becarios:
-    name: becarios_fotos
-    driver: local
-  logs_becarios:
-    name: becarios_logs
-    driver: local
-  logs_apache:
-    name: becarios_apache_logs
-    driver: local
-  temp_uploads:
-    name: becarios_temp
-    driver: local
+      - fotos_becarios:/var/www/html/admin/assets/fotos_becarios
+      - logs_app:/var/www/html/logs
 
-# Red: Usando extra_hosts para acceso a PostgreSQL del servidor host
+volumes:
+  fotos_becarios:
+  logs_app:

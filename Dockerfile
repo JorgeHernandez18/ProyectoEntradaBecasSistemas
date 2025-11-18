@@ -1,30 +1,28 @@
 # ==========================================
 # Dockerfile para Sistema de Becarios UFPS
+# Usa PHP-FPM + Nginx
 # ==========================================
 
-FROM php:8.2-apache
+FROM php:8.2-fpm
 
 # Información del mantenedor
 LABEL maintainer="Sistema de Becarios UFPS"
-LABEL version="1.0"
+LABEL version="2.0"
 LABEL description="Sistema de gestión de becarios para Ingeniería de Sistemas UFPS"
 
-# Instalar dependencias del sistema
+# Instalar dependencias del sistema y nginx
 RUN apt-get update && apt-get install -y \
+    nginx \
     libzip-dev \
     zip \
     unzip \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libicu-dev \
-    libxml2-dev \
     libpq-dev \
     postgresql-client \
-    cron \
-    supervisor \
     curl \
-    gettext-base \
+    supervisor \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo \
@@ -32,70 +30,61 @@ RUN apt-get update && apt-get install -y \
         pgsql \
         gd \
         zip \
-        intl \
-        xml \
         opcache \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Configurar PHP
-COPY deployment/config/php.ini /usr/local/etc/php/conf.d/custom.ini
-
-# Habilitar mod_rewrite para Apache
-RUN a2enmod rewrite headers
-
-# Configurar Apache
-COPY deployment/config/apache.conf /etc/apache2/sites-available/000-default.conf
-
-# Crear directorios necesarios
-RUN mkdir -p /var/log/becarios \
-    && mkdir -p /app/admin/assets/fotos_becarios \
-    && mkdir -p /app/logs \
-    && mkdir -p /tmp/uploads \
-    && chown -R www-data:www-data /var/log/becarios \
-    && chown -R www-data:www-data /app \
-    && chmod -R 755 /app
-
-# Copiar código fuente
-COPY . /app/
-
-# Crear enlace simbólico para el archivo de conexión
-RUN ln -sf /app/deployment/config/conexion_docker.php /app/modelo/conexion.php
+RUN echo "date.timezone = America/Bogota" > /usr/local/etc/php/conf.d/timezone.ini \
+    && echo "upload_max_filesize = 10M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 10M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/memory.ini
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Copiar código fuente
+COPY . /var/www/html/
+
+# Crear directorios necesarios
+RUN mkdir -p /var/www/html/admin/assets/fotos_becarios \
+    && mkdir -p /var/www/html/logs \
+    && mkdir -p /var/run/php \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/admin/assets/fotos_becarios \
+    && chmod -R 777 /var/www/html/logs
+
 # Instalar dependencias PHP
-WORKDIR /app
-RUN if [ -f "composer.json" ]; then composer install --no-dev --optimize-autoloader; fi
+WORKDIR /var/www/html
+RUN if [ -f "composer.json" ]; then composer install --no-dev --optimize-autoloader --no-interaction; fi
 
-# Configurar permisos
-RUN chown -R www-data:www-data /app \
-    && find /app -type d -exec chmod 755 {} \; \
-    && find /app -type f -exec chmod 644 {} \; \
-    && chmod +x /app/deployment/scripts/*.sh
+# Configurar nginx
+COPY nginx.conf /etc/nginx/sites-available/default
 
-# Configurar cron para auto-salidas
-COPY deployment/config/crontab /etc/cron.d/becarios-cron
-RUN chmod 0644 /etc/cron.d/becarios-cron \
-    && crontab /etc/cron.d/becarios-cron
+# Configurar supervisor para manejar nginx + php-fpm
+RUN echo "[supervisord]\n\
+nodaemon=true\n\
+\n\
+[program:php-fpm]\n\
+command=/usr/local/sbin/php-fpm\n\
+autostart=true\n\
+autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
+\n\
+[program:nginx]\n\
+command=/usr/sbin/nginx -g 'daemon off;'\n\
+autostart=true\n\
+autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0" > /etc/supervisor/conf.d/supervisord.conf
 
-# Configurar supervisor
-COPY deployment/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+EXPOSE 80
 
-# Script de inicialización
-COPY deployment/scripts/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Variables de entorno por defecto
-ENV APACHE_DOCUMENT_ROOT=/app
-ENV APACHE_LOG_DIR=/var/log/apache2
-ENV APACHE_PORT=80
-ENV PHP_TIMEZONE=America/Bogota
-ENV APP_ENV=production
-
-EXPOSE ${APACHE_PORT}
-
-# Punto de entrada
-ENTRYPOINT ["/entrypoint.sh"]
+# Iniciar supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
